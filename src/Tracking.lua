@@ -28,7 +28,7 @@ function EGC.Tracking.EarthgoreDidProc(_, changeType, _, effectName, _, _, _,
     EGC:Trace(1, effectName .. " (" .. effectAbilityId .. ")")
 
     EGC.Tracking.timeOfProc = GetGameTimeMilliseconds()
-    EGC.EGCTexture:SetAlpha(0.75)
+    EGC.EGCTexture:SetColor(0.5, 0.5, 0.5, 1)
     EVENT_MANAGER:RegisterForUpdate(EGC.name .. "Count", updateIntervalMs, EGC.UI.Update)
 
 end

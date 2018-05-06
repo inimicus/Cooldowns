@@ -13,6 +13,7 @@ EGC.version     = "0.0.1"
 EGC.dbVersion   = 1
 EGC.slash       = "/egc"
 EGC.prefix      = "[EGC] "
+EGC.onCooldown  = false
 EGC.HUDHidden   = false
 EGC.ForceShow   = false
 
@@ -40,17 +41,17 @@ function EGC.Initialize(event, addonName)
     EGC:Trace(1, "EGC Loaded")
     EVENT_MANAGER:UnregisterForEvent(EGC.name, EVENT_ADD_ON_LOADED)
 
-    EGC.preferences = ZO_SavedVars:NewAccountWide("EarthgoreCooldownVariables", EGC.dbVersion, nil, EGC:GetDefaults())
+    EGC.preferences = ZO_SavedVars:NewAccountWide("EarthgoreCooldownVariables", EGC.dbVersion, nil, EGC.Defaults.Get())
 
     -- Use saved debugMode value
     EGC.debugMode = EGC.preferences.debugMode
 
-    SLASH_COMMANDS[EGC.slash] = EGC.SlashCommand
+    SLASH_COMMANDS[EGC.slash] = EGC.UI.SlashCommand
 
-    EGC:InitSettings()
-    EGC.DrawUI()
-    EGC.ToggleHUD()
-    EGC.RegisterEvents()
+    EGC.Settings.Init()
+    EGC.UI.Draw()
+    EGC.UI.ToggleHUD()
+    EGC.Tracking.Register()
 
     EGC:Trace(2, "Finished Initialize()")
 end

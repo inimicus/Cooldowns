@@ -6,6 +6,8 @@
 -- Defaults.lua
 -- -----------------------------------------------------------------------------
 
+EGC.Defaults = {}
+
 local defaults = {
     debugMode = 0,
     positionLeft = 150,
@@ -13,6 +15,6 @@ local defaults = {
     unlocked = true,
 }
 
-function EGC:GetDefaults()
+function EGC.Defaults.Get()
     return defaults
 end

@@ -6,7 +6,9 @@
 -- Interface.lua
 -- -----------------------------------------------------------------------------
 
-function EGC.DrawUI()
+EGC.UI = {}
+
+function EGC.UI.Draw()
     local c = WINDOW_MANAGER:CreateTopLevelWindow("EGCContainer")
     c:SetClampedToScreen(true)
     c:SetDimensions(100, 100)
@@ -14,14 +16,17 @@ function EGC.DrawUI()
     c:SetMouseEnabled(true)
     c:SetAlpha(1)
     c:SetMovable(EGC.preferences.unlocked)
-    c:SetHidden(true)
-    c:SetHandler("OnMoveStop", function(...) EGC.SavePosition() end)
+    c:SetHidden(false)
+    c:SetHandler("OnMoveStop", function(...) EGC.UI.Position.Save() end)
 
-    local t = WINDOW_MANAGER:CreateControl("EGCText", c, CT_CONTROL)
-    t:SetAnchor(TOPLEFT, c, TOPLEFT, 0, 0)
+    local r = WINDOW_MANAGER:CreateControl("EGCTexture", c, CT_TEXTURE)
+    r:SetTexture('/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds')
+    r:SetAlpha(1)
+    r:SetDimensions(100, 100)
+    r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
-    local l = WINDOW_MANAGER:CreateControl("EGCLabel", t, CT_LABEL)
-    l:SetAnchor(TOPLEFT, t, TOPLEFT, 0, 0)
+    local l = WINDOW_MANAGER:CreateControl("EGCLabel", c, CT_LABEL)
+    l:SetAnchor(CENTER, t, CENTER, 0, 0)
     l:SetColor(255, 255, 255, 1)
     l:SetFont("$(MEDIUM_FONT)|50|soft-shadow-thick")
     l:SetVerticalAlignment(TOP)
@@ -29,23 +34,36 @@ function EGC.DrawUI()
     l:SetPixelRoundingEnabled(true)
 
     EGC.EGCContainer = c
-    EGC.EGCText = t
+    EGC.EGCTexture = r
     EGC.EGCLabel = l
 
-    EGC.SetPosition(EGC.preferences.positionLeft, EGC.preferences.positionTop)
+    EGC.UI.Position.Set(EGC.preferences.positionLeft, EGC.preferences.positionTop)
 
     EGC:Trace(2, "Finished DrawUI()")
 end
 
-function EGC.ToggleShow()
-    if (EGC.onCooldown and not EGC.HUDHidden) then
-        EGC.EGCContainer:SetHidden(false)
+function EGC.UI.Update()
+    EGC.onCooldown = true
+
+    local countdown = (EGC.Tracking.timeOfProc + EGC.Tracking.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
+
+    EGC:Trace(3, "Countdown: " .. countdown)
+
+    if (countdown < 0) then
+        EVENT_MANAGER:UnregisterForUpdate(EGC.name .. "Count")
+        EGC.onCooldown = false
+        EGC.EGCLabel:SetText("")
+        EGC.EGCTexture:SetAlpha(1)
+        PlaySound(SOUNDS.DUEL_START)
+    elseif (countdown < 10) then
+        EGC.EGCLabel:SetText(string.format("%.1f", countdown))
     else
-        EGC.EGCContainer:SetHidden(true)
+        EGC.EGCLabel:SetText(string.format("%.0f", countdown))
     end
+
 end
 
-function EGC.ToggleHUD()
+function EGC.UI.ToggleHUD()
     local hudScene = SCENE_MANAGER:GetScene("hud")
     hudScene:RegisterCallback("StateChange", function(oldState, newState)
 
@@ -56,21 +74,23 @@ function EGC.ToggleHUD()
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
             EGC:Trace(3, "Hiding HUD")
             EGC.HUDHidden = true
-            EGC.ToggleShow()
+            EGC.EGCContainer:SetHidden(true)
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
             EGC:Trace(3, "Showing HUD")
             EGC.HUDHidden = false
-            EGC.ToggleShow()
+            EGC.EGCContainer:SetHidden(false)
         end
     end)
 
     EGC:Trace(2, "Finished ToggleHUD()")
 end
 
-function EGC.SavePosition()
+EGC.UI.Position = {}
+
+function EGC.UI.Position.Save()
     local top   = EGC.EGCContainer:GetTop()
     local left  = EGC.EGCContainer:GetLeft()
 
@@ -80,13 +100,13 @@ function EGC.SavePosition()
     EGC.preferences.positionTop  = top
 end
 
-function EGC.SetPosition(left, top)
+function EGC.UI.Position.Set(left, top)
     EGC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
     EGC.EGCContainer:ClearAnchors()
     EGC.EGCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
 
-function EGC.SlashCommand(command)
+function EGC.UI.SlashCommand(command)
     -- Debug Options ----------------------------------------------------------
     if command == "debug 0" then
         d(EGC.prefix .. "Setting debug level to 0 (Off)")
@@ -104,7 +124,6 @@ function EGC.SlashCommand(command)
         d(EGC.prefix .. "Setting debug level to 3 (High)")
         EGC.debugMode = 3
         EGC.preferences.debugMode = 3
-
 
     -- Default ----------------------------------------------------------------
     else

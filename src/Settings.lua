@@ -6,6 +6,8 @@
 -- Settings.lua
 -- -----------------------------------------------------------------------------
 
+EGC.Settings = {}
+
 local LAM = LibStub("LibAddonMenu-2.0")
 
 local panelData = {
@@ -20,12 +22,12 @@ local panelData = {
 local optionsTable = {
     [1] = {
         type = "header",
-        name = "Positioning",
+        name = "Options",
         width = "full",
     },
 }
 
-function EGC:InitSettings()
+function EGC.Settings.Init()
     LAM:RegisterAddonPanel(EGC.name, panelData)
     LAM:RegisterOptionControls(EGC.name, optionsTable)
 

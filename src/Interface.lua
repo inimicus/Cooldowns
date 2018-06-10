@@ -48,7 +48,7 @@ function EGC.UI.Update()
 
     EGC:Trace(3, "Countdown: " .. countdown)
 
-    if (countdown < 0) then
+    if (countdown <= 0) then
         EVENT_MANAGER:UnregisterForUpdate(EGC.name .. "Count")
         EGC.onCooldown = false
         EGC.EGCLabel:SetText("")

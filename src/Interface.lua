@@ -53,7 +53,7 @@ function EGC.UI.Update()
         EGC.onCooldown = false
         EGC.EGCLabel:SetText("")
         EGC.EGCTexture:SetColor(1, 1, 1, 1)
-        PlaySound(SOUNDS.DUEL_START)
+        PlaySound(SOUNDS.TELVAR_GAINED)
     elseif (countdown < 10) then
         EGC.EGCLabel:SetText(string.format("%.1f", countdown))
     else

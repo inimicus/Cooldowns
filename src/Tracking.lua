@@ -29,6 +29,9 @@ function EGC.Tracking.EarthgoreDidProc(_, changeType, _, effectName, _, _, _,
 
     EGC.Tracking.timeOfProc = GetGameTimeMilliseconds()
     EGC.EGCTexture:SetColor(0.5, 0.5, 0.5, 1)
+
+    PlaySound(SOUNDS.TELVAR_LOST)
+
     EVENT_MANAGER:RegisterForUpdate(EGC.name .. "Count", updateIntervalMs, EGC.UI.Update)
 
 end

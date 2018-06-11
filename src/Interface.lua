@@ -73,18 +73,26 @@ function EGC.UI.ToggleHUD()
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
             EGC:Trace(3, "Hiding HUD")
             EGC.HUDHidden = true
-            EGC.EGCContainer:SetHidden(true)
+            EGC.UI.ShowIcon(false)
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
             EGC:Trace(3, "Showing HUD")
             EGC.HUDHidden = false
-            EGC.EGCContainer:SetHidden(false)
+            EGC.UI.ShowIcon(true)
         end
     end)
 
     EGC:Trace(2, "Finished ToggleHUD()")
+end
+
+function EGC.UI.ShowIcon(shouldShow)
+    if (shouldShow and EGC.enabled and not EGC.HUDHidden) then
+        EGC.EGCContainer:SetHidden(false)
+    else
+        EGC.EGCContainer:SetHidden(true)
+    end
 end
 
 EGC.UI.Position = {}

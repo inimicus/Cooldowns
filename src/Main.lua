@@ -14,6 +14,7 @@ EGC.dbVersion   = 1
 EGC.slash       = "/egc"
 EGC.prefix      = "[EGC] "
 EGC.onCooldown  = false
+EGC.enabled     = false
 EGC.HUDHidden   = false
 EGC.ForceShow   = false
 

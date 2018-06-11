@@ -23,7 +23,7 @@ EGC.ForceShow   = false
 -- 1: Low    - Basic debug info, show core functionality
 -- 2: Medium - More information about skills and addon details
 -- 3: High   - Everything
-EGC.debugMode = 1
+EGC.debugMode = 0
 -- -----------------------------------------------------------------------------
 
 function EGC:Trace(debugLevel, ...)

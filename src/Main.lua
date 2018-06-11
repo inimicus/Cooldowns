@@ -9,7 +9,7 @@
 -- -----------------------------------------------------------------------------
 EGC             = {}
 EGC.name        = "EarthgoreCooldown"
-EGC.version     = "0.0.1"
+EGC.version     = "0.0.2"
 EGC.dbVersion   = 1
 EGC.slash       = "/egc"
 EGC.prefix      = "[EGC] "

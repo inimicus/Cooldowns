@@ -52,17 +52,8 @@ function EGC.Initialize(event, addonName)
     EGC.Settings.Init()
     EGC.UI.Draw()
     EGC.UI.ToggleHUD()
-    EGC.Tracking.Register()
-
-    --local function WornSlotUpdate(slotControl)
-    --    if (slotControl.slotIndex ~= EQUIP_SLOT_HEAD
-    --        and slotControl.slotIndex ~= EQUIP_SLOT_SHOULDERS) then return end
-
-    --    d("Equip slot changed: " .. slotControl.slotIndex)
-    --    d(slotControl)
-    --end
-
-    --CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", WornSlotUpdate)
+    EGC.Tracking.RegisterWornSlotUpdate()
+    EGC.Tracking.IsEarthgoreEquipped()
 
     EGC:Trace(2, "Finished Initialize()")
 end

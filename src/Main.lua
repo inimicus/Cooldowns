@@ -55,6 +55,8 @@ function EGC.Initialize(event, addonName)
     EGC.Tracking.RegisterWornSlotUpdate()
     EGC.Tracking.IsEarthgoreEquipped()
 
+    EGC.Tracking.RegisterEffects()
+
     EGC:Trace(2, "Finished Initialize()")
 end
 

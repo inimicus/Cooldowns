@@ -2,7 +2,7 @@
 ## APIVersion: 100024 100025
 ## SavedVariables: EarthgoreCooldownVariables
 ## Description: Displays cooldown for Earthgore proc.
-## Version: 0.0.2
+## Version: 0.0.3
 ## Author: |cFFCCCC@g4rr3t|r
 ## OptionalDependsOn:  LibAddonMenu-2.0
 

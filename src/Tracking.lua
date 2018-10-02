@@ -11,6 +11,7 @@ EGC.Tracking.timeOfProc = 0
 EGC.Tracking.cooldownDurationMs = 35000
 
 local EARTHGORE_ID = 97855
+local EARTHGORE_EFFECT_ID = 97857
 local updateIntervalMs = 100
 
 -- Trappings of Invigoration: 101970
@@ -24,6 +25,11 @@ function EGC.Tracking.RegisterEffects()
     EVENT_MANAGER:RegisterForEvent(EGC.name, EVENT_COMBAT_EVENT, DidEventCombatEvent)
     EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, TRAPPINGS_ID)
     EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+    EGC:Trace(2, "Registering effects")
+
+    EVENT_MANAGER:RegisterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, DidEventCombatEvent)
+    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, EARTHGORE_ID)
+    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
     EGC:Trace(2, "Registering effects")
 end
 
@@ -45,12 +51,22 @@ end
 --*integer* _targetUnitId_,
 --*integer* _abilityId_)
 function DidEventCombatEvent(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+        -- ACTION_RESULT_POWER_ENERGIZE = 128
+        -- ACTION_RESULT_HEAL = 16
+        -- ACTION_RESULT_EFFECT_GAINED = 2240
+
         if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
-            EGC:Trace(1, "Trappings on Cooldown")
-        else 
-            -- ACTION_RESULT_POWER_ENERGIZE
+            EGC:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
+        elseif result == ACTION_RESULT_POWER_ENERGIZE then
+            EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        elseif result == ACTION_RESULT_HEAL then
+            EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        else
             EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
         end
+
+        --EGC:Trace(1, GetAbilityIcon(abilityId))
+        --EGC:Trace(1, zo_strformat("Event <<1>> (<<2>>) Icon: <<3>>", abilityName, abilityId, GetAbilityIcon(abilityId)))
 end
 
 function EGC.Tracking.UnregisterEffects()
@@ -95,7 +111,7 @@ function EGC.Tracking.IsEarthgoreEquipped()
         EGC:Trace(1, "Not wearing Earthgore!")
         EGC.enabled = false
         EGC.UI.ShowIcon(false)
-        --EGC.Tracking.UnregisterEffects()
+        EGC.Tracking.UnregisterEffects()
     end
 
 end
@@ -104,9 +120,10 @@ function EGC.Tracking.EarthgoreDidProc(_, changeType, _, effectName, _, _, _,
         _, _, _, _, _, _, _, _, effectAbilityId, sourceType)
 
     -- Ignore non-start changes
-    --if changeType ~= EFFECT_RESULT_GAINED then return end
+    if changeType ~= EFFECT_RESULT_GAINED then return end
 
     EGC:Trace(1, effectName .. " (" .. effectAbilityId .. ")")
+    --EGC:Trace(1, zo_strformat("Effect <<1>> (<<2>>) Icon: <<3>>", effectName, effectAbilityId, GetAbilityIcon(effectAbilityId)))
 
     EGC.Tracking.timeOfProc = GetGameTimeMilliseconds()
     EGC.EGCTexture:SetColor(0.5, 0.5, 0.5, 1)

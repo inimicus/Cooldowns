@@ -21,6 +21,10 @@ function EGC.UI.Draw()
 
     local r = WINDOW_MANAGER:CreateControl("EGCTexture", c, CT_TEXTURE)
     r:SetTexture('/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds')
+    --r:SetTexture('/esoui/art/champion/champion_points_stamina_icon.dds')
+    --r:SetTexture('/esoui/art/champion/champion_points_stamina_icon-hud.dds')
+    --r:SetTexture('/esoui/art/champion/champion_points_magicka_icon.dds')
+    --r:SetTexture('esoui/art/champion/champion_points_magicka_icon-hud.dds')
     r:SetDimensions(100, 100)
     r:SetAnchor(CENTER, c, CENTER, 0, 0)
 

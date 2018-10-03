@@ -53,7 +53,8 @@ function EGC.Initialize(event, addonName)
     EGC.UI.Draw()
     EGC.UI.ToggleHUD()
     EGC.Tracking.RegisterWornSlotUpdate()
-    EGC.Tracking.IsEarthgoreEquipped()
+    --EGC.Tracking.IsEarthgoreEquipped()
+    EGC.Tracking.CheckEquippedSet()
 
     EGC.Tracking.RegisterEffects()
 

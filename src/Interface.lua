@@ -9,56 +9,62 @@
 EGC.UI = {}
 EGC.UI.Controls = {}
 
-function EGC.UI.Draw()
-    for _, set in pairs(EGC.Tracking.Sets) do
-        if set.enabled then
+function EGC.UI.Draw(key)
+
+    local set = EGC.Tracking.Sets[key];
+
+    -- Enable display
+    if set.enabled then
+
+        local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+
+        -- Draw UI and create context if it doesn't exist
+        if container == nil then
             EGC:Trace(1, zo_strformat("Drawing: <<1>>", set.name))
-            set.draw()
+
+            local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
+            c:SetClampedToScreen(true)
+            c:SetDimensions(100, 100)
+            c:ClearAnchors()
+            c:SetMouseEnabled(true)
+            c:SetAlpha(1)
+            c:SetMovable(EGC.preferences.unlocked)
+            c:SetHidden(false)
+            c:SetHandler("OnMoveStop", function(...) EGC.UI.Position.Save(key) end)
+
+            local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
+            r:SetTexture(set.texture)
+            r:SetDimensions(100, 100)
+            r:SetAnchor(CENTER, c, CENTER, 0, 0)
+
+            local l = WINDOW_MANAGER:CreateControl(key .. "Label", c, CT_LABEL)
+            l:SetAnchor(CENTER, c, CENTER, 0, 0)
+            l:SetColor(255, 255, 255, 1)
+            l:SetFont("$(MEDIUM_FONT)|36|soft-shadow-thick")
+            l:SetVerticalAlignment(TOP)
+            l:SetHorizontalAlignment(RIGHT)
+            l:SetPixelRoundingEnabled(true)
+
+            set.context = c
+            set.label = l
+
+            EGC.UI.Position.Set(key, EGC.preferences.sets[key].x, EGC.preferences.sets[key].y)
+
+        -- Reuse context
+        else 
+            container:SetHidden(false)
+            set.context = container
+        end
+
+    -- Disable display
+    else
+        if set.context ~= nil and WINDOW_MANAGER:GetControlByName(key .. "_Container") ~= nil then
+            set.context:SetHidden(true)
+            set.context = nil
         end
     end
 
     EGC:Trace(2, "Finished DrawUI()")
-end
-
-function EGC.UI.DrawEarthgore()
-    -- TODO: Check if these controls exist before drawing
-
-    local c = WINDOW_MANAGER:CreateTopLevelWindow("EGCContainer")
-    c:SetClampedToScreen(true)
-    c:SetDimensions(100, 100)
-    c:ClearAnchors()
-    c:SetMouseEnabled(true)
-    c:SetAlpha(1)
-    c:SetMovable(EGC.preferences.unlocked)
-    c:SetHidden(false)
-    c:SetHandler("OnMoveStop", function(...) EGC.UI.Position.Save() end)
-
-    local r = WINDOW_MANAGER:CreateControl("EGCTexture", c, CT_TEXTURE)
-    r:SetTexture('/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds')
-    --r:SetTexture('/esoui/art/champion/champion_points_stamina_icon.dds')
-    --r:SetTexture('/esoui/art/champion/champion_points_stamina_icon-hud.dds')
-    --r:SetTexture('/esoui/art/champion/champion_points_magicka_icon.dds')
-    --r:SetTexture('esoui/art/champion/champion_points_magicka_icon-hud.dds')
-    r:SetDimensions(100, 100)
-    r:SetAnchor(CENTER, c, CENTER, 0, 0)
-
-    local l = WINDOW_MANAGER:CreateControl("EGCLabel", c, CT_LABEL)
-    l:SetAnchor(CENTER, c, CENTER, 0, 0)
-    l:SetColor(255, 255, 255, 1)
-    l:SetFont("$(MEDIUM_FONT)|36|soft-shadow-thick")
-    l:SetVerticalAlignment(TOP)
-    l:SetHorizontalAlignment(RIGHT)
-    l:SetPixelRoundingEnabled(true)
-
-    EGC.EGCContainer = c
-    EGC.EGCTexture = r
-    EGC.EGCLabel = l
-
-    EGC.UI.Position.Set(EGC.preferences.positionLeft, EGC.preferences.positionTop)
-
-    EGC.enabled = true
-
-    EGC:Trace(1, "Earthgore Drawn")
 end
 
 function EGC.UI.Update()
@@ -109,28 +115,30 @@ end
 
 function EGC.UI.ShowIcon(shouldShow)
     if (shouldShow and EGC.enabled and not EGC.HUDHidden) then
-        EGC.EGCContainer:SetHidden(false)
+        --EGC.EGCContainer:SetHidden(false)
     else
-        EGC.EGCContainer:SetHidden(true)
+        --EGC.EGCContainer:SetHidden(true)
     end
 end
 
 EGC.UI.Position = {}
 
-function EGC.UI.Position.Save()
-    local top   = EGC.EGCContainer:GetTop()
-    local left  = EGC.EGCContainer:GetLeft()
+function EGC.UI.Position.Save(key)
+    local context = EGC.Tracking.Sets[key].context
+    local top   = context:GetTop()
+    local left  = context:GetLeft()
 
     EGC:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
 
-    EGC.preferences.positionLeft = left
-    EGC.preferences.positionTop  = top
+    EGC.preferences.sets[key].x = left
+    EGC.preferences.sets[key].y = top
 end
 
-function EGC.UI.Position.Set(left, top)
+function EGC.UI.Position.Set(key, left, top)
     EGC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    EGC.EGCContainer:ClearAnchors()
-    EGC.EGCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    local context = EGC.Tracking.Sets[key].context
+    context:ClearAnchors()
+    context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
 
 function EGC.UI.SlashCommand(command)

@@ -10,8 +10,20 @@ EGC.Defaults = {}
 
 local defaults = {
     debugMode = 0,
-    positionLeft = 150,
-    positionTop = 150,
+    sets = {
+        Trappings = {
+            x = 150,
+            y = 150,
+        },
+        Lich = {
+            x = 150,
+            y = 150,
+        },
+        Earthgore = {
+            x = 150,
+            y = 150,
+        },
+    },
     unlocked = true,
 }
 

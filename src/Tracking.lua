@@ -10,24 +10,50 @@ EGC.Tracking = {}
 EGC.Tracking.timeOfProc = 0
 EGC.Tracking.cooldownDurationMs = 35000
 
+-- ACTION_RESULT_POWER_ENERGIZE = 128 = Trappings
+-- ACTION_RESULT_HEAL = 16 = Earthgore HOT, but with a different ability ID
+-- ACTION_RESULT_EFFECT_GAINED = 2240 = Earthgore, Lich
+-- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245 = Secondary lich effect (increased magicka recovery duration)
+
 EGC.Tracking.Sets = {
-    {
+    Trappings = {
         name = "Trappings of Invigoration",
         id = 101970,
         enabled = false,
-        draw = function() return end,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 60000,
+        onCooldown = false,
+        timeOfProc = 0,
+        proc = function() d('Trappings proc!') return end,
+        context = nil,
+        label = nil,
+        texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
     },
-    {
+    Lich = {
         name = "Shroud of the Lich",
         id = 57164,
         enabled = false,
-        draw = function() return end,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 60000,
+        onCooldown = false,
+        timeOfProc = 0,
+        proc = function() d('Lich proc!') return end,
+        context = nil,
+        label = nil,
+        texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
     },
-    {
+    Earthgore = {
         name = "Earthgore",
         id = 97855,
         enabled = false,
-        draw = function() EGC.UI.DrawEarthgore() return end,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 35000,
+        onCooldown = false,
+        timeOfProc = 0,
+        proc = function() d('Earthgore proc!') return end,
+        context = nil,
+        label = nil,
+        texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
     },
 }
 
@@ -107,21 +133,21 @@ end
 --*integer* _sourceUnitId_,
 --*integer* _targetUnitId_,
 --*integer* _abilityId_)
-function DidEventCombatEvent(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
-        -- ACTION_RESULT_POWER_ENERGIZE = 128 = Trappings
-        -- ACTION_RESULT_HEAL = 16 = Earthgore HOT, but with a different ability ID
-        -- ACTION_RESULT_EFFECT_GAINED = 2240 = Earthgore, Lich
-        -- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245 = Secondary lich effect (increased magicka recovery duration)
+function DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
 
-        if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
-            EGC:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
-        elseif result == ACTION_RESULT_POWER_ENERGIZE then
-            EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
-        else
-            EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
-        end
+    local set = EGC.Tracking.Sets[setKey];
 
-        --EGC:Trace(1, zo_strformat("Event <<1>> (<<2>>) Icon: <<3>>", abilityName, abilityId, GetAbilityIcon(abilityId)))
+    if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
+        EGC:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
+    elseif result == set.result then
+        EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        set.onCooldown = true
+        set.timeOfProc = GetGameTimeMilliseconds()
+        set.proc()
+    else
+        EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+    end
+
 end
 
 function EGC.Tracking.UnregisterEffects()
@@ -135,7 +161,7 @@ function EGC.Tracking.RegisterWornSlotUpdate()
 end
 
 function EGC.Tracking.WornSlotUpdate(slotControl)
-	-- Ignore costume updates
+    -- Ignore costume updates
     if slotControl.slotIndex == EQUIP_SLOT_COSTUME then return end
 
     -- Provide changed slot to check function
@@ -203,7 +229,7 @@ end
 function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
     -- Compared equipped sets to sets we should track
-    for _, set in pairs(EGC.Tracking.Sets) do
+    for key, set in pairs(EGC.Tracking.Sets) do
 
         -- If a set we should track
         if setName == set.name then
@@ -211,50 +237,21 @@ function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
             -- Full bonus active
             if numEquipped == maxEquipped then
                 EGC:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
-                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, DidEventCombatEvent)
+                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) DidEventCombatEvent(key, ...) end)
                 EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
                 EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-                -- TODO: Enable Set
                 set.enabled = true
+                EGC.UI.Draw(key)
 
             -- Full bonus not active
             else
                 EGC:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
                 EVENT_MANAGER:UnregisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
-                -- TODO: Disable Set
                 set.enabled = false
+                EGC.UI.Draw(key)
             end
 
         end
-    end
-    
-end
-
-function EGC.Tracking.IsEarthgoreEquipped()
-
-    local headLink      = GetItemLink(BAG_WORN, EQUIP_SLOT_HEAD)
-    local shoulderLink  = GetItemLink(BAG_WORN, EQUIP_SLOT_SHOULDERS)
-
-    local headHasSet, headSetName, _, headNumEquipped, headMaxEquipped = GetItemLinkSetInfo(headLink, true)
-    local shoulderHasSet, shoulderSetName, _, shoulderNumEquipped, shoulderMaxEquipped = GetItemLinkSetInfo(shoulderLink, true)
-
-    EGC:Trace(2, "Head: " .. headSetName .." (" .. headNumEquipped .. " of "
-        .. headMaxEquipped .. ") Shoulders: " .. shoulderSetName .. " ("
-        .. shoulderNumEquipped .. " of " .. shoulderMaxEquipped .. ")")
-
-    if (headSetName == 'Earthgore' and
-            shoulderSetName == 'Earthgore' and
-            headNumEquipped == headMaxEquipped and
-            shoulderNumEquipped == shoulderMaxEquipped) then
-        EGC:Trace(1, "Wearing Earthgore!")
-        EGC.enabled = true
-        EGC.UI.ShowIcon(true)
-        EGC.Tracking.RegisterEffects()
-    else
-        EGC:Trace(1, "Not wearing Earthgore!")
-        EGC.enabled = false
-        EGC.UI.ShowIcon(false)
-        EGC.Tracking.UnregisterEffects()
     end
 
 end

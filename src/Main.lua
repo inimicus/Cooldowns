@@ -52,7 +52,7 @@ function EGC.Initialize(event, addonName)
     EGC.Settings.Init()
     EGC.Tracking.RegisterWornSlotUpdate()
     EGC.Tracking.CheckEquippedSet()
-    EGC.UI.Draw()
+    --EGC.UI.Draw()
     EGC.UI.ToggleHUD()
 
     EGC:Trace(2, "Finished Initialize()")

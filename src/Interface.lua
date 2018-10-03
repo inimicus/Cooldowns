@@ -7,8 +7,20 @@
 -- -----------------------------------------------------------------------------
 
 EGC.UI = {}
+EGC.UI.Controls = {}
 
 function EGC.UI.Draw()
+    for _, set in pairs(EGC.Tracking.Sets) do
+        if set.enabled then
+            EGC:Trace(1, zo_strformat("Drawing: <<1>>", set.name))
+            set.draw()
+        end
+    end
+
+    EGC:Trace(2, "Finished DrawUI()")
+end
+
+function EGC.UI.DrawEarthgore()
     local c = WINDOW_MANAGER:CreateTopLevelWindow("EGCContainer")
     c:SetClampedToScreen(true)
     c:SetDimensions(100, 100)
@@ -42,7 +54,9 @@ function EGC.UI.Draw()
 
     EGC.UI.Position.Set(EGC.preferences.positionLeft, EGC.preferences.positionTop)
 
-    EGC:Trace(2, "Finished DrawUI()")
+    EGC.enabled = true
+
+    EGC:Trace(1, "Earthgore Drawn")
 end
 
 function EGC.UI.Update()

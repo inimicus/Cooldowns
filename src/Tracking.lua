@@ -14,14 +14,20 @@ EGC.Tracking.Sets = {
     {
         name = "Trappings of Invigoration",
         id = 101970,
+        enabled = false,
+        draw = function() return end,
     },
     {
         name = "Shroud of the Lich",
         id = 57164,
+        enabled = false,
+        draw = function() return end,
     },
     {
         name = "Earthgore",
         id = 97855,
+        enabled = false,
+        draw = function() EGC.UI.DrawEarthgore() return end,
     },
 }
 
@@ -155,12 +161,10 @@ function EGC.Tracking.CheckEquippedSet(slotControl)
 
         -- Non-empty slot
         else
-
             -- Process only items with set bouses
             if hasSet then
                 EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
             end
-
         end
 
     -- Check all equipped items
@@ -206,13 +210,19 @@ function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
             -- Full bonus active
             if numEquipped == maxEquipped then
-                EGC:Trace(1, zo_strformat("Full set for: <<1>>", setName))
+                EGC:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
+                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, DidEventCombatEvent)
+                EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
+                EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                 -- TODO: Enable Set
+                set.enabled = true
 
             -- Full bonus not active
             else
-                EGC:Trace(1, zo_strformat("Not active for: <<1>>", setName))
+                EGC:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
+                EVENT_MANAGER:UnregisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
                 -- TODO: Disable Set
+                set.enabled = false
             end
 
         end

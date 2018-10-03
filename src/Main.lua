@@ -50,13 +50,10 @@ function EGC.Initialize(event, addonName)
     SLASH_COMMANDS[EGC.slash] = EGC.UI.SlashCommand
 
     EGC.Settings.Init()
+    EGC.Tracking.RegisterWornSlotUpdate()
+    EGC.Tracking.CheckEquippedSet()
     EGC.UI.Draw()
     EGC.UI.ToggleHUD()
-    EGC.Tracking.RegisterWornSlotUpdate()
-    --EGC.Tracking.IsEarthgoreEquipped()
-    EGC.Tracking.CheckEquippedSet()
-
-    EGC.Tracking.RegisterEffects()
 
     EGC:Trace(2, "Finished Initialize()")
 end

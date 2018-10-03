@@ -21,6 +21,8 @@ function EGC.UI.Draw()
 end
 
 function EGC.UI.DrawEarthgore()
+    -- TODO: Check if these controls exist before drawing
+
     local c = WINDOW_MANAGER:CreateTopLevelWindow("EGCContainer")
     c:SetClampedToScreen(true)
     c:SetDimensions(100, 100)

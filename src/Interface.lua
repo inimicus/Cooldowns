@@ -17,6 +17,7 @@ function EGC.UI.Draw(key)
     if set.enabled then
 
         local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        local saved = EGC.preferences.sets[key]
 
         -- Draw UI and create context if it doesn't exist
         if container == nil then
@@ -24,7 +25,7 @@ function EGC.UI.Draw(key)
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
-            c:SetDimensions(100, 100)
+            c:SetDimensions(saved.size, saved.size)
             c:ClearAnchors()
             c:SetMouseEnabled(true)
             c:SetAlpha(1)
@@ -34,10 +35,10 @@ function EGC.UI.Draw(key)
 
             local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
-            r:SetDimensions(100, 100)
+            r:SetDimensions(saved.size, saved.size)
             r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
-            local l = WINDOW_MANAGER:CreateControl(key .. "Label", c, CT_LABEL)
+            local l = WINDOW_MANAGER:CreateControl(key .. "_Label", c, CT_LABEL)
             l:SetAnchor(CENTER, c, CENTER, 0, 0)
             l:SetColor(255, 255, 255, 1)
             l:SetFont("$(MEDIUM_FONT)|36|soft-shadow-thick")
@@ -46,9 +47,8 @@ function EGC.UI.Draw(key)
             l:SetPixelRoundingEnabled(true)
 
             set.context = c
-            set.label = l
 
-            EGC.UI.Position.Set(key, EGC.preferences.sets[key].x, EGC.preferences.sets[key].y)
+            EGC.UI.Position.Set(key, saved.x, saved.y)
 
         -- Reuse context
         else 
@@ -67,23 +67,28 @@ function EGC.UI.Draw(key)
     EGC:Trace(2, "Finished DrawUI()")
 end
 
-function EGC.UI.Update()
-    EGC.onCooldown = true
+function EGC.UI.Update(setKey)
 
-    local countdown = (EGC.Tracking.timeOfProc + EGC.Tracking.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
+    local set = EGC.Tracking.Sets[setKey]
+    local container = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
+    local texture = WINDOW_MANAGER:GetControlByName(setKey .. "_Texture")
+    local label = WINDOW_MANAGER:GetControlByName(setKey .. "_Label")
+
+    local countdown = (set.timeOfProc + set.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
 
     EGC:Trace(3, "Countdown: " .. countdown)
 
     if (countdown <= 0) then
-        EVENT_MANAGER:UnregisterForUpdate(EGC.name .. "Count")
-        EGC.onCooldown = false
-        EGC.EGCLabel:SetText("")
-        EGC.EGCTexture:SetColor(1, 1, 1, 1)
+        EVENT_MANAGER:UnregisterForUpdate(EGC.name .. setKey .. "Count")
+        set.onCooldown = false
+        label:SetText("")
+        texture:SetColor(1, 1, 1, 1)
         PlaySound(SOUNDS.TELVAR_GAINED)
     elseif (countdown < 10) then
-        EGC.EGCLabel:SetText(string.format("%.1f", countdown))
+        label:SetText(string.format("%.1f", countdown))
     else
-        EGC.EGCLabel:SetText(string.format("%.0f", countdown))
+        texture:SetColor(0.5, 0.5, 0.5, 1)
+        label:SetText(string.format("%.0f", countdown))
     end
 
 end

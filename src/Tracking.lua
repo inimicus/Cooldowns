@@ -10,6 +10,8 @@ EGC.Tracking = {}
 EGC.Tracking.timeOfProc = 0
 EGC.Tracking.cooldownDurationMs = 35000
 
+local updateIntervalMs = 100
+
 -- ACTION_RESULT_POWER_ENERGIZE = 128 = Trappings
 -- ACTION_RESULT_HEAL = 16 = Earthgore HOT, but with a different ability ID
 -- ACTION_RESULT_EFFECT_GAINED = 2240 = Earthgore, Lich
@@ -24,9 +26,7 @@ EGC.Tracking.Sets = {
         cooldownDurationMs = 60000,
         onCooldown = false,
         timeOfProc = 0,
-        proc = function() d('Trappings proc!') return end,
         context = nil,
-        label = nil,
         texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
     },
     Lich = {
@@ -37,9 +37,7 @@ EGC.Tracking.Sets = {
         cooldownDurationMs = 60000,
         onCooldown = false,
         timeOfProc = 0,
-        proc = function() d('Lich proc!') return end,
         context = nil,
-        label = nil,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
     },
     Earthgore = {
@@ -50,9 +48,18 @@ EGC.Tracking.Sets = {
         cooldownDurationMs = 35000,
         onCooldown = false,
         timeOfProc = 0,
-        proc = function() d('Earthgore proc!') return end,
         context = nil,
-        label = nil,
+        texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
+    },
+    Olorime = {
+        name = "Vestment of Olorime",
+        id = 107141,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 10000,
+        onCooldown = false,
+        timeOfProc = 0,
+        context = nil,
         texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
     },
 }
@@ -95,8 +102,6 @@ local EARTHGORE_ID = 97855
 local TRAPPINGS_ID = 101970
 local LICH_ID = 57164
 
-local updateIntervalMs = 100
-
 function EGC.Tracking.RegisterEffects()
     --EVENT_MANAGER:RegisterForEvent(EGC.name, EVENT_EFFECT_CHANGED, EGC.Tracking.EarthgoreDidProc)
     --EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, EARTHGORE_ID)
@@ -135,7 +140,7 @@ end
 --*integer* _abilityId_)
 function DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
 
-    local set = EGC.Tracking.Sets[setKey];
+    local set = EGC.Tracking.Sets[setKey]
 
     if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
         EGC:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
@@ -143,7 +148,7 @@ function DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
         EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
-        set.proc()
+        EVENT_MANAGER:RegisterForUpdate(EGC.name .. setKey .. "Count", updateIntervalMs, function(...) EGC.UI.Update(setKey) return end)
     else
         EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
     end

@@ -14,14 +14,22 @@ local defaults = {
         Trappings = {
             x = 150,
             y = 150,
+            size = 100,
         },
         Lich = {
             x = 150,
             y = 150,
+            size = 100,
         },
         Earthgore = {
             x = 150,
             y = 150,
+            size = 100,
+        },
+        Olorime = {
+            x = 150,
+            y = 150,
+            size = 100,
         },
     },
     unlocked = true,

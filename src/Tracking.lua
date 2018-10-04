@@ -7,15 +7,13 @@
 -- -----------------------------------------------------------------------------
 
 EGC.Tracking = {}
-EGC.Tracking.timeOfProc = 0
-EGC.Tracking.cooldownDurationMs = 35000
 
 local updateIntervalMs = 100
 
--- ACTION_RESULT_POWER_ENERGIZE = 128 = Trappings
--- ACTION_RESULT_HEAL = 16 = Earthgore HOT, but with a different ability ID
--- ACTION_RESULT_EFFECT_GAINED = 2240 = Earthgore, Lich
--- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245 = Secondary lich effect (increased magicka recovery duration)
+-- ACTION_RESULT_POWER_ENERGIZE = 128
+-- ACTION_RESULT_HEAL = 16
+-- ACTION_RESULT_EFFECT_GAINED = 2240
+-- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245
 
 EGC.Tracking.Sets = {
     Trappings = {
@@ -60,7 +58,7 @@ EGC.Tracking.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         context = nil,
-        texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
+        texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
     },
 }
 
@@ -98,47 +96,7 @@ EGC.Tracking.ITEM_SLOT_NAMES = {
     "Backup Off-Hand Weapon",
 }
 
-local EARTHGORE_ID = 97855
-local TRAPPINGS_ID = 101970
-local LICH_ID = 57164
-
-function EGC.Tracking.RegisterEffects()
-    --EVENT_MANAGER:RegisterForEvent(EGC.name, EVENT_EFFECT_CHANGED, EGC.Tracking.EarthgoreDidProc)
-    --EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, EARTHGORE_ID)
-    --EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-
-    EVENT_MANAGER:RegisterForEvent(EGC.name, EVENT_COMBAT_EVENT, DidEventCombatEvent)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, TRAPPINGS_ID)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-
-    EVENT_MANAGER:RegisterForEvent(EGC.name .. "lich", EVENT_COMBAT_EVENT, DidEventCombatEvent)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "lich", EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, LICH_ID)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "lich", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-
-    EVENT_MANAGER:RegisterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, DidEventCombatEvent)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, EARTHGORE_ID)
-    EVENT_MANAGER:AddFilterForEvent(EGC.name .. "earthgore", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-    EGC:Trace(2, "Registering effects")
-end
-
--- EVENT_COMBAT_EVENT (
---*[ActionResult|#ActionResult]* _result_,
---*bool* _isError_,
---*string* _abilityName_,
---*integer* _abilityGraphic_,
---*[ActionSlotType|#ActionSlotType]* _abilityActionSlotType_,
---*string* _sourceName_,
---*[CombatUnitType|#CombatUnitType]* _sourceType_,
---*string* _targetName_,
---*[CombatUnitType|#CombatUnitType]* _targetType_,
---*integer* _hitValue_,
---*[CombatMechanicType|#CombatMechanicType]* _powerType_,
---*[DamageType|#DamageType]* _damageType_,
---*bool* _log_,
---*integer* _sourceUnitId_,
---*integer* _targetUnitId_,
---*integer* _abilityId_)
-function DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+function EGC.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
 
     local set = EGC.Tracking.Sets[setKey]
 
@@ -148,16 +106,13 @@ function DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
         EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
+        -- TODO: Get sound from preferences
+        PlaySound(SOUNDS.TELVAR_LOST)
         EVENT_MANAGER:RegisterForUpdate(EGC.name .. setKey .. "Count", updateIntervalMs, function(...) EGC.UI.Update(setKey) return end)
     else
         EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
     end
 
-end
-
-function EGC.Tracking.UnregisterEffects()
-    EVENT_MANAGER:UnregisterForEvent(EGC.name, EVENT_EFFECT_CHANGED)
-    EGC:Trace(2, "Unregistering effects")
 end
 
 function EGC.Tracking.RegisterWornSlotUpdate()
@@ -170,63 +125,37 @@ function EGC.Tracking.WornSlotUpdate(slotControl)
     if slotControl.slotIndex == EQUIP_SLOT_COSTUME then return end
 
     -- Provide changed slot to check function
-    EGC.Tracking.CheckEquippedSet(slotControl)
+    EGC.Tracking.CheckEquippedSet()
 end
 
-function EGC.Tracking.CheckEquippedSet(slotControl)
+function EGC.Tracking.CheckEquippedSet()
 
-    -- If we're given a slot control to inspect
-    if slotControl ~= nil then
-        local itemLink = GetItemLink(BAG_WORN, slotControl.slotIndex)
-        local hasSet, setName, numBonuses, numEquipped, maxEquipped = GetItemLinkSetInfo(itemLink, true)
+    -- Check every slot for sets
+    for index, slot in pairs(EGC.Tracking.ITEM_SLOTS) do
+        local itemLink = GetItemLink(BAG_WORN, slot)
+        local slotName = EGC.Tracking.ITEM_SLOT_NAMES[index]
 
-        -- Item Removed
+        -- If slot is empty
         if itemLink == "" then
-            EGC:Trace(1, zo_strformat("Equipment unequipped"))
-
-            -- Rerun this function, but check all pieces
-            -- When an item is unequipped, we need to check all pieces
-            -- that are currently equipped in order to determine if
-            -- the set bonus is still active.
-            EGC.Tracking.CheckEquippedSet()
+            EGC:Trace(2, zo_strformat("<<1>>: Not Equipped", slotName))
 
         -- Non-empty slot
         else
-            -- Process only items with set bouses
+            local hasSet, setName, numBonuses, numEquipped, maxEquipped = GetItemLinkSetInfo(itemLink, true)
+
+            -- Set item equipped
             if hasSet then
+                EGC:Trace(2, zo_strformat("<<1>>: <<2>> (<<3>> of <<4>>)", slotName, setName, numEquipped, maxEquipped))
+
+                -- Check if we should enable tracking
                 EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
-            end
-        end
 
-    -- Check all equipped items
-    else
-        -- Check every slot for sets
-        for index, slot in pairs(EGC.Tracking.ITEM_SLOTS) do
-            local itemLink = GetItemLink(BAG_WORN, slot)
-            local slotName = EGC.Tracking.ITEM_SLOT_NAMES[index]
-
-            -- If slot is empty
-            if itemLink == "" then
-                EGC:Trace(2, zo_strformat("<<1>>: Not Equipped", slotName))
-
-            -- Non-empty slot
+            -- Not a set item, ignore
             else
-                local hasSet, setName, numBonuses, numEquipped, maxEquipped = GetItemLinkSetInfo(itemLink, true)
-
-                -- Set item equipped
-                if hasSet then
-                    EGC:Trace(2, zo_strformat("<<1>>: <<2>> (<<3>> of <<4>>)", slotName, setName, numEquipped, maxEquipped))
-
-                    -- Check if we should enable tracking
-                    EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
-
-                -- Not a set item, ignore
-                else
-                    EGC:Trace(2, zo_strformat("<<1>>: No Set", slotName))
-                end
+                EGC:Trace(2, zo_strformat("<<1>>: No Set", slotName))
             end
-
         end
+
     end
 
 end
@@ -242,7 +171,7 @@ function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
             -- Full bonus active
             if numEquipped == maxEquipped then
                 EGC:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
-                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) DidEventCombatEvent(key, ...) end)
+                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) EGC.Tracking.DidEventCombatEvent(key, ...) end)
                 EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
                 EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                 set.enabled = true
@@ -261,21 +190,6 @@ function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
 end
 
-function EGC.Tracking.EarthgoreDidProc(_, changeType, _, effectName, _, _, _,
-        _, _, _, _, _, _, _, _, effectAbilityId, sourceType)
 
-    -- Ignore non-start changes
-    if changeType ~= EFFECT_RESULT_GAINED then return end
 
-    --EGC:Trace(1, effectName .. " (" .. effectAbilityId .. ")")
-    --EGC:Trace(1, zo_strformat("Effect <<1>> (<<2>>) Icon: <<3>>", effectName, effectAbilityId, GetAbilityIcon(effectAbilityId)))
-
-    EGC.Tracking.timeOfProc = GetGameTimeMilliseconds()
-    EGC.EGCTexture:SetColor(0.5, 0.5, 0.5, 1)
-
-    PlaySound(SOUNDS.TELVAR_LOST)
-
-    EVENT_MANAGER:RegisterForUpdate(EGC.name .. "Count", updateIntervalMs, EGC.UI.Update)
-
-end
 

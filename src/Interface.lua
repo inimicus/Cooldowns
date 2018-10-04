@@ -40,7 +40,7 @@ function EGC.UI.Draw(key)
 
             local l = WINDOW_MANAGER:CreateControl(key .. "_Label", c, CT_LABEL)
             l:SetAnchor(CENTER, c, CENTER, 0, 0)
-            l:SetColor(255, 255, 255, 1)
+            l:SetColor(1, 1, 1, 1)
             l:SetFont("$(MEDIUM_FONT)|36|soft-shadow-thick")
             l:SetVerticalAlignment(TOP)
             l:SetHorizontalAlignment(RIGHT)
@@ -77,6 +77,7 @@ function EGC.UI.Update(setKey)
     local countdown = (set.timeOfProc + set.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
 
     EGC:Trace(3, "Countdown: " .. countdown)
+    texture:SetColor(0.5, 0.5, 0.5, 1)
 
     if (countdown <= 0) then
         EVENT_MANAGER:UnregisterForUpdate(EGC.name .. setKey .. "Count")
@@ -87,7 +88,6 @@ function EGC.UI.Update(setKey)
     elseif (countdown < 10) then
         label:SetText(string.format("%.1f", countdown))
     else
-        texture:SetColor(0.5, 0.5, 0.5, 1)
         label:SetText(string.format("%.0f", countdown))
     end
 

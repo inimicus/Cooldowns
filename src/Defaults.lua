@@ -29,7 +29,7 @@ local defaults = {
         Olorime = {
             x = 150,
             y = 150,
-            size = 100,
+            size = 80,
         },
     },
     unlocked = true,

@@ -1,3 +1,3 @@
-# Earthgore Cooldown
+# Cooldowns
 
-An addon that tracks exactly that.
+An addon that tracks long cooldowns for various sets.

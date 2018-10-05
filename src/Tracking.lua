@@ -24,7 +24,6 @@ Cool.Tracking.Sets = {
         cooldownDurationMs = 60000,
         onCooldown = false,
         timeOfProc = 0,
-        context = nil,
         texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
     },
     Lich = {
@@ -35,7 +34,6 @@ Cool.Tracking.Sets = {
         cooldownDurationMs = 60000,
         onCooldown = false,
         timeOfProc = 0,
-        context = nil,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
     },
     Earthgore = {
@@ -46,7 +44,6 @@ Cool.Tracking.Sets = {
         cooldownDurationMs = 35000,
         onCooldown = false,
         timeOfProc = 0,
-        context = nil,
         texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
     },
     Olorime = {
@@ -57,7 +54,6 @@ Cool.Tracking.Sets = {
         cooldownDurationMs = 10000,
         onCooldown = false,
         timeOfProc = 0,
-        context = nil,
         texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
     },
 }

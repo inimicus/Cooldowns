@@ -12,11 +12,11 @@ Cool.UI.Controls = {}
 function Cool.UI.Draw(key)
 
     local set = Cool.Tracking.Sets[key];
+    local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
 
     -- Enable display
     if set.enabled then
 
-        local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
         local saved = Cool.preferences.sets[key]
 
         -- Draw UI and create context if it doesn't exist
@@ -46,21 +46,17 @@ function Cool.UI.Draw(key)
             l:SetHorizontalAlignment(RIGHT)
             l:SetPixelRoundingEnabled(true)
 
-            set.context = c
-
             Cool.UI.Position.Set(key, saved.x, saved.y)
 
         -- Reuse context
         else 
             container:SetHidden(false)
-            set.context = container
         end
 
     -- Disable display
     else
-        if set.context ~= nil and WINDOW_MANAGER:GetControlByName(key .. "_Container") ~= nil then
-            set.context:SetHidden(true)
-            set.context = nil
+        if container ~= nil then
+            container:SetHidden(true)
         end
     end
 
@@ -84,6 +80,7 @@ function Cool.UI.Update(setKey)
         set.onCooldown = false
         label:SetText("")
         texture:SetColor(1, 1, 1, 1)
+        -- TODO: Get sound from preferences
         PlaySound(SOUNDS.TELVAR_GAINED)
     elseif (countdown < 10) then
         label:SetText(string.format("%.1f", countdown))
@@ -119,6 +116,7 @@ function Cool.UI.ToggleHUD()
 end
 
 function Cool.UI.ShowIcon(shouldShow)
+    -- TODO: Setup visibility
     if (shouldShow and Cool.enabled and not Cool.HUDHidden) then
         --Cool.CoolContainer:SetHidden(false)
     else
@@ -129,7 +127,7 @@ end
 Cool.UI.Position = {}
 
 function Cool.UI.Position.Save(key)
-    local context = Cool.Tracking.Sets[key].context
+    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
@@ -141,7 +139,7 @@ end
 
 function Cool.UI.Position.Set(key, left, top)
     Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    local context = Cool.Tracking.Sets[key].context
+    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
     context:ClearAnchors()
     context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end

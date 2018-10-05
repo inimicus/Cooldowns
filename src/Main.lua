@@ -42,7 +42,7 @@ function Cool.Initialize(event, addonName)
     Cool:Trace(1, "Cool Loaded")
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
-    Cool.preferences = ZO_SavedVars:NewAccountWide("EarthgoreCooldownVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
+    Cool.preferences = ZO_SavedVars:NewAccountWide("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
 
     -- Use saved debugMode value
     Cool.debugMode = Cool.preferences.debugMode
@@ -53,6 +53,10 @@ function Cool.Initialize(event, addonName)
     Cool.Tracking.RegisterWornSlotUpdate()
     Cool.Tracking.CheckEquippedSet()
     Cool.UI.ToggleHUD()
+
+    --for key, sound in pairs(SOUNDS) do
+    --    d(zo_strformat("key: <<1>> Sound: <<2>>", key, sound))
+    --end
 
     Cool:Trace(2, "Finished Initialize()")
 end

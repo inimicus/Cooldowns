@@ -63,6 +63,13 @@ function Cool.UI.Draw(key)
     Cool:Trace(2, "Finished DrawUI()")
 end
 
+function Cool.UI.PlaySound(sound, volume)
+    local tempVolume = GetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME)
+    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, "100", 1)
+    PlaySound(SOUNDS[sound])
+    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, tempVolume, 1)
+end
+
 function Cool.UI.Update(setKey)
 
     local set = Cool.Tracking.Sets[setKey]
@@ -131,7 +138,7 @@ function Cool.UI.Position.Save(key)
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
-    Cool:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
+    Cool:Trace(2, zo_strformat("Saving position for <<1>> - Left: <<2>> Top: <<2>>", key, left, top))
 
     Cool.preferences.sets[key].x = left
     Cool.preferences.sets[key].y = top

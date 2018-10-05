@@ -1,12 +1,12 @@
 -- -----------------------------------------------------------------------------
--- Earthgore Cooldown
+-- Cooldowns
 -- Author:  g4rr3t
 -- Created: May 5, 2018
 --
 -- Defaults.lua
 -- -----------------------------------------------------------------------------
 
-EGC.Defaults = {}
+Cool.Defaults = {}
 
 local defaults = {
     debugMode = 0,
@@ -35,6 +35,6 @@ local defaults = {
     unlocked = true,
 }
 
-function EGC.Defaults.Get()
+function Cool.Defaults.Get()
     return defaults
 end

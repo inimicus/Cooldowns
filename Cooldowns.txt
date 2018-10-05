@@ -1,9 +1,9 @@
-## Title: Earthgore Cooldown
+## Title: Cooldowns
 ## APIVersion: 100024 100025
-## SavedVariables: EarthgoreCooldownVariables
-## Description: Displays cooldown for Earthgore proc.
-## Version: 0.0.3
-## Author: |cFFCCCC@g4rr3t|r
+## SavedVariables: CooldownVariables
+## Description: Displays cooldowns for various set procs.
+## Version: 1.0.0
+## Author: |cFFCCCC@g4rr3t|r (NA)
 ## OptionalDependsOn:  LibAddonMenu-2.0
 
 lib/LibStub/LibStub.lua

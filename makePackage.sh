@@ -7,7 +7,7 @@ addon=${PWD##*/}
 outDir="${addon}/release/"
 
 # Get version number
-version=`cat EarthgoreCooldown.txt | grep "## Version" | sed 's/.*: //'`
+version=`cat Cooldowns.txt | grep "## Version" | sed 's/.*: //'`
 
 # Setup zip file name
 zipName="${addon}-${version/ /_}.zip"

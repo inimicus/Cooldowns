@@ -1,21 +1,21 @@
 -- -----------------------------------------------------------------------------
--- Earthgore Cooldown
+-- Cooldowns
 -- Author:  g4rr3t
 -- Created: May 5, 2018
 --
 -- Settings.lua
 -- -----------------------------------------------------------------------------
 
-EGC.Settings = {}
+Cool.Settings = {}
 
 local LAM = LibStub("LibAddonMenu-2.0")
 
 local panelData = {
     type        = "panel",
-    name        = "Earthgore Cooldown",
-    displayName = "Earthgore Cooldown",
-    author      = "g4rr3t",
-    version     = EGC.version,
+    name        = "Cooldowns",
+    displayName = "Cooldowns",
+    author      = "g4rr3t (NA)",
+    version     = Cool.version,
     registerForRefresh  = true,
 }
 
@@ -27,9 +27,9 @@ local optionsTable = {
     },
 }
 
-function EGC.Settings.Init()
-    LAM:RegisterAddonPanel(EGC.name, panelData)
-    LAM:RegisterOptionControls(EGC.name, optionsTable)
+function Cool.Settings.Init()
+    LAM:RegisterAddonPanel(Cool.name, panelData)
+    LAM:RegisterOptionControls(Cool.name, optionsTable)
 
-    EGC:Trace(2, "Finished InitSettings()")
+    Cool:Trace(2, "Finished InitSettings()")
 end

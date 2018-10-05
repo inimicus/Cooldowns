@@ -1,12 +1,12 @@
 -- -----------------------------------------------------------------------------
--- Earthgore Cooldown
+-- Cooldowns
 -- Author:  g4rr3t
 -- Created: May 5, 2018
 --
 -- Tracking.lua
 -- -----------------------------------------------------------------------------
 
-EGC.Tracking = {}
+Cool.Tracking = {}
 
 local updateIntervalMs = 100
 
@@ -15,7 +15,7 @@ local updateIntervalMs = 100
 -- ACTION_RESULT_EFFECT_GAINED = 2240
 -- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245
 
-EGC.Tracking.Sets = {
+Cool.Tracking.Sets = {
     Trappings = {
         name = "Trappings of Invigoration",
         id = 101970,
@@ -62,7 +62,7 @@ EGC.Tracking.Sets = {
     },
 }
 
-EGC.Tracking.ITEM_SLOTS = {
+Cool.Tracking.ITEM_SLOTS = {
     EQUIP_SLOT_HEAD,
     EQUIP_SLOT_NECK,
     EQUIP_SLOT_CHEST,
@@ -79,7 +79,7 @@ EGC.Tracking.ITEM_SLOTS = {
     EQUIP_SLOT_BACKUP_OFF,
 }
 
-EGC.Tracking.ITEM_SLOT_NAMES = {
+Cool.Tracking.ITEM_SLOT_NAMES = {
     "Head",
     "Neck",
     "Chest",
@@ -96,48 +96,48 @@ EGC.Tracking.ITEM_SLOT_NAMES = {
     "Backup Off-Hand Weapon",
 }
 
-function EGC.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
 
-    local set = EGC.Tracking.Sets[setKey]
+    local set = Cool.Tracking.Sets[setKey]
 
     if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
-        EGC:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
+        Cool:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
     elseif result == set.result then
-        EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
         -- TODO: Get sound from preferences
         PlaySound(SOUNDS.TELVAR_LOST)
-        EVENT_MANAGER:RegisterForUpdate(EGC.name .. setKey .. "Count", updateIntervalMs, function(...) EGC.UI.Update(setKey) return end)
+        EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
-        EGC:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
     end
 
 end
 
-function EGC.Tracking.RegisterWornSlotUpdate()
-    CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", EGC.Tracking.WornSlotUpdate)
-    EGC:Trace(2, "Registering Worn Slot Update")
+function Cool.Tracking.RegisterWornSlotUpdate()
+    CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
+    Cool:Trace(2, "Registering Worn Slot Update")
 end
 
-function EGC.Tracking.WornSlotUpdate(slotControl)
+function Cool.Tracking.WornSlotUpdate(slotControl)
     -- Ignore costume updates
     if slotControl.slotIndex == EQUIP_SLOT_COSTUME then return end
 
     -- Provide changed slot to check function
-    EGC.Tracking.CheckEquippedSet()
+    Cool.Tracking.CheckEquippedSet()
 end
 
-function EGC.Tracking.CheckEquippedSet()
+function Cool.Tracking.CheckEquippedSet()
 
     -- Check every slot for sets
-    for index, slot in pairs(EGC.Tracking.ITEM_SLOTS) do
+    for index, slot in pairs(Cool.Tracking.ITEM_SLOTS) do
         local itemLink = GetItemLink(BAG_WORN, slot)
-        local slotName = EGC.Tracking.ITEM_SLOT_NAMES[index]
+        local slotName = Cool.Tracking.ITEM_SLOT_NAMES[index]
 
         -- If slot is empty
         if itemLink == "" then
-            EGC:Trace(2, zo_strformat("<<1>>: Not Equipped", slotName))
+            Cool:Trace(2, zo_strformat("<<1>>: Not Equipped", slotName))
 
         -- Non-empty slot
         else
@@ -145,14 +145,14 @@ function EGC.Tracking.CheckEquippedSet()
 
             -- Set item equipped
             if hasSet then
-                EGC:Trace(2, zo_strformat("<<1>>: <<2>> (<<3>> of <<4>>)", slotName, setName, numEquipped, maxEquipped))
+                Cool:Trace(2, zo_strformat("<<1>>: <<2>> (<<3>> of <<4>>)", slotName, setName, numEquipped, maxEquipped))
 
                 -- Check if we should enable tracking
-                EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
+                Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
             -- Not a set item, ignore
             else
-                EGC:Trace(2, zo_strformat("<<1>>: No Set", slotName))
+                Cool:Trace(2, zo_strformat("<<1>>: No Set", slotName))
             end
         end
 
@@ -160,29 +160,29 @@ function EGC.Tracking.CheckEquippedSet()
 
 end
 
-function EGC.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
+function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
     -- Compared equipped sets to sets we should track
-    for key, set in pairs(EGC.Tracking.Sets) do
+    for key, set in pairs(Cool.Tracking.Sets) do
 
         -- If a set we should track
         if setName == set.name then
 
             -- Full bonus active
             if numEquipped == maxEquipped then
-                EGC:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
-                EVENT_MANAGER:RegisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) EGC.Tracking.DidEventCombatEvent(key, ...) end)
-                EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
-                EVENT_MANAGER:AddFilterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+                Cool:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
+                EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) Cool.Tracking.DidEventCombatEvent(key, ...) end)
+                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
+                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                 set.enabled = true
-                EGC.UI.Draw(key)
+                Cool.UI.Draw(key)
 
             -- Full bonus not active
             else
-                EGC:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
-                EVENT_MANAGER:UnregisterForEvent(EGC.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
+                Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
+                EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
                 set.enabled = false
-                EGC.UI.Draw(key)
+                Cool.UI.Draw(key)
             end
 
         end

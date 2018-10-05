@@ -1,27 +1,27 @@
 -- -----------------------------------------------------------------------------
--- Earthgore Cooldown
+-- Cooldowns
 -- Author:  g4rr3t
 -- Created: May 5, 2018
 --
 -- Interface.lua
 -- -----------------------------------------------------------------------------
 
-EGC.UI = {}
-EGC.UI.Controls = {}
+Cool.UI = {}
+Cool.UI.Controls = {}
 
-function EGC.UI.Draw(key)
+function Cool.UI.Draw(key)
 
-    local set = EGC.Tracking.Sets[key];
+    local set = Cool.Tracking.Sets[key];
 
     -- Enable display
     if set.enabled then
 
         local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
-        local saved = EGC.preferences.sets[key]
+        local saved = Cool.preferences.sets[key]
 
         -- Draw UI and create context if it doesn't exist
         if container == nil then
-            EGC:Trace(1, zo_strformat("Drawing: <<1>>", set.name))
+            Cool:Trace(1, zo_strformat("Drawing: <<1>>", set.name))
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
@@ -29,9 +29,9 @@ function EGC.UI.Draw(key)
             c:ClearAnchors()
             c:SetMouseEnabled(true)
             c:SetAlpha(1)
-            c:SetMovable(EGC.preferences.unlocked)
+            c:SetMovable(Cool.preferences.unlocked)
             c:SetHidden(false)
-            c:SetHandler("OnMoveStop", function(...) EGC.UI.Position.Save(key) end)
+            c:SetHandler("OnMoveStop", function(...) Cool.UI.Position.Save(key) end)
 
             local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
@@ -48,7 +48,7 @@ function EGC.UI.Draw(key)
 
             set.context = c
 
-            EGC.UI.Position.Set(key, saved.x, saved.y)
+            Cool.UI.Position.Set(key, saved.x, saved.y)
 
         -- Reuse context
         else 
@@ -64,23 +64,23 @@ function EGC.UI.Draw(key)
         end
     end
 
-    EGC:Trace(2, "Finished DrawUI()")
+    Cool:Trace(2, "Finished DrawUI()")
 end
 
-function EGC.UI.Update(setKey)
+function Cool.UI.Update(setKey)
 
-    local set = EGC.Tracking.Sets[setKey]
+    local set = Cool.Tracking.Sets[setKey]
     local container = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
     local texture = WINDOW_MANAGER:GetControlByName(setKey .. "_Texture")
     local label = WINDOW_MANAGER:GetControlByName(setKey .. "_Label")
 
     local countdown = (set.timeOfProc + set.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
 
-    EGC:Trace(3, "Countdown: " .. countdown)
+    Cool:Trace(3, "Countdown: " .. countdown)
     texture:SetColor(0.5, 0.5, 0.5, 1)
 
     if (countdown <= 0) then
-        EVENT_MANAGER:UnregisterForUpdate(EGC.name .. setKey .. "Count")
+        EVENT_MANAGER:UnregisterForUpdate(Cool.name .. setKey .. "Count")
         set.onCooldown = false
         label:SetText("")
         texture:SetColor(1, 1, 1, 1)
@@ -93,80 +93,80 @@ function EGC.UI.Update(setKey)
 
 end
 
-function EGC.UI.ToggleHUD()
+function Cool.UI.ToggleHUD()
     local hudScene = SCENE_MANAGER:GetScene("hud")
     hudScene:RegisterCallback("StateChange", function(oldState, newState)
 
         -- Don't change states if display should be forced to show
-        if EGC.ForceShow then return end
+        if Cool.ForceShow then return end
 
         -- Transitioning to a menu/non-HUD
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
-            EGC:Trace(3, "Hiding HUD")
-            EGC.HUDHidden = true
-            EGC.UI.ShowIcon(false)
+            Cool:Trace(3, "Hiding HUD")
+            Cool.HUDHidden = true
+            Cool.UI.ShowIcon(false)
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
-            EGC:Trace(3, "Showing HUD")
-            EGC.HUDHidden = false
-            EGC.UI.ShowIcon(true)
+            Cool:Trace(3, "Showing HUD")
+            Cool.HUDHidden = false
+            Cool.UI.ShowIcon(true)
         end
     end)
 
-    EGC:Trace(2, "Finished ToggleHUD()")
+    Cool:Trace(2, "Finished ToggleHUD()")
 end
 
-function EGC.UI.ShowIcon(shouldShow)
-    if (shouldShow and EGC.enabled and not EGC.HUDHidden) then
-        --EGC.EGCContainer:SetHidden(false)
+function Cool.UI.ShowIcon(shouldShow)
+    if (shouldShow and Cool.enabled and not Cool.HUDHidden) then
+        --Cool.CoolContainer:SetHidden(false)
     else
-        --EGC.EGCContainer:SetHidden(true)
+        --Cool.CoolContainer:SetHidden(true)
     end
 end
 
-EGC.UI.Position = {}
+Cool.UI.Position = {}
 
-function EGC.UI.Position.Save(key)
-    local context = EGC.Tracking.Sets[key].context
+function Cool.UI.Position.Save(key)
+    local context = Cool.Tracking.Sets[key].context
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
-    EGC:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
+    Cool:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
 
-    EGC.preferences.sets[key].x = left
-    EGC.preferences.sets[key].y = top
+    Cool.preferences.sets[key].x = left
+    Cool.preferences.sets[key].y = top
 end
 
-function EGC.UI.Position.Set(key, left, top)
-    EGC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    local context = EGC.Tracking.Sets[key].context
+function Cool.UI.Position.Set(key, left, top)
+    Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+    local context = Cool.Tracking.Sets[key].context
     context:ClearAnchors()
     context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
 
-function EGC.UI.SlashCommand(command)
+function Cool.UI.SlashCommand(command)
     -- Debug Options ----------------------------------------------------------
     if command == "debug 0" then
-        d(EGC.prefix .. "Setting debug level to 0 (Off)")
-        EGC.debugMode = 0
-        EGC.preferences.debugMode = 0
+        d(Cool.prefix .. "Setting debug level to 0 (Off)")
+        Cool.debugMode = 0
+        Cool.preferences.debugMode = 0
     elseif command == "debug 1" then
-        d(EGC.prefix .. "Setting debug level to 1 (Low)")
-        EGC.debugMode = 1
-        EGC.preferences.debugMode = 1
+        d(Cool.prefix .. "Setting debug level to 1 (Low)")
+        Cool.debugMode = 1
+        Cool.preferences.debugMode = 1
     elseif command == "debug 2" then
-        d(EGC.prefix .. "Setting debug level to 2 (Medium)")
-        EGC.debugMode = 2
-        EGC.preferences.debugMode = 2
+        d(Cool.prefix .. "Setting debug level to 2 (Medium)")
+        Cool.debugMode = 2
+        Cool.preferences.debugMode = 2
     elseif command == "debug 3" then
-        d(EGC.prefix .. "Setting debug level to 3 (High)")
-        EGC.debugMode = 3
-        EGC.preferences.debugMode = 3
+        d(Cool.prefix .. "Setting debug level to 3 (High)")
+        Cool.debugMode = 3
+        Cool.preferences.debugMode = 3
 
     -- Default ----------------------------------------------------------------
     else
-        d(EGC.prefix .. "Command not recognized!")
+        d(Cool.prefix .. "Command not recognized!")
     end
 end

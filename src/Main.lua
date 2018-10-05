@@ -1,34 +1,34 @@
 -- -----------------------------------------------------------------------------
--- Earthgore Cooldown
+-- Cooldowns
 -- Author:  g4rr3t
 -- Created: May 5, 2018
 --
--- Track proc cooldowns for Earthgore and display a timer.
+-- Track cooldowns for various sets
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-EGC             = {}
-EGC.name        = "EarthgoreCooldown"
-EGC.version     = "0.0.3"
-EGC.dbVersion   = 1
-EGC.slash       = "/egc"
-EGC.prefix      = "[EGC] "
-EGC.onCooldown  = false
-EGC.enabled     = false
-EGC.HUDHidden   = false
-EGC.ForceShow   = false
+Cool             = {}
+Cool.name        = "Cooldowns"
+Cool.version     = "1.0.0"
+Cool.dbVersion   = 1
+Cool.slash       = "/cool"
+Cool.prefix      = "[Cool] "
+Cool.onCooldown  = false
+Cool.enabled     = false
+Cool.HUDHidden   = false
+Cool.ForceShow   = false
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output
 -- 1: Low    - Basic debug info, show core functionality
 -- 2: Medium - More information about skills and addon details
 -- 3: High   - Everything
-EGC.debugMode = 0
+Cool.debugMode = 0
 -- -----------------------------------------------------------------------------
 
-function EGC:Trace(debugLevel, ...)
-    if debugLevel <= EGC.debugMode then
-        d(EGC.prefix .. ...)
+function Cool:Trace(debugLevel, ...)
+    if debugLevel <= Cool.debugMode then
+        d(Cool.prefix .. ...)
     end
 end
 
@@ -36,30 +36,30 @@ end
 -- Startup
 -- -----------------------------------------------------------------------------
 
-function EGC.Initialize(event, addonName)
-    if addonName ~= EGC.name then return end
+function Cool.Initialize(event, addonName)
+    if addonName ~= Cool.name then return end
 
-    EGC:Trace(1, "EGC Loaded")
-    EVENT_MANAGER:UnregisterForEvent(EGC.name, EVENT_ADD_ON_LOADED)
+    Cool:Trace(1, "Cool Loaded")
+    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
-    EGC.preferences = ZO_SavedVars:NewAccountWide("EarthgoreCooldownVariables", EGC.dbVersion, nil, EGC.Defaults.Get())
+    Cool.preferences = ZO_SavedVars:NewAccountWide("EarthgoreCooldownVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
 
     -- Use saved debugMode value
-    EGC.debugMode = EGC.preferences.debugMode
+    Cool.debugMode = Cool.preferences.debugMode
 
-    SLASH_COMMANDS[EGC.slash] = EGC.UI.SlashCommand
+    SLASH_COMMANDS[Cool.slash] = Cool.UI.SlashCommand
 
-    EGC.Settings.Init()
-    EGC.Tracking.RegisterWornSlotUpdate()
-    EGC.Tracking.CheckEquippedSet()
-    EGC.UI.ToggleHUD()
+    Cool.Settings.Init()
+    Cool.Tracking.RegisterWornSlotUpdate()
+    Cool.Tracking.CheckEquippedSet()
+    Cool.UI.ToggleHUD()
 
-    EGC:Trace(2, "Finished Initialize()")
+    Cool:Trace(2, "Finished Initialize()")
 end
 
 -- -----------------------------------------------------------------------------
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EVENT_MANAGER:RegisterForEvent(EGC.name, EVENT_ADD_ON_LOADED, function(...) EGC.Initialize(...) end)
+EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_ADD_ON_LOADED, function(...) Cool.Initialize(...) end)
 

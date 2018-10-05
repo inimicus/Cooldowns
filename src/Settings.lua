@@ -72,12 +72,16 @@ end
 -- Initialize
 function Cool.Settings.Init()
 
-    soundOptions = {}
-    soundNames = {}
-    for soundId, soundName in pairs(SOUNDS) do
-        table.insert(soundOptions, soundId)
-        table.insert(soundNames, soundName)
-    end
+    soundOptions = {
+        "AVA_GATE_OPENED",
+    }
+    soundNames = {
+        "Alliance War Gate Opened",
+    }
+    --for soundId, soundName in pairs(SOUNDS) do
+    --    table.insert(soundOptions, soundId)
+    --    table.insert(soundNames, soundName)
+    --end
 
     optionsTable = {
         [1] = {
@@ -119,7 +123,7 @@ function Cool.Settings.Init()
                     setFunc = function(value) Cool.Settings.SetOnProcVolume(key, value) end,
                     min = 1,
                     max = 100,
-                    step = 5,
+                    step = 1,
                     clampInput = true,
                     decimals = 0,
                     --tooltip = "Slider's tooltip text.",
@@ -163,7 +167,7 @@ function Cool.Settings.Init()
                     setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.volume = value end,
                     min = 1,
                     max = 100,
-                    step = 5,
+                    step = 1,
                     clampInput = true,
                     decimals = 0,
                     --tooltip = "Slider's tooltip text.",

@@ -54,10 +54,6 @@ function Cool.Initialize(event, addonName)
     Cool.Tracking.CheckEquippedSet()
     Cool.UI.ToggleHUD()
 
-    --for key, sound in pairs(SOUNDS) do
-    --    d(zo_strformat("key: <<1>> Sound: <<2>>", key, sound))
-    --end
-
     Cool:Trace(2, "Finished Initialize()")
 end
 

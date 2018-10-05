@@ -64,10 +64,12 @@ function Cool.UI.Draw(key)
 end
 
 function Cool.UI.PlaySound(sound, volume)
-    local tempVolume = GetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME)
-    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, "100", 1)
+    local originalVolume = GetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME)
+    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, string.format("%d", volume), 1)
     PlaySound(SOUNDS[sound])
-    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, tempVolume, 1)
+    zo_callLater(function() 
+        SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, originalVolume, 1)
+    end, 1500)
 end
 
 function Cool.UI.Update(setKey)

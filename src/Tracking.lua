@@ -16,6 +16,17 @@ local updateIntervalMs = 100
 -- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245
 
 Cool.Tracking.Sets = {
+    Warlock = {
+        name = "Vestments of the Warlock",
+        settingsColor = "FF5EBD",
+        id = 57163,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 60000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+    },
     Trappings = {
         name = "Trappings of Invigoration",
         settingsColor = "FFA6D8",

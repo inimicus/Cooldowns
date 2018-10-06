@@ -23,12 +23,12 @@ function Cool.Defaults.Get()
             size = 75,
             sounds = {
                 onProc = {
-                    enabled = false,
-                    sound = nil,
+                    enabled = true,
+                    sound = 'STATS_PURCHASE',
                 },
                 onReady = {
-                    enabled = false,
-                    sound = nil,
+                    enabled = true,
+                    sound = 'SKILL_LINE_ADDED',
                 },
             },
         }

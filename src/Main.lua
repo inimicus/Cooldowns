@@ -50,7 +50,7 @@ function Cool.Initialize(event, addonName)
     SLASH_COMMANDS[Cool.slash] = Cool.UI.SlashCommand
 
     Cool.Settings.Init()
-    Cool.Tracking.RegisterWornSlotUpdate()
+    Cool.Tracking.RegisterEvents()
     Cool.Tracking.CheckEquippedSet()
     Cool.UI.ToggleHUD()
 

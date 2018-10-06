@@ -114,9 +114,18 @@ function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _,
 
 end
 
-function Cool.Tracking.RegisterWornSlotUpdate()
+function Cool.Tracking.RegisterEvents()
+    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, Cool.Tracking.OnAlive)
+    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, Cool.Tracking.OnDeath)
     CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
-    Cool:Trace(2, "Registering Worn Slot Update")
+    Cool:Trace(2, "Registered Events")
+end
+
+function Cool.Tracking.UnregisterEvents()
+    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
+    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
+    CALLBACK_MANAGER:UnregisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
+    Cool:Trace(2, "Unregistered Events")
 end
 
 function Cool.Tracking.OnAlive()

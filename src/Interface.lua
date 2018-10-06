@@ -21,7 +21,7 @@ function Cool.UI.Draw(key)
 
         -- Draw UI and create context if it doesn't exist
         if container == nil then
-            Cool:Trace(1, zo_strformat("Drawing: <<1>>", set.name))
+            Cool:Trace(2, zo_strformat("Drawing: <<1>>", set.name))
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)

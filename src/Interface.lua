@@ -93,7 +93,7 @@ function Cool.UI.Update(setKey)
 
     local countdown = (set.timeOfProc + set.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
 
-    Cool:Trace(3, "Countdown: " .. countdown)
+    --Cool:Trace(3, "Countdown: " .. countdown)
     texture:SetColor(0.5, 0.5, 0.5, 1)
 
     if (countdown <= 0) then

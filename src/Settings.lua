@@ -51,22 +51,22 @@ function Cool.Settings.SetOnProcEnabled(setKey, enabled)
     Cool.preferences.sets[setKey].sounds.onProc.enabled = enabled
 end
 
-function Cool.Settings.GetOnProcVolume(setKey)
-    return Cool.preferences.sets[setKey].sounds.onProc.volume
+-- OnReady Sound Settings
+function Cool.Settings.GetOnReadyEnabled(setKey)
+    return Cool.preferences.sets[setKey].sounds.onReady.enabled
 end
 
-function Cool.Settings.SetOnProcVolume(setKey, volume)
-    Cool.preferences.sets[setKey].sounds.onProc.volume = volume
+function Cool.Settings.SetOnReadyEnabled(setKey, enabled)
+    Cool.preferences.sets[setKey].sounds.onReady.enabled = enabled
 end
 
 -- Test Sound
 function Cool.Settings.PlayTestSound(setKey, condition)
     local sound = Cool.preferences.sets[setKey].sounds[condition].sound
-    local volume = Cool.preferences.sets[setKey].sounds[condition].volume
 
-    Cool:Trace(2, zo_strformat("Testing sound <<1>> at volume <<2>>", sound, volume))
+    Cool:Trace(2, zo_strformat("Testing sound <<1>>", sound))
 
-    Cool.UI.PlaySound(sound, volume)
+    Cool.UI.PlaySound(sound)
 end
 
 -- Initialize
@@ -112,89 +112,58 @@ function Cool.Settings.Init()
                 [2] = {
                     type = "checkbox",
                     name = "Play Sound On Proc",
+                    tooltip = "Set to ON to play a sound when the set procs.",
                     getFunc = function() return Cool.Settings.GetOnProcEnabled(key) end,
                     setFunc = function(value) Cool.Settings.SetOnProcEnabled(key, value) end,
                     width = "full",
                 },
                 [3] = {
-                    type = "slider",
-                    name = "Sound On Proc Volume",
-                    getFunc = function() return Cool.Settings.GetOnProcVolume(key) end,
-                    setFunc = function(value) Cool.Settings.SetOnProcVolume(key, value) end,
-                    min = 1,
-                    max = 100,
-                    step = 1,
-                    clampInput = true,
-                    decimals = 0,
-                    --tooltip = "Slider's tooltip text.",
-                    width = "full",
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
-                },
-                [4] = {
                     type = "dropdown",
-                    name = "Sound On Proc", -- or string id or function returning a string
+                    name = "Sound On Proc",
                     choices = soundNames,
                     choicesValues = soundOptions,
                     getFunc = function() return Cool.preferences.sets[key].sounds.onProc.sound end,
                     setFunc = function(value) Cool.preferences.sets[key].sounds.onProc.sound = value end,
-                    --tooltip = "Dropdown's tooltip text.", -- or string id or function returning a string (optional)
-                    --choicesTooltips = {"tooltip 1", "tooltip 2", "tooltip 3"}, -- or array of string ids or array of functions returning a string (optional)
-                    sort = "name-up", --or "name-down", "numeric-up", "numeric-down", "value-up", "value-down", "numericvalue-up", "numericvalue-down" (optional) - if not provided, list will not be sorted
-                    width = "full", --or "half" (optional)
-                    scrollable = true, -- boolean or number, if set the dropdown will feature a scroll bar if there are a large amount of choices and limit the visible lines to the specified number or 10 if true is used (optional)
+                    tooltip = "Sound volume based on Interface volume setting.",
+                    sort = "name-down",
+                    width = "full",
+                    scrollable = true,
+                    disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
+                },
+                [4] = {
+                    type = "button",
+                    name = "Test Sound",
+                    func = function() Cool.Settings.PlayTestSound(key, 'onProc') end,
+                    width = "full",
                     disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
                 },
                 [5] = {
-                    type = "button",
-                    name = "Test Sound", -- string id or function returning a string
-                    func = function() Cool.Settings.PlayTestSound(key, 'onProc') end,
-                    width = "full", --or "half" (optional)
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
-                },
-                [6] = {
                     type = "checkbox",
                     name = "Play Sound On Ready",
-                    getFunc = function() return end,
-                    setFunc = function(value) return end,
-                    --tooltip = "Checkbox's tooltip text.", -- or string id or function returning a string (optional)
-                    width = "full", -- or "half" (optional)
-                    --disabled = function() return db.someBooleanSetting end, --or boolean (optional)
+                    tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
+                    getFunc = function() return Cool.Settings.GetOnReadyEnabled(key) end,
+                    setFunc = function(value) Cool.Settings.SetOnReadyEnabled(key, value) end,
+                    width = "full",
+                },
+                [6] = {
+                    type = "dropdown",
+                    name = "Sound On Ready",
+                    choices = {"table", "of", "choices"},
+                    choicesValues = {"foo", 2, "three"},
+                    getFunc = function() return Cool.preferences.sets[key].sounds.onReady.sound end,
+                    setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.sound = value end,
+                    tooltip = "Sound volume based on game interface volume setting.",
+                    sort = "name-down",
+                    width = "full",
+                    scrollable = true,
+                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(key) end,
                 },
                 [7] = {
-                    type = "slider",
-                    name = "Sound On Ready Volume",
-                    getFunc = function() return Cool.preferences.sets[key].sounds.onReady.volume end,
-                    setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.volume = value end,
-                    min = 1,
-                    max = 100,
-                    step = 1,
-                    clampInput = true,
-                    decimals = 0,
-                    --tooltip = "Slider's tooltip text.",
-                    width = "full",
-                    --disabled = function() return false end,
-                },
-                [8] = {
-                    type = "dropdown",
-                    name = "Sound On Ready", -- or string id or function returning a string
-                    choices = {"table", "of", "choices"},
-                    choicesValues = {"foo", 2, "three"}, -- if specified, these values will get passed to setFunc instead (optional)
-                    getFunc = function() return end,
-                    setFunc = function(var) return end,
-                    --tooltip = "Dropdown's tooltip text.", -- or string id or function returning a string (optional)
-                    --choicesTooltips = {"tooltip 1", "tooltip 2", "tooltip 3"}, -- or array of string ids or array of functions returning a string (optional)
-                    sort = "name-up", --or "name-down", "numeric-up", "numeric-down", "value-up", "value-down", "numericvalue-up", "numericvalue-down" (optional) - if not provided, list will not be sorted
-                    width = "full", --or "half" (optional)
-                    scrollable = true, -- boolean or number, if set the dropdown will feature a scroll bar if there are a large amount of choices and limit the visible lines to the specified number or 10 if true is used (optional)
-                    --disabled = function() return db.someBooleanSetting end, --or boolean (optional)
-                },
-                [9] = {
                     type = "button",
-                    name = "Test Sound", -- string id or function returning a string
-                    func = function() end,
-                    --tooltip = "Button's tooltip text.", -- string id or function returning a string (optional)
-                    width = "full", --or "half" (optional)
-                    --disabled = function() return db.someBooleanSetting end, --or boolean (optional)
+                    name = "Test Sound",
+                    func = function() Cool.Settings.PlayTestSound(key, 'onReady') end,
+                    width = "full",
+                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(key) end,
                 },
             },
         })

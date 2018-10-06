@@ -63,13 +63,8 @@ function Cool.UI.Draw(key)
     Cool:Trace(2, "Finished DrawUI()")
 end
 
-function Cool.UI.PlaySound(sound, volume)
-    local originalVolume = GetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME)
-    SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, string.format("%d", volume), 1)
+function Cool.UI.PlaySound(sound)
     PlaySound(SOUNDS[sound])
-    zo_callLater(function() 
-        SetSetting(SETTING_TYPE_AUDIO, AUDIO_SETTING_UI_VOLUME, originalVolume, 1)
-    end, 1500)
 end
 
 function Cool.UI.Update(setKey)
@@ -89,8 +84,7 @@ function Cool.UI.Update(setKey)
         set.onCooldown = false
         label:SetText("")
         texture:SetColor(1, 1, 1, 1)
-        -- TODO: Get sound from preferences
-        PlaySound(SOUNDS.TELVAR_GAINED)
+        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady.sound)
     elseif (countdown < 10) then
         label:SetText(string.format("%.1f", countdown))
     else

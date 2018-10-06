@@ -18,12 +18,10 @@ local defaults = {
             sounds = {
                 onProc = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
                 onReady = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
             },
@@ -35,12 +33,10 @@ local defaults = {
             sounds = {
                 onProc = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
                 onReady = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
             },
@@ -52,12 +48,10 @@ local defaults = {
             sounds = {
                 onProc = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
                 onReady = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
             },
@@ -69,12 +63,10 @@ local defaults = {
             sounds = {
                 onProc = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
                 onReady = {
                     enabled = false,
-                    volume = 75,
                     sound = nil,
                 },
             },

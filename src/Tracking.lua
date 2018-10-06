@@ -106,8 +106,7 @@ function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _,
         Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
-        -- TODO: Get sound from preferences
-        PlaySound(SOUNDS.TELVAR_LOST)
+        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
         EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
         Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))

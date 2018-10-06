@@ -10,71 +10,28 @@ Cool.Defaults = {}
 
 local defaults = {
     debugMode = 0,
-    sets = {
-        Trappings = {
-            x = 150,
-            y = 150,
-            size = 100,
-            sounds = {
-                onProc = {
-                    enabled = false,
-                    sound = nil,
-                },
-                onReady = {
-                    enabled = false,
-                    sound = nil,
-                },
-            },
-        },
-        Lich = {
-            x = 150,
-            y = 150,
-            size = 100,
-            sounds = {
-                onProc = {
-                    enabled = false,
-                    sound = nil,
-                },
-                onReady = {
-                    enabled = false,
-                    sound = nil,
-                },
-            },
-        },
-        Earthgore = {
-            x = 150,
-            y = 150,
-            size = 100,
-            sounds = {
-                onProc = {
-                    enabled = false,
-                    sound = nil,
-                },
-                onReady = {
-                    enabled = false,
-                    sound = nil,
-                },
-            },
-        },
-        Olorime = {
-            x = 150,
-            y = 150,
-            size = 80,
-            sounds = {
-                onProc = {
-                    enabled = false,
-                    sound = nil,
-                },
-                onReady = {
-                    enabled = false,
-                    sound = nil,
-                },
-            },
-        },
-    },
+    sets = {},
     unlocked = true,
+    showOutsideCombat = true,
 }
 
 function Cool.Defaults.Get()
+    for key, set in pairs(Cool.Tracking.Sets) do
+        defaults.sets[key] = {
+            x = 150,
+            y = 150,
+            size = 75,
+            sounds = {
+                onProc = {
+                    enabled = false,
+                    sound = nil,
+                },
+                onReady = {
+                    enabled = false,
+                    sound = nil,
+                },
+            },
+        }
+    end
     return defaults
 end

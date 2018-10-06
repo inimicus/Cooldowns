@@ -134,15 +134,15 @@ function Cool.Settings.Init()
         },
         [2] = {
             type = "button",
-            name = function() if Cool.ForceShow then return "Hide All" else return "Show All" end end,
-            tooltip = "Force show all enabled for position or previewing display settings.",
+            name = function() if Cool.ForceShow then return "Hide All Equipped" else return "Show All Equipped" end end,
+            tooltip = "Force all equipped sets for positioning or previewing display settings.",
             func = function(control) Cool.Settings.ForceShow(control) end,
             width = "half",
         },
         [3] = {
             type = "button",
             name = function() if Cool.preferences.unlocked then return "Lock All" else return "Unlock All" end end,
-            tooltip = "Toggle lock/unlock display for repositioning.",
+            tooltip = "Toggle locked/unlocked state.",
             func = function(control) Cool.Settings.ToggleLocked(control) end,
             width = "half",
         },

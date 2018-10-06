@@ -111,7 +111,7 @@ Cool.Sounds = {
         "WOODWORKER_IMPROVE_TOOLTIP_GLOW_SUCCESS",
     },
     names = {
-        "Skill Morph Chose",
+        "Skill Morph Chosen",
         "Ability Picked Up",
         "Skill Purchased",
         "Ability Slotted",
@@ -171,7 +171,7 @@ Cool.Sounds = {
         "Group Vote Request",
         "Group Vote Failed",
         "Group Vote Passed",
-        "Guild Roster added",
+        "Guild Roster Added",
         "Guild Roster Removed",
         "HUD Armor Broken",
         "Inventory Apply Charge",

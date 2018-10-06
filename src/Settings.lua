@@ -139,6 +139,7 @@ function Cool.Settings.Init()
             name = "Sets",
             width = "full",
         },
+        -- TODO: Add Show/Hide out of combat
     }
 
     -- TODO: Maintain displayed order

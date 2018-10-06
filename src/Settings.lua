@@ -161,17 +161,30 @@ function Cool.Settings.Init()
         },
     }
 
-    -- TODO: Maintain displayed order
+    -- Copy key/value table to index/value table
+    settingsTable = {}
     for key, set in pairs(Cool.Tracking.Sets) do
+        table.insert(settingsTable, {
+            key = key,
+            name = set.name,
+        })
+    end
+
+    -- Sort settings table alphabetically
+    table.sort(settingsTable, function(x, y)
+        return x.name < y.name
+    end)
+
+    for index, set in ipairs(settingsTable) do
         table.insert(optionsTable, {
             type = "submenu",
-            name = function() return Cool.Settings.GetSetName(key) end,
+            name = function() return Cool.Settings.GetSetName(set.key) end,
             controls = {
                 [1] = {
                     type = "slider",
                     name = "Size",
-                    getFunc = function() return Cool.Settings.GetSize(key) end,
-                    setFunc = function(size) Cool.Settings.SetSize(key, size) end,
+                    getFunc = function() return Cool.Settings.GetSize(set.key) end,
+                    setFunc = function(size) Cool.Settings.SetSize(set.key, size) end,
                     min = 64,
                     max = 150,
                     step = 1,
@@ -183,8 +196,8 @@ function Cool.Settings.Init()
                     type = "checkbox",
                     name = "Play Sound On Proc",
                     tooltip = "Set to ON to play a sound when the set procs.",
-                    getFunc = function() return Cool.Settings.GetOnProcEnabled(key) end,
-                    setFunc = function(value) Cool.Settings.SetOnProcEnabled(key, value) end,
+                    getFunc = function() return Cool.Settings.GetOnProcEnabled(set.key) end,
+                    setFunc = function(value) Cool.Settings.SetOnProcEnabled(set.key, value) end,
                     width = "full",
                 },
                 [3] = {
@@ -192,27 +205,27 @@ function Cool.Settings.Init()
                     name = "Sound On Proc",
                     choices = Cool.Sounds.names,
                     choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[key].sounds.onProc.sound end,
-                    setFunc = function(value) Cool.preferences.sets[key].sounds.onProc.sound = value end,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onProc.sound end,
+                    setFunc = function(value) Cool.preferences.sets[set.key].sounds.onProc.sound = value end,
                     tooltip = "Sound volume based on Interface volume setting.",
                     sort = "name-up",
                     width = "full",
                     scrollable = true,
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
+                    disabled = function() return not Cool.Settings.GetOnProcEnabled(set.key) end,
                 },
                 [4] = {
                     type = "button",
                     name = "Test Sound",
-                    func = function() Cool.Settings.PlayTestSound(key, 'onProc') end,
+                    func = function() Cool.Settings.PlayTestSound(set.key, 'onProc') end,
                     width = "full",
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
+                    disabled = function() return not Cool.Settings.GetOnProcEnabled(set.key) end,
                 },
                 [5] = {
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
-                    getFunc = function() return Cool.Settings.GetOnReadyEnabled(key) end,
-                    setFunc = function(value) Cool.Settings.SetOnReadyEnabled(key, value) end,
+                    getFunc = function() return Cool.Settings.GetOnReadyEnabled(set.key) end,
+                    setFunc = function(value) Cool.Settings.SetOnReadyEnabled(set.key, value) end,
                     width = "full",
                 },
                 [6] = {
@@ -220,20 +233,20 @@ function Cool.Settings.Init()
                     name = "Sound On Ready",
                     choices = Cool.Sounds.names,
                     choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[key].sounds.onReady.sound end,
-                    setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.sound = value end,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onReady.sound end,
+                    setFunc = function(value) Cool.preferences.sets[set.key].sounds.onReady.sound = value end,
                     tooltip = "Sound volume based on game interface volume setting.",
                     sort = "name-up",
                     width = "full",
                     scrollable = true,
-                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(key) end,
+                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(set.key) end,
                 },
                 [7] = {
                     type = "button",
                     name = "Test Sound",
-                    func = function() Cool.Settings.PlayTestSound(key, 'onReady') end,
+                    func = function() Cool.Settings.PlayTestSound(set.key, 'onReady') end,
                     width = "full",
-                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(key) end,
+                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(set.key) end,
                 },
             },
         })

@@ -91,7 +91,7 @@ function Cool.Settings.ForceShow(control)
 
     for key, set in pairs(Cool.Tracking.Sets) do
         local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
-        if context ~= nil then
+        if context ~= nil and set.enabled then
             if Cool.ForceShow then
                 control:SetText("Hide All")
                 Cool.HUDHidden = false

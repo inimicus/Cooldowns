@@ -8,7 +8,6 @@
 
 Cool.UI = {}
 Cool.UI.scaleBase = 100
-Cool.UI.Controls = {}
 
 function Cool.UI.Draw(key)
 

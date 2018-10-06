@@ -114,17 +114,6 @@ end
 -- Initialize
 function Cool.Settings.Init()
 
-    soundOptions = {
-        "AVA_GATE_OPENED",
-    }
-    soundNames = {
-        "Alliance War Gate Opened",
-    }
-    --for soundId, soundName in pairs(SOUNDS) do
-    --    table.insert(soundOptions, soundId)
-    --    table.insert(soundNames, soundName)
-    --end
-
     optionsTable = {
         [1] = {
             type = "header",
@@ -181,12 +170,12 @@ function Cool.Settings.Init()
                 [3] = {
                     type = "dropdown",
                     name = "Sound On Proc",
-                    choices = soundNames,
-                    choicesValues = soundOptions,
+                    choices = Cool.Sounds.names,
+                    choicesValues = Cool.Sounds.options,
                     getFunc = function() return Cool.preferences.sets[key].sounds.onProc.sound end,
                     setFunc = function(value) Cool.preferences.sets[key].sounds.onProc.sound = value end,
                     tooltip = "Sound volume based on Interface volume setting.",
-                    sort = "name-down",
+                    sort = "name-up",
                     width = "full",
                     scrollable = true,
                     disabled = function() return not Cool.Settings.GetOnProcEnabled(key) end,
@@ -209,12 +198,12 @@ function Cool.Settings.Init()
                 [6] = {
                     type = "dropdown",
                     name = "Sound On Ready",
-                    choices = soundNames,
-                    choicesValues = soundOptions,
+                    choices = Cool.Sounds.names,
+                    choicesValues = Cool.Sounds.options,
                     getFunc = function() return Cool.preferences.sets[key].sounds.onReady.sound end,
                     setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.sound = value end,
                     tooltip = "Sound volume based on game interface volume setting.",
-                    sort = "name-down",
+                    sort = "name-up",
                     width = "full",
                     scrollable = true,
                     disabled = function() return not Cool.Settings.GetOnReadyEnabled(key) end,

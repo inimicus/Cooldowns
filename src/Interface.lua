@@ -30,7 +30,11 @@ function Cool.UI.Draw(key)
             c:SetMouseEnabled(true)
             c:SetAlpha(1)
             c:SetMovable(Cool.preferences.unlocked)
-            c:SetHidden(false)
+            if Cool.HUDHidden then
+                c:SetHidden(true)
+            else
+                c:SetHidden(false)
+            end
             c:SetHandler("OnMoveStop", function(...) Cool.UI.Position.Save(key) end)
 
             local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
@@ -50,7 +54,9 @@ function Cool.UI.Draw(key)
 
         -- Reuse context
         else 
-            container:SetHidden(false)
+            if not Cool.HUDHidden then
+                container:SetHidden(false)
+            end
         end
 
     -- Disable display
@@ -119,12 +125,18 @@ function Cool.UI.ToggleHUD()
 end
 
 function Cool.UI.ShowIcon(shouldShow)
-    -- TODO: Setup visibility
-    if (shouldShow and Cool.enabled and not Cool.HUDHidden) then
-        --Cool.CoolContainer:SetHidden(false)
-    else
-        --Cool.CoolContainer:SetHidden(true)
+
+    for key, set in pairs(Cool.Tracking.Sets) do
+        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        if context ~= nil then
+            if (shouldShow and set.enabled and not Cool.HUDHidden) then
+                context:SetHidden(false)
+            else
+                context:SetHidden(true)
+            end
+        end
     end
+
 end
 
 Cool.UI.Position = {}

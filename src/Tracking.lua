@@ -119,6 +119,14 @@ function Cool.Tracking.RegisterWornSlotUpdate()
     Cool:Trace(2, "Registering Worn Slot Update")
 end
 
+function Cool.Tracking.OnAlive()
+    Cool.UI.ShowIcon(true)
+end
+
+function Cool.Tracking.OnDeath()
+    Cool.UI.ShowIcon(false)
+end
+
 function Cool.Tracking.WornSlotUpdate(slotControl)
     -- Ignore costume updates
     if slotControl.slotIndex == EQUIP_SLOT_COSTUME then return end

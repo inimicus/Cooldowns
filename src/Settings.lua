@@ -69,6 +69,43 @@ function Cool.Settings.PlayTestSound(setKey, condition)
     Cool.UI.PlaySound(sound)
 end
 
+-- Locked State
+function Cool.Settings.ToggleLocked(control)
+    Cool.preferences.unlocked = not Cool.preferences.unlocked
+    for key, set in pairs(Cool.Tracking.Sets) do
+        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        if context ~= nil then
+            context:SetMovable(Cool.preferences.unlocked)
+            if Cool.preferences.unlocked then
+                control:SetText("Lock All")
+            else
+                control:SetText("Unlock All")
+            end
+        end
+    end
+end
+
+-- Force Showing
+function Cool.Settings.ForceShow(control)
+    Cool.ForceShow = not Cool.ForceShow
+
+    for key, set in pairs(Cool.Tracking.Sets) do
+        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        if context ~= nil then
+            if Cool.ForceShow then
+                control:SetText("Hide All")
+                Cool.HUDHidden = false
+                context:SetHidden(false)
+            else
+                control:SetText("Show All")
+                Cool.HUDHidden = true
+                context:SetHidden(true)
+            end
+        end
+    end
+
+end
+
 -- Initialize
 function Cool.Settings.Init()
 
@@ -86,7 +123,26 @@ function Cool.Settings.Init()
     optionsTable = {
         [1] = {
             type = "header",
-            name = "Options",
+            name = "Global Settings",
+            width = "full",
+        },
+        [2] = {
+            type = "button",
+            name = function() if Cool.ForceShow then return "Hide All" else return "Show All" end end,
+            tooltip = "Force show all enabled for position or previewing display settings.",
+            func = function(control) Cool.Settings.ForceShow(control) end,
+            width = "half",
+        },
+        [3] = {
+            type = "button",
+            name = function() if Cool.preferences.unlocked then return "Lock All" else return "Unlock All" end end,
+            tooltip = "Toggle lock/unlock display for repositioning.",
+            func = function(control) Cool.Settings.ToggleLocked(control) end,
+            width = "half",
+        },
+        [4] = {
+            type = "header",
+            name = "Sets",
             width = "full",
         },
     }

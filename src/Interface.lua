@@ -191,6 +191,18 @@ function Cool.UI.SlashCommand(command)
         Cool.debugMode = 3
         Cool.preferences.debugMode = 3
 
+    -- Unfiltered Events
+    elseif command == "all on" then
+        d(Cool.prefix .. "Registering unfiltered events, setting debug mode to 1")
+        Cool.debugMode = 1
+        Cool.preferences.debugMode = 1
+        Cool.Tracking.RegisterUnfiltered()
+    elseif command == "all off" then
+        d(Cool.prefix .. "Unregistering unfiltered events, setting debug mode to 0")
+        Cool.Tracking.UnregisterUnfiltered()
+        Cool.debugMode = 0
+        Cool.preferences.debugMode = 0
+
     -- Default ----------------------------------------------------------------
     else
         d(Cool.prefix .. "Command not recognized!")

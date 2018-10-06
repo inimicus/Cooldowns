@@ -114,6 +114,16 @@ function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _,
 
 end
 
+function Cool.Tracking.RegisterUnfiltered()
+    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, Cool.Tracking.DidEventCombatEventUnfiltered)
+    Cool:Trace(1, "Registered Unfiltered Events")
+end
+
+function Cool.Tracking.UnregisterUnfiltered()
+    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT)
+    Cool:Trace(1, "Unregistered Unfiltered Events")
+end
+
 function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, Cool.Tracking.OnAlive)
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, Cool.Tracking.OnDeath)
@@ -121,7 +131,6 @@ function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:AddFilterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
         REGISTER_FILTER_BAG_ID, BAG_WORN,
         REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
-    --CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
 	
 	if not Cool.preferences.showOutsideCombat then
 		Cool.Tracking.RegisterCombatEvent()
@@ -134,7 +143,6 @@ function Cool.Tracking.UnregisterEvents()
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
 	EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
-    --CALLBACK_MANAGER:UnregisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
     Cool:Trace(2, "Unregistered Events")
 end
 
@@ -244,6 +252,24 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
 end
 
+function Cool.Tracking.DidEventCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+    -- Exclude common unnecessary abilities
+    local ignoreList = {
+        sprint        = 973,
+        sprintDrain   = 15356,
+        block         = 14890,
+        interrupt     = 55146,
+        interrupt     = 55146,
+        roll          = 28549,
+        immov         = 29721,
+        phase         = 98294,
+        dodgeFatigue  = 69143,
+    }
 
+    for index, value in pairs(ignoreList) do
+        if abilityId == value then return end
+    end
 
+    Cool:Trace(1, zo_strformat("<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result))
+end
 

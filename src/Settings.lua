@@ -39,7 +39,13 @@ function Cool.Settings.GetSize(setKey)
 end
 
 function Cool.Settings.SetSize(setKey, size)
+    local context = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
+
     Cool.preferences.sets[setKey].size = size
+
+    if context ~= nil then
+        context:SetScale(size / Cool.UI.scaleBase)
+    end
 end
 
 -- OnProc Sound Settings
@@ -103,7 +109,6 @@ function Cool.Settings.ForceShow(control)
             end
         end
     end
-
 end
 
 -- Initialize
@@ -158,8 +163,8 @@ function Cool.Settings.Init()
                     name = "Size",
                     getFunc = function() return Cool.Settings.GetSize(key) end,
                     setFunc = function(size) Cool.Settings.SetSize(key, size) end,
-                    min = 25,
-                    max = 256,
+                    min = 64,
+                    max = 150,
                     step = 1,
                     clampInput = true,
                     decimals = 0,
@@ -204,8 +209,8 @@ function Cool.Settings.Init()
                 [6] = {
                     type = "dropdown",
                     name = "Sound On Ready",
-                    choices = {"table", "of", "choices"},
-                    choicesValues = {"foo", 2, "three"},
+                    choices = soundNames,
+                    choicesValues = soundOptions,
                     getFunc = function() return Cool.preferences.sets[key].sounds.onReady.sound end,
                     setFunc = function(value) Cool.preferences.sets[key].sounds.onReady.sound = value end,
                     tooltip = "Sound volume based on game interface volume setting.",

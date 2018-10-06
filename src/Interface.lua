@@ -7,6 +7,7 @@
 -- -----------------------------------------------------------------------------
 
 Cool.UI = {}
+Cool.UI.scaleBase = 100
 Cool.UI.Controls = {}
 
 function Cool.UI.Draw(key)
@@ -25,7 +26,7 @@ function Cool.UI.Draw(key)
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
-            c:SetDimensions(saved.size, saved.size)
+            c:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
             c:ClearAnchors()
             c:SetMouseEnabled(true)
             c:SetAlpha(1)
@@ -35,11 +36,12 @@ function Cool.UI.Draw(key)
             else
                 c:SetHidden(false)
             end
+            c:SetScale(saved.size / Cool.UI.scaleBase)
             c:SetHandler("OnMoveStop", function(...) Cool.UI.Position.Save(key) end)
 
             local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
-            r:SetDimensions(saved.size, saved.size)
+            r:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
             r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
             local l = WINDOW_MANAGER:CreateControl(key .. "_Label", c, CT_LABEL)

@@ -18,7 +18,7 @@ local updateIntervalMs = 100
 Cool.Tracking.Sets = {
     Warlock = {
         name = "Vestments of the Warlock",
-        settingsColor = "FF5EBD",
+        settingsColor = "3A97CF",
         id = 57163,
         enabled = false,
         result = ACTION_RESULT_POWER_ENERGIZE,
@@ -29,7 +29,7 @@ Cool.Tracking.Sets = {
     },
     Trappings = {
         name = "Trappings of Invigoration",
-        settingsColor = "FFA6D8",
+        settingsColor = "92C843",
         id = 101970,
         enabled = false,
         result = ACTION_RESULT_POWER_ENERGIZE,
@@ -40,7 +40,7 @@ Cool.Tracking.Sets = {
     },
     Lich = {
         name = "Shroud of the Lich",
-        settingsColor = "FF5EBD",
+        settingsColor = "3A97CF",
         id = 57164,
         enabled = false,
         result = ACTION_RESULT_EFFECT_GAINED,
@@ -51,7 +51,7 @@ Cool.Tracking.Sets = {
     },
     Earthgore = {
         name = "Earthgore",
-        settingsColor = "FFDE65",
+        settingsColor = "CD5031",
         id = 97855,
         enabled = false,
         result = ACTION_RESULT_EFFECT_GAINED,

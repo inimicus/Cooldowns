@@ -117,7 +117,11 @@ end
 function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, Cool.Tracking.OnAlive)
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, Cool.Tracking.OnDeath)
-    CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
+	EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, Cool.Tracking.WornSlotUpdate)
+    EVENT_MANAGER:AddFilterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
+        REGISTER_FILTER_BAG_ID, BAG_WORN,
+        REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
+    --CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
 	
 	if not Cool.preferences.showOutsideCombat then
 		Cool.Tracking.RegisterCombatEvent()
@@ -129,7 +133,8 @@ end
 function Cool.Tracking.UnregisterEvents()
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
-    CALLBACK_MANAGER:UnregisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
+	EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
+    --CALLBACK_MANAGER:UnregisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
     Cool:Trace(2, "Unregistered Events")
 end
 
@@ -157,11 +162,11 @@ function Cool.Tracking.OnDeath()
     Cool.UI:SetCombatStateDisplay()
 end
 
-function Cool.Tracking.WornSlotUpdate(slotControl)
+function Cool.Tracking.WornSlotUpdate(eventCode, bagId, slotId, isNewItem, itemSoundCategory, updateReason)
     -- Ignore costume updates
-    if slotControl.slotIndex == EQUIP_SLOT_COSTUME then return end
+    if slotId == EQUIP_SLOT_COSTUME then return end
 
-    -- Provide changed slot to check function
+    -- Check equipped sets
     Cool.Tracking.CheckEquippedSet()
 end
 
@@ -207,19 +212,31 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
             -- Full bonus active
             if numEquipped == maxEquipped then
-                Cool:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
-                EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) Cool.Tracking.DidEventCombatEvent(key, ...) end)
-                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
-                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-                set.enabled = true
-                Cool.UI.Draw(key)
+
+                -- Don't enable if already enabled
+                if not set.enabled then
+                    Cool:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
+                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) Cool.Tracking.DidEventCombatEvent(key, ...) end)
+                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
+                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+                    set.enabled = true
+                    Cool.UI.Draw(key)
+                else 
+                    Cool:Trace(2, zo_strformat("Set already enabled for: <<1>>", setName))
+                end
 
             -- Full bonus not active
             else
-                Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
-                EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
-                set.enabled = false
-                Cool.UI.Draw(key)
+
+                -- Don't disable if already disabled
+                if set.enabled then
+                    Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
+                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
+                    set.enabled = false
+                    Cool.UI.Draw(key)
+                else
+                    Cool:Trace(2, zo_strformat("Set already disabled for: <<1>>", setName))
+                end
             end
 
         end

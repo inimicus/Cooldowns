@@ -95,19 +95,31 @@ end
 function Cool.Settings.ForceShow(control)
     Cool.ForceShow = not Cool.ForceShow
 
-    for key, set in pairs(Cool.Tracking.Sets) do
-        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
-        if context ~= nil and set.enabled then
-            if Cool.ForceShow then
-                control:SetText("Hide All")
-                Cool.HUDHidden = false
-                context:SetHidden(false)
-            else
-                control:SetText("Show All")
-                Cool.HUDHidden = true
-                context:SetHidden(true)
-            end
-        end
+    if Cool.ForceShow then
+        control:SetText("Hide All Equipped")
+        Cool.HUDHidden = false
+        Cool.UI.ShowIcon(true)
+    else
+        control:SetText("Show All Equipped")
+        Cool.HUDHidden = true
+        Cool.UI.ShowIcon(false)
+    end
+
+end
+
+-- Combat State Display
+function Cool.Settings.GetShowOutOfCombat()
+    return Cool.preferences.showOutsideCombat
+end
+
+function Cool.Settings.SetShowOutOfCombat(value)
+    Cool.preferences.showOutsideCombat = value
+    Cool.UI:SetCombatStateDisplay()
+
+    if value then
+        Cool.Tracking.UnregisterCombatEvent()
+    else
+        Cool.Tracking.RegisterCombatEvent()
     end
 end
 
@@ -135,11 +147,18 @@ function Cool.Settings.Init()
             width = "half",
         },
         [4] = {
+            type = "checkbox",
+            name = "Show Outside of Combat",
+            tooltip = "Set to ON to show while out of combat and OFF to only show while in combat.",
+            getFunc = function() return Cool.Settings.GetShowOutOfCombat() end,
+            setFunc = function(value) Cool.Settings.SetShowOutOfCombat(value) end,
+            width = "full",
+        },
+        [5] = {
             type = "header",
             name = "Sets",
             width = "full",
         },
-        -- TODO: Add Show/Hide out of combat
     }
 
     -- TODO: Maintain displayed order

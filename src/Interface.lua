@@ -70,6 +70,16 @@ function Cool.UI.Draw(key)
     Cool:Trace(2, "Finished DrawUI()")
 end
 
+function Cool.UI:SetCombatStateDisplay()
+    Cool:Trace(3, zo_strformat("Setting combat state display, in combat: <<1>>", tostring(Cool.isInCombat)))
+
+    if Cool.isInCombat or Cool.preferences.showOutsideCombat then
+        Cool.UI.ShowIcon(true)
+    else
+        Cool.UI.ShowIcon(false)
+    end
+end
+
 function Cool.UI.PlaySound(sound)
     PlaySound(SOUNDS[sound])
 end
@@ -111,14 +121,14 @@ function Cool.UI.ToggleHUD()
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
             Cool:Trace(3, "Hiding HUD")
             Cool.HUDHidden = true
-            Cool.UI.ShowIcon(false)
+            Cool.UI:SetCombatStateDisplay()
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
             Cool:Trace(3, "Showing HUD")
             Cool.HUDHidden = false
-            Cool.UI.ShowIcon(true)
+            Cool.UI:SetCombatStateDisplay()
         end
     end)
 
@@ -130,7 +140,9 @@ function Cool.UI.ShowIcon(shouldShow)
     for key, set in pairs(Cool.Tracking.Sets) do
         local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
         if context ~= nil then
-            if (shouldShow and set.enabled and not Cool.HUDHidden) then
+            if Cool.ForceShow then
+                context:SetHidden(false)
+            elseif (shouldShow and set.enabled and not Cool.HUDHidden) then
                 context:SetHidden(false)
             else
                 context:SetHidden(true)

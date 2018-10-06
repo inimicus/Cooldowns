@@ -118,6 +118,11 @@ function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, Cool.Tracking.OnAlive)
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, Cool.Tracking.OnDeath)
     CALLBACK_MANAGER:RegisterCallback("WornSlotUpdate", Cool.Tracking.WornSlotUpdate)
+	
+	if not Cool.preferences.showOutsideCombat then
+		Cool.Tracking.RegisterCombatEvent()
+	end
+
     Cool:Trace(2, "Registered Events")
 end
 
@@ -128,12 +133,28 @@ function Cool.Tracking.UnregisterEvents()
     Cool:Trace(2, "Unregistered Events")
 end
 
+function Cool.Tracking.RegisterCombatEvent()
+    EVENT_MANAGER:RegisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE, function(...) Cool.IsInCombat(...) end)
+    Cool:Trace(2, "Registered combat events")
+end
+
+function Cool.Tracking.UnregisterCombatEvent()
+    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE)
+    Cool:Trace(2, "Unregistered combat events")
+end
+
+function Cool.IsInCombat(_, inCombat)
+    Cool.isInCombat = inCombat
+    Cool:Trace(2, zo_strformat("In Combat: <<1>>", tostring(inCombat)))
+    Cool.UI:SetCombatStateDisplay()
+end
+
 function Cool.Tracking.OnAlive()
-    Cool.UI.ShowIcon(true)
+    Cool.UI:SetCombatStateDisplay()
 end
 
 function Cool.Tracking.OnDeath()
-    Cool.UI.ShowIcon(false)
+    Cool.UI:SetCombatStateDisplay()
 end
 
 function Cool.Tracking.WornSlotUpdate(slotControl)

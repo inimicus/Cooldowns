@@ -179,10 +179,12 @@ function Cool.IsInCombat(_, inCombat)
 end
 
 function Cool.Tracking.OnAlive()
+    Cool.HUDHidden = false
     Cool.UI:SetCombatStateDisplay()
 end
 
 function Cool.Tracking.OnDeath()
+    Cool.HUDHidden = true
     Cool.UI:SetCombatStateDisplay()
 end
 

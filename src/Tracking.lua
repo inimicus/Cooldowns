@@ -18,6 +18,7 @@ local updateIntervalMs = 100
 Cool.Tracking.Sets = {
     Warlock = {
         name = "Vestments of the Warlock",
+        description = "Displays when the Magicka Flood proc is available or cooldown until it is ready again.",
         settingsColor = "3A97CF",
         id = 57163,
         enabled = false,
@@ -29,6 +30,7 @@ Cool.Tracking.Sets = {
     },
     Trappings = {
         name = "Trappings of Invigoration",
+        description = "Displays when the stamina return proc is available or cooldown until it is ready again.",
         settingsColor = "92C843",
         id = 101970,
         enabled = false,
@@ -40,6 +42,7 @@ Cool.Tracking.Sets = {
     },
     Lich = {
         name = "Shroud of the Lich",
+        description = "Displays when the magicka recovery proc is ready or when it will be available, but not the duration of increased magicka recovery.",
         settingsColor = "3A97CF",
         id = 57164,
         enabled = false,
@@ -51,6 +54,7 @@ Cool.Tracking.Sets = {
     },
     Earthgore = {
         name = "Earthgore",
+        description = "Displays when the heal proc is ready or when it will be available, but not the duration of the heal over time.",
         settingsColor = "CD5031",
         id = 97855,
         enabled = false,
@@ -62,6 +66,7 @@ Cool.Tracking.Sets = {
     },
     Olorime = {
         name = "Vestment of Olorime",
+        description = "Displays when the Major Courage area of effect is able to be placed, but does not indicate the duration of Major Courage.",
         settingsColor = "FCFCCB",
         id = 107141,
         enabled = false,
@@ -138,14 +143,14 @@ end
 function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, Cool.Tracking.OnAlive)
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, Cool.Tracking.OnDeath)
-	EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, Cool.Tracking.WornSlotUpdate)
+    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, Cool.Tracking.WornSlotUpdate)
     EVENT_MANAGER:AddFilterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
         REGISTER_FILTER_BAG_ID, BAG_WORN,
         REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
-	
-	if not Cool.preferences.showOutsideCombat then
-		Cool.Tracking.RegisterCombatEvent()
-	end
+
+    if not Cool.preferences.showOutsideCombat then
+        Cool.Tracking.RegisterCombatEvent()
+    end
 
     Cool:Trace(2, "Registered Events")
 end
@@ -153,7 +158,7 @@ end
 function Cool.Tracking.UnregisterEvents()
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
-	EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
+    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
     Cool:Trace(2, "Unregistered Events")
 end
 
@@ -240,7 +245,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
                     EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                     set.enabled = true
                     Cool.UI.Draw(key)
-                else 
+                else
                     Cool:Trace(2, zo_strformat("Set already enabled for: <<1>>", setName))
                 end
 

@@ -28,6 +28,11 @@ function Cool.Settings.GetSetName(setKey)
     return zo_strformat("|c<<1>><<2>>|r", color, name)
 end
 
+-- Set Submenu
+function Cool.Settings.GetDescription(setKey)
+    return Cool.Tracking.Sets[setKey].description
+end
+
 -- Enabled Status
 function Cool.Settings.GetIsEnabled(setKey)
     return Cool.Tracking.Sets[setKey].enabled
@@ -181,6 +186,11 @@ function Cool.Settings.Init()
             name = function() return Cool.Settings.GetSetName(set.key) end,
             controls = {
                 [1] = {
+                    type = "description",
+                    text = function() return Cool.Settings.GetDescription(set.key) end,
+                    width = "full",
+                },
+                [2] = {
                     type = "slider",
                     name = "Size",
                     getFunc = function() return Cool.Settings.GetSize(set.key) end,
@@ -192,7 +202,7 @@ function Cool.Settings.Init()
                     decimals = 0,
                     width = "full",
                 },
-                [2] = {
+                [3] = {
                     type = "checkbox",
                     name = "Play Sound On Proc",
                     tooltip = "Set to ON to play a sound when the set procs.",
@@ -200,7 +210,7 @@ function Cool.Settings.Init()
                     setFunc = function(value) Cool.Settings.SetOnProcEnabled(set.key, value) end,
                     width = "full",
                 },
-                [3] = {
+                [4] = {
                     type = "dropdown",
                     name = "Sound On Proc",
                     choices = Cool.Sounds.names,
@@ -213,14 +223,14 @@ function Cool.Settings.Init()
                     scrollable = true,
                     disabled = function() return not Cool.Settings.GetOnProcEnabled(set.key) end,
                 },
-                [4] = {
+                [5] = {
                     type = "button",
                     name = "Test Sound",
                     func = function() Cool.Settings.PlayTestSound(set.key, 'onProc') end,
                     width = "full",
                     disabled = function() return not Cool.Settings.GetOnProcEnabled(set.key) end,
                 },
-                [5] = {
+                [6] = {
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
@@ -228,7 +238,7 @@ function Cool.Settings.Init()
                     setFunc = function(value) Cool.Settings.SetOnReadyEnabled(set.key, value) end,
                     width = "full",
                 },
-                [6] = {
+                [7] = {
                     type = "dropdown",
                     name = "Sound On Ready",
                     choices = Cool.Sounds.names,
@@ -241,7 +251,7 @@ function Cool.Settings.Init()
                     scrollable = true,
                     disabled = function() return not Cool.Settings.GetOnReadyEnabled(set.key) end,
                 },
-                [7] = {
+                [8] = {
                     type = "button",
                     name = "Test Sound",
                     func = function() Cool.Settings.PlayTestSound(set.key, 'onReady') end,

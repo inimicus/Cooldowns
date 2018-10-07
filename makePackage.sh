@@ -21,6 +21,7 @@ declare -a systemExclude=(
 declare -a fileExclude=(
     "README.md"
     "makePackage.sh"
+    "art/*"
     "release/*"
     "release/**/*"
 )

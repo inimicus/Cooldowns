@@ -311,7 +311,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
                 -- Don't disable if already disabled
                 if set.enabled then
                     Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setName))
-                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT)
+                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)
                     set.enabled = false
                     Cool.UI.Draw(key)
                 else

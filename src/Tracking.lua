@@ -14,9 +14,27 @@ local updateIntervalMs = 100
 -- ACTION_RESULT_HEAL = 16
 -- ACTION_RESULT_EFFECT_GAINED = 2240
 -- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245
+-- ACTION_RESULT_ABILITY_ON_COOLDOWN = 2080
+--
+-- EVENT_ABILITY_COOLDOWN_UPDATED = 131181
+-- EVENT_COMBAT_EVENT = 131102
 
 Cool.Tracking.Sets = {
+    Wyrd = {
+        event = EVENT_ABILITY_COOLDOWN_UPDATED,
+        name = "Wyrd Tree's Blessing",
+        description = "Displays when the Wyrd Tree proc is available or cooldown until it is ready again.",
+        settingsColor = "FCFCCB",
+        id = 34871,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 15000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+    },
     Warlock = {
+        event = EVENT_COMBAT_EVENT,
         name = "Vestments of the Warlock",
         description = "Displays when the Magicka Flood proc is available or cooldown until it is ready again.",
         settingsColor = "3A97CF",
@@ -29,6 +47,7 @@ Cool.Tracking.Sets = {
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
     },
     Trappings = {
+        event = EVENT_COMBAT_EVENT,
         name = "Trappings of Invigoration",
         description = "Displays when the stamina return proc is available or cooldown until it is ready again.",
         settingsColor = "92C843",
@@ -41,6 +60,7 @@ Cool.Tracking.Sets = {
         texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
     },
     Lich = {
+        event = EVENT_COMBAT_EVENT,
         name = "Shroud of the Lich",
         description = "Displays when the magicka recovery proc is ready or when it will be available, but not the duration of increased magicka recovery.",
         settingsColor = "3A97CF",
@@ -53,6 +73,7 @@ Cool.Tracking.Sets = {
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
     },
     Earthgore = {
+        event = EVENT_COMBAT_EVENT,
         name = "Earthgore",
         description = "Displays when the heal proc is ready or when it will be available, but not the duration of the heal over time.",
         settingsColor = "CD5031",
@@ -65,6 +86,7 @@ Cool.Tracking.Sets = {
         texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
     },
     Olorime = {
+        event = EVENT_COMBAT_EVENT,
         name = "Vestment of Olorime",
         description = "Displays when the Major Courage area of effect is able to be placed, but does not indicate the duration of Major Courage.",
         settingsColor = "FCFCCB",
@@ -112,7 +134,26 @@ Cool.Tracking.ITEM_SLOT_NAMES = {
     "Backup Off-Hand Weapon",
 }
 
-function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+function Cool.Tracking.OnCooldownUpdated(setKey, eventCode, abilityId)
+    -- When cooldown of this ability occurs, this function is continually called
+    -- until the set is off cooldown.
+    -- We can use the first call of this function to detect a proc state.
+
+    local set = Cool.Tracking.Sets[setKey]
+
+    -- Ignore if set is on cooldown
+    if set.onCooldown == true then return end
+
+    Cool:Trace(1, zo_strformat("Cooldown proc for <<1>> (<<2>>)", setKey, abilityId))
+
+    set.onCooldown = true
+    set.timeOfProc = GetGameTimeMilliseconds()
+    Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
+    EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
+end
+
+
+function Cool.Tracking.OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
 
     local set = Cool.Tracking.Sets[setKey]
 
@@ -131,7 +172,8 @@ function Cool.Tracking.DidEventCombatEvent(setKey, _, result, _, abilityName, _,
 end
 
 function Cool.Tracking.RegisterUnfiltered()
-    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, Cool.Tracking.DidEventCombatEventUnfiltered)
+    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, Cool.Tracking.OnCombatEventUnfiltered)
+    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
     Cool:Trace(1, "Registered Unfiltered Events")
 end
 
@@ -242,9 +284,21 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
                 -- Don't enable if already enabled
                 if not set.enabled then
                     Cool:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setName))
-                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, function(...) Cool.Tracking.DidEventCombatEvent(key, ...) end)
-                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, set.id)
-                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+
+                    -- Set callback based on event
+                    local procFunction = nil
+                    if set.event == EVENT_ABILITY_COOLDOWN_UPDATED then
+                        procFunction = Cool.Tracking.OnCooldownUpdated
+                    else
+                        procFunction = Cool.Tracking.OnCombatEvent
+                    end
+
+                    -- Register events
+                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, set.event, function(...) procFunction(key, ...) end)
+                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, set.event,
+                        REGISTER_FILTER_ABILITY_ID, set.id,
+                        REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+
                     set.enabled = true
                     Cool.UI.Draw(key)
                 else
@@ -270,7 +324,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)
 
 end
 
-function Cool.Tracking.DidEventCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
+function Cool.Tracking.OnCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
     -- Exclude common unnecessary abilities
     local ignoreList = {
         sprint        = 973,

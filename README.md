@@ -14,6 +14,7 @@ be even remotely within the realm of possibility.
 But fret no longer! There is an addon to count your long cooldowns for you.
 
 ## Features
+- Only enables tracking/display when an included set is equipped
 - Reposition to any place on your screen
 - Resize display from really small to comically large
 - Optionally hide when out of combat
@@ -27,6 +28,7 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 - Trappings of Invigoration
 - Vestment of Olorime
 - Vestments of the Warlock
+- Wyrd Tree's Blessing
 
 ## Addtional Sets
 If you'd like to see a specific set added, please let me know. I would prefer to 

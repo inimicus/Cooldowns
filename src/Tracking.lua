@@ -7,6 +7,7 @@
 -- -----------------------------------------------------------------------------
 
 Cool.Tracking = {}
+Cool.Tracking.equipped = {}
 
 local updateIntervalMs = 100
 
@@ -234,11 +235,68 @@ function Cool.Tracking.WornSlotUpdate(eventCode, bagId, slotId, isNewItem, itemS
     -- Ignore costume updates
     if slotId == EQUIP_SLOT_COSTUME then return end
 
-    -- Check equipped sets
-    Cool.Tracking.CheckEquippedSet()
+    local wornLink = GetItemLink(badId, slotId)
+    local hasSet, setName, numBonuses, numEquipped, maxEquipped = GetItemLinkSetInfo(wornLink, true)
+
+    -- Detect changes to equipped 
+    if wornLink == Cool.Tracking.equipped[slotId] then
+        -- No change
+        Cool:Trace(1, zo_strformat("Same item equipped: <<1>>", wornLink))
+        return
+    elseif wornLink == '' then
+        -- Remove
+        Cool:Trace(1, "Item unequipped")
+        Cool.Tracking.equipped[slotId] = nil
+        Cool.Tracking.CheckEquippedSetBonus()
+    else 
+        -- Changed
+        Cool:Trace(1, zo_strformat("New item equipped: <<1>>", wornLink))
+        Cool.Tracking.equipped[slotId] = wornLink
+
+        -- Check equipped sets
+        --Cool.Tracking.CheckEquippedSet()
+        Cool.Tracking.CheckEquippedSetBonus()
+    end
+end
+
+function Cool.Tracking.CheckEquippedSetBonus()
+    local setBonus = {}
+
+    for slot, itemLink in pairs(Cool.Tracking.equipped) do
+
+        local hasSet, setName, numBonuses, numEquipped, maxEquipped = GetItemLinkSetInfo(itemLink, true)
+
+        -- Count set equipped bonuses
+        if hasSet then
+
+            -- Initialize set bonus count
+            setBonus[setName] = setBonus[setName] or 0
+
+            -- 2H weapons, staves, bows count as two set pieces
+            if GetItemLinkWeaponType(itemLink) == WEAPONTYPE_BOW
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_FIRE_STAFF
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_FROST_STAFF
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_HEALING_STAFF
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_LIGHTNING_STAFF
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_AXE
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_HAMMER
+                or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_SWORD
+            then
+                -- Counts as 2
+                setBonus[setName] = setBonus[setName] + 2
+            else
+                -- Counts as 1
+                setBonus[setName] = setBonus[setName] + 1
+            end
+        end
+
+    end
 end
 
 function Cool.Tracking.CheckEquippedSet()
+
+    -- Clear equipped
+    Cool.Tracking.equipped = {}
 
     -- Check every slot for sets
     for index, slot in pairs(Cool.Tracking.ITEM_SLOTS) do
@@ -256,6 +314,9 @@ function Cool.Tracking.CheckEquippedSet()
             -- Set item equipped
             if hasSet then
                 Cool:Trace(2, zo_strformat("<<1>>: <<2>> (<<3>> of <<4>>)", slotName, setName, numEquipped, maxEquipped))
+
+                -- Save sets
+                Cool.Tracking.equipped[slot] = itemLink
 
                 -- Check if we should enable tracking
                 Cool.Tracking.EnableTrackingForSet(setName, numEquipped, maxEquipped)

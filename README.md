@@ -24,6 +24,7 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 
 ## Implemented Sets
 - Earthgore
+- Magicka Furnace
 - Shroud of the Lich
 - Trappings of Invigoration
 - Vestment of Olorime

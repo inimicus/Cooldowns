@@ -11,7 +11,7 @@ Cool.UI.scaleBase = 100
 
 function Cool.UI.Draw(key)
 
-    local set = Cool.Tracking.Sets[key];
+    local set = Cool.Data.Sets[key];
     local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
 
     -- Enable display
@@ -21,7 +21,7 @@ function Cool.UI.Draw(key)
 
         -- Draw UI and create context if it doesn't exist
         if container == nil then
-            Cool:Trace(2, zo_strformat("Drawing: <<1>>", set.name))
+            Cool:Trace(2, zo_strformat("Drawing: <<1>>", key))
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
@@ -54,7 +54,7 @@ function Cool.UI.Draw(key)
             Cool.UI.Position.Set(key, saved.x, saved.y)
 
         -- Reuse context
-        else 
+        else
             if not Cool.HUDHidden then
                 container:SetHidden(false)
             end
@@ -86,7 +86,7 @@ end
 
 function Cool.UI.Update(setKey)
 
-    local set = Cool.Tracking.Sets[setKey]
+    local set = Cool.Data.Sets[setKey]
     local container = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
     local texture = WINDOW_MANAGER:GetControlByName(setKey .. "_Texture")
     local label = WINDOW_MANAGER:GetControlByName(setKey .. "_Label")
@@ -137,7 +137,7 @@ end
 
 function Cool.UI.ShowIcon(shouldShow)
 
-    for key, set in pairs(Cool.Tracking.Sets) do
+    for key, set in pairs(Cool.Data.Sets) do
         local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
         if context ~= nil then
             if Cool.ForceShow then

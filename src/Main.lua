@@ -54,7 +54,7 @@ function Cool.Initialize(event, addonName)
 
     Cool.Settings.Init()
     Cool.Tracking.RegisterEvents()
-    Cool.Tracking.CheckEquippedSet()
+    Cool.Equipped.UpdateAllSlots()
     Cool.UI.ToggleHUD()
 
     Cool:Trace(2, "Finished Initialize()")

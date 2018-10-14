@@ -16,7 +16,7 @@ local defaults = {
 }
 
 function Cool.Defaults.Get()
-    for key, set in pairs(Cool.Tracking.Sets) do
+    for key, set in pairs(Cool.Data.Sets) do
         defaults.sets[key] = {
             x = 150,
             y = 150,

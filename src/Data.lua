@@ -31,6 +31,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+        showFrame = false,
     },
     ["Wyrd Tree's Blessing"] = {
         event = EVENT_ABILITY_COOLDOWN_UPDATED,
@@ -43,6 +44,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+        showFrame = true,
     },
     ["Vestments of the Warlock"] = {
         event = EVENT_COMBAT_EVENT,
@@ -55,6 +57,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+        showFrame = false,
     },
     ["Trappings of Invigoration"] = {
         event = EVENT_COMBAT_EVENT,
@@ -67,6 +70,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
+        showFrame = false,
     },
     ["Shroud of the Lich"] = {
         event = EVENT_COMBAT_EVENT,
@@ -79,6 +83,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+        showFrame = false,
     },
     ["Earthgore"] = {
         event = EVENT_COMBAT_EVENT,
@@ -91,6 +96,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
+        showFrame = false,
     },
     ["Vestment of Olorime"] = {
         event = EVENT_COMBAT_EVENT,
@@ -103,6 +109,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
+        showFrame = true,
     },
 }
 

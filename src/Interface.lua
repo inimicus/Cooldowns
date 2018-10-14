@@ -43,6 +43,13 @@ function Cool.UI.Draw(key)
             r:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
             r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
+            if set.showFrame then
+                local f = WINDOW_MANAGER:CreateControl(key .. "_Frame", c, CT_TEXTURE)
+                f:SetTexture("/esoui/art/actionbar/gamepad/gp_abilityframe64.dds")
+                f:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
+                f:SetAnchor(CENTER, c, CENTER, 0, 0)
+            end
+
             local l = WINDOW_MANAGER:CreateControl(key .. "_Label", c, CT_LABEL)
             l:SetAnchor(CENTER, c, CENTER, 0, 0)
             l:SetColor(1, 1, 1, 1)

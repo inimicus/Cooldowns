@@ -64,5 +64,5 @@ end
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_ADD_ON_LOADED, function(...) Cool.Initialize(...) end)
+EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_ADD_ON_LOADED, Cool.Initialize)
 

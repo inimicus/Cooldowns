@@ -57,12 +57,12 @@ local function IsInCombat(_, inCombat)
 end
 
 local function OnAlive()
-    Cool.HUDHidden = false
+    Cool.isDead = false
     Cool.UI:SetCombatStateDisplay()
 end
 
 local function OnDeath()
-    Cool.HUDHidden = true
+    Cool.isDead = true
     Cool.UI:SetCombatStateDisplay()
 end
 

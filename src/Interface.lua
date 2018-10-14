@@ -80,7 +80,7 @@ end
 function Cool.UI:SetCombatStateDisplay()
     Cool:Trace(3, zo_strformat("Setting combat state display, in combat: <<1>>", tostring(Cool.isInCombat)))
 
-    if Cool.isInCombat or Cool.preferences.showOutsideCombat then
+    if Cool.isInCombat or Cool.preferences.showOutsideCombat and not Cool.isDead then
         Cool.UI.ShowIcon(true)
     else
         Cool.UI.ShowIcon(false)

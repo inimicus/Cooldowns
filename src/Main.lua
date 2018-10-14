@@ -16,6 +16,7 @@ Cool.prefix     = "[Cool] "
 Cool.HUDHidden  = false
 Cool.ForceShow  = false
 Cool.isInCombat = false
+Cool.isDead     = false
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output
@@ -48,9 +49,10 @@ function Cool.Initialize(event, addonName)
 
     SLASH_COMMANDS[Cool.slash] = Cool.UI.SlashCommand
 
-    -- Update initial combat state
-    -- In the event that UI is loaded mid-combat
+    -- Update initial combat/dead state
+    -- In the event that UI is loaded mid-combat or while dead
 	Cool.isInCombat = IsUnitInCombat("player")
+	Cool.isDead = IsUnitDead("player")
 
     Cool.Settings.Init()
     Cool.Tracking.RegisterEvents()

@@ -208,7 +208,7 @@ function Cool.Settings.Init()
                     name = "Size",
                     getFunc = function() return Cool.Settings.GetSize(set.name) end,
                     setFunc = function(size) Cool.Settings.SetSize(set.name, size) end,
-                    min = 64,
+                    min = 32,
                     max = 150,
                     step = 1,
                     clampInput = true,

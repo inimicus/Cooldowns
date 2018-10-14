@@ -20,18 +20,18 @@ local panelData = {
 }
 
 -- Set Submenu
-function Cool.Settings.GetSetName(setKey)
+local function GetSetName(setKey)
     local color = Cool.Data.Sets[setKey].settingsColor
     return zo_strformat("|c<<1>><<2>>|r", color, setKey)
 end
 
 -- Description
-function Cool.Settings.GetDescription(setKey)
+local function GetDescription(setKey)
     return Cool.Data.Sets[setKey].description
 end
 
 -- Enabled State
-function Cool.Settings.GetEnabledState(setKey)
+local function GetEnabledState(setKey)
     local enabled =  Cool.Data.Sets[setKey].enabled
     if enabled then
         return "|c92C843Equipped!|r"
@@ -41,16 +41,16 @@ function Cool.Settings.GetEnabledState(setKey)
 end
 
 -- Enabled Status
-function Cool.Settings.GetIsEnabled(setKey)
+local function GetIsEnabled(setKey)
     return Cool.Data.Sets[setKey].enabled
 end
 
 -- Display Size
-function Cool.Settings.GetSize(setKey)
+local function GetSize(setKey)
     return Cool.preferences.sets[setKey].size
 end
 
-function Cool.Settings.SetSize(setKey, size)
+local function SetSize(setKey, size)
     local context = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
 
     Cool.preferences.sets[setKey].size = size
@@ -61,25 +61,25 @@ function Cool.Settings.SetSize(setKey, size)
 end
 
 -- OnProc Sound Settings
-function Cool.Settings.GetOnProcEnabled(setKey)
+local function GetOnProcEnabled(setKey)
     return Cool.preferences.sets[setKey].sounds.onProc.enabled
 end
 
-function Cool.Settings.SetOnProcEnabled(setKey, enabled)
+local function SetOnProcEnabled(setKey, enabled)
     Cool.preferences.sets[setKey].sounds.onProc.enabled = enabled
 end
 
 -- OnReady Sound Settings
-function Cool.Settings.GetOnReadyEnabled(setKey)
+local function GetOnReadyEnabled(setKey)
     return Cool.preferences.sets[setKey].sounds.onReady.enabled
 end
 
-function Cool.Settings.SetOnReadyEnabled(setKey, enabled)
+local function SetOnReadyEnabled(setKey, enabled)
     Cool.preferences.sets[setKey].sounds.onReady.enabled = enabled
 end
 
 -- Test Sound
-function Cool.Settings.PlayTestSound(setKey, condition)
+local function PlayTestSound(setKey, condition)
     local sound = Cool.preferences.sets[setKey].sounds[condition].sound
 
     Cool:Trace(2, zo_strformat("Testing sound <<1>>", sound))
@@ -88,7 +88,7 @@ function Cool.Settings.PlayTestSound(setKey, condition)
 end
 
 -- Locked State
-function Cool.Settings.ToggleLocked(control)
+local function ToggleLocked(control)
     Cool.preferences.unlocked = not Cool.preferences.unlocked
     for key, set in pairs(Cool.Data.Sets) do
         local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
@@ -104,7 +104,7 @@ function Cool.Settings.ToggleLocked(control)
 end
 
 -- Force Showing
-function Cool.Settings.ForceShow(control)
+local function ForceShow(control)
     Cool.ForceShow = not Cool.ForceShow
 
     if Cool.ForceShow then
@@ -120,11 +120,11 @@ function Cool.Settings.ForceShow(control)
 end
 
 -- Combat State Display
-function Cool.Settings.GetShowOutOfCombat()
+local function GetShowOutOfCombat()
     return Cool.preferences.showOutsideCombat
 end
 
-function Cool.Settings.SetShowOutOfCombat(value)
+local function SetShowOutOfCombat(value)
     Cool.preferences.showOutsideCombat = value
     Cool.UI:SetCombatStateDisplay()
 
@@ -148,22 +148,22 @@ function Cool.Settings.Init()
             type = "button",
             name = function() if Cool.ForceShow then return "Hide All Equipped" else return "Show All Equipped" end end,
             tooltip = "Force all equipped sets for positioning or previewing display settings.",
-            func = function(control) Cool.Settings.ForceShow(control) end,
+            func = function(control) ForceShow(control) end,
             width = "half",
         },
         {
             type = "button",
             name = function() if Cool.preferences.unlocked then return "Lock All" else return "Unlock All" end end,
             tooltip = "Toggle locked/unlocked state.",
-            func = function(control) Cool.Settings.ToggleLocked(control) end,
+            func = function(control) ToggleLocked(control) end,
             width = "half",
         },
         {
             type = "checkbox",
             name = "Show Outside of Combat",
             tooltip = "Set to ON to show while out of combat and OFF to only show while in combat.",
-            getFunc = function() return Cool.Settings.GetShowOutOfCombat() end,
-            setFunc = function(value) Cool.Settings.SetShowOutOfCombat(value) end,
+            getFunc = function() return GetShowOutOfCombat() end,
+            setFunc = function(value) SetShowOutOfCombat(value) end,
             width = "full",
         },
         {
@@ -189,16 +189,16 @@ function Cool.Settings.Init()
     for index, set in ipairs(settingsTable) do
         table.insert(optionsTable, {
             type = "submenu",
-            name = function() return Cool.Settings.GetSetName(set.name) end,
+            name = function() return GetSetName(set.name) end,
             controls = {
                 {
                     type = "description",
-                    text = function() return Cool.Settings.GetDescription(set.name) end,
+                    text = function() return GetDescription(set.name) end,
                     width = "full",
                 },
                 --[[ {
                     type = "button",
-                    name = function() return Cool.Settings.GetEnabledState(set.name) end,
+                    name = function() return GetEnabledState(set.name) end,
                     func = function() return end,
                     width = "full",
                     disabled = true,
@@ -206,8 +206,8 @@ function Cool.Settings.Init()
                 {
                     type = "slider",
                     name = "Size",
-                    getFunc = function() return Cool.Settings.GetSize(set.name) end,
-                    setFunc = function(size) Cool.Settings.SetSize(set.name, size) end,
+                    getFunc = function() return GetSize(set.name) end,
+                    setFunc = function(size) SetSize(set.name, size) end,
                     min = 32,
                     max = 150,
                     step = 1,
@@ -219,8 +219,8 @@ function Cool.Settings.Init()
                     type = "checkbox",
                     name = "Play Sound On Proc",
                     tooltip = "Set to ON to play a sound when the set procs.",
-                    getFunc = function() return Cool.Settings.GetOnProcEnabled(set.name) end,
-                    setFunc = function(value) Cool.Settings.SetOnProcEnabled(set.name, value) end,
+                    getFunc = function() return GetOnProcEnabled(set.name) end,
+                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
                     width = "full",
                 },
                 {
@@ -234,21 +234,21 @@ function Cool.Settings.Init()
                     sort = "name-up",
                     width = "full",
                     scrollable = true,
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(set.name) end,
+                    disabled = function() return not GetOnProcEnabled(set.name) end,
                 },
                 {
                     type = "button",
                     name = "Test Sound",
-                    func = function() Cool.Settings.PlayTestSound(set.name, 'onProc') end,
+                    func = function() PlayTestSound(set.name, 'onProc') end,
                     width = "full",
-                    disabled = function() return not Cool.Settings.GetOnProcEnabled(set.name) end,
+                    disabled = function() return not GetOnProcEnabled(set.name) end,
                 },
                 {
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
-                    getFunc = function() return Cool.Settings.GetOnReadyEnabled(set.name) end,
-                    setFunc = function(value) Cool.Settings.SetOnReadyEnabled(set.name, value) end,
+                    getFunc = function() return GetOnReadyEnabled(set.name) end,
+                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
                     width = "full",
                 },
                 {
@@ -262,14 +262,14 @@ function Cool.Settings.Init()
                     sort = "name-up",
                     width = "full",
                     scrollable = true,
-                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(set.name) end,
+                    disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
                 {
                     type = "button",
                     name = "Test Sound",
-                    func = function() Cool.Settings.PlayTestSound(set.name, 'onReady') end,
+                    func = function() PlayTestSound(set.name, 'onReady') end,
                     width = "full",
-                    disabled = function() return not Cool.Settings.GetOnReadyEnabled(set.name) end,
+                    disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
             },
         })

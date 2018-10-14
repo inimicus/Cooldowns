@@ -20,7 +20,7 @@ function Cool.Defaults.Get()
         defaults.sets[key] = {
             x = 150,
             y = 150,
-            size = 75,
+            size = 64,
             sounds = {
                 onProc = {
                     enabled = true,

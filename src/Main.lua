@@ -7,15 +7,15 @@
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-Cool             = {}
-Cool.name        = "Cooldowns"
-Cool.version     = "1.1.0"
-Cool.dbVersion   = 1
-Cool.slash       = "/cool"
-Cool.prefix      = "[Cool] "
-Cool.HUDHidden   = false
-Cool.ForceShow   = false
-Cool.isInCombat  = false
+Cool            = {}
+Cool.name       = "Cooldowns"
+Cool.version    = "1.1.0"
+Cool.dbVersion  = 1
+Cool.slash      = "/cool"
+Cool.prefix     = "[Cool] "
+Cool.HUDHidden  = false
+Cool.ForceShow  = false
+Cool.isInCombat = false
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output

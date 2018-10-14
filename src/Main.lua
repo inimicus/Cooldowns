@@ -43,6 +43,7 @@ function Cool.Initialize(event, addonName)
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
     Cool.preferences = ZO_SavedVars:NewAccountWide("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
+    Cool.Settings.Upgrade()
 
     -- Use saved debugMode value
     Cool.debugMode = Cool.preferences.debugMode

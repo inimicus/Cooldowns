@@ -280,3 +280,27 @@ function Cool.Settings.Init()
 
     Cool:Trace(2, "Finished InitSettings()")
 end
+
+function Cool.Settings.Upgrade()
+    -- v1.1.0 changes setKey names, restore previous user settings
+    if Cool.preferences.upgradedv110 == nil or not Cool.preferences.upgradedv110 then
+        local previousSetKeys = {
+            ["Lich"] = "Shroud of the Lich",
+            ["Olorime"] = "Vestment of Olorime",
+            ["Trappings"] = "Trappings of Invigoration",
+            ["Warlock"] = "Vestments of the Warlock",
+            ["Wyrd"] = "Wyrd Tree's Blessing",
+        }
+
+        for previous, new in pairs(previousSetKeys) do
+            if Cool.preferences.sets[previous] ~= nil then
+                Cool.preferences.sets[new] = Cool.preferences.sets[previous]
+                Cool.preferences.sets[previous] = nil
+            end
+        end
+
+        d("[Cooldowns] Upgraded settings to v1.1.0")
+        Cool.preferences.upgradedv110 = true
+    end
+end
+

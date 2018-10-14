@@ -21,21 +21,28 @@ local panelData = {
 
 -- Set Submenu
 function Cool.Settings.GetSetName(setKey)
-    local set = Cool.Tracking.Sets[setKey]
-    local name = set.name
-    local color = set.settingsColor
-
-    return zo_strformat("|c<<1>><<2>>|r", color, name)
+    local color = Cool.Data.Sets[setKey].settingsColor
+    return zo_strformat("|c<<1>><<2>>|r", color, setKey)
 end
 
--- Set Submenu
+-- Description
 function Cool.Settings.GetDescription(setKey)
-    return Cool.Tracking.Sets[setKey].description
+    return Cool.Data.Sets[setKey].description
+end
+
+-- Enabled State
+function Cool.Settings.GetEnabledState(setKey)
+    local enabled =  Cool.Data.Sets[setKey].enabled
+    if enabled then
+        return "|c92C843Equipped!|r"
+    else
+        return "|cCD5031Not Equipped!|r"
+    end
 end
 
 -- Enabled Status
 function Cool.Settings.GetIsEnabled(setKey)
-    return Cool.Tracking.Sets[setKey].enabled
+    return Cool.Data.Sets[setKey].enabled
 end
 
 -- Display Size
@@ -83,7 +90,7 @@ end
 -- Locked State
 function Cool.Settings.ToggleLocked(control)
     Cool.preferences.unlocked = not Cool.preferences.unlocked
-    for key, set in pairs(Cool.Tracking.Sets) do
+    for key, set in pairs(Cool.Data.Sets) do
         local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
         if context ~= nil then
             context:SetMovable(Cool.preferences.unlocked)

@@ -26,6 +26,7 @@ lib/LibAddonMenu-2.0/controls/divider.lua
 src/Main.lua
 src/Data.lua
 src/Defaults.lua
+src/Equipped.lua
 src/Interface.lua
 src/Sounds.lua
 src/Settings.lua

@@ -43,7 +43,7 @@ Cool.Data.Sets = {
         cooldownDurationMs = 15000,
         onCooldown = false,
         timeOfProc = 0,
-        texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+        texture = "/esoui/art/icons/ability_ava_005.dds",
         showFrame = true,
     },
     ["Vestments of the Warlock"] = {

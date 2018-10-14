@@ -20,6 +20,18 @@
 Cool.Data = {}
 
 Cool.Data.Sets = {
+    ["Magicka Furnace"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Magicka Furnace proc is available or cooldown until it is ready again.",
+        settingsColor = "3A97CF",
+        id = 34813,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 30000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+    },
     ["Wyrd Tree's Blessing"] = {
         event = EVENT_ABILITY_COOLDOWN_UPDATED,
         description = "Displays when the Wyrd Tree proc is available or cooldown until it is ready again.",

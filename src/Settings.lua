@@ -139,26 +139,26 @@ end
 function Cool.Settings.Init()
 
     optionsTable = {
-        [1] = {
+        {
             type = "header",
             name = "Global Settings",
             width = "full",
         },
-        [2] = {
+        {
             type = "button",
             name = function() if Cool.ForceShow then return "Hide All Equipped" else return "Show All Equipped" end end,
             tooltip = "Force all equipped sets for positioning or previewing display settings.",
             func = function(control) Cool.Settings.ForceShow(control) end,
             width = "half",
         },
-        [3] = {
+        {
             type = "button",
             name = function() if Cool.preferences.unlocked then return "Lock All" else return "Unlock All" end end,
             tooltip = "Toggle locked/unlocked state.",
             func = function(control) Cool.Settings.ToggleLocked(control) end,
             width = "half",
         },
-        [4] = {
+        {
             type = "checkbox",
             name = "Show Outside of Combat",
             tooltip = "Set to ON to show while out of combat and OFF to only show while in combat.",
@@ -166,7 +166,7 @@ function Cool.Settings.Init()
             setFunc = function(value) Cool.Settings.SetShowOutOfCombat(value) end,
             width = "full",
         },
-        [5] = {
+        {
             type = "header",
             name = "Sets",
             width = "full",

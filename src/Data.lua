@@ -118,7 +118,8 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
-    -- Synergies --
+
+    -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Undaunted orb or Templar shard synergy is able to be used or when it will become available.",

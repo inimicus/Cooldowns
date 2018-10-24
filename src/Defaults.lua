@@ -15,8 +15,12 @@ local defaults = {
     showOutsideCombat = true,
 }
 
-function Cool.Defaults.Get()
+local synergies = {}
+
+function Cool.Defaults:Generate()
     for key, set in pairs(Cool.Data.Sets) do
+
+        -- Populate Sets
         defaults.sets[key] = {
             x = 150,
             y = 150,
@@ -32,6 +36,20 @@ function Cool.Defaults.Get()
                 },
             },
         }
+
+        -- Populate Synergies
+        synergies[key] = false
+
     end
+end
+
+-- Account-wide
+function Cool.Defaults.Get()
     return defaults
 end
+
+-- Per-character
+function Cool.Defaults.GetSynergies()
+    return synergies
+end
+

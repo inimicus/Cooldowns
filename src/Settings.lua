@@ -32,12 +32,12 @@ end
 
 -- Enabled State
 local function GetEnabledState(setKey)
-    local enabled =  Cool.Data.Sets[setKey].enabled
-    if enabled then
-        return "|c92C843Equipped!|r"
-    else
-        return "|cCD5031Not Equipped!|r"
-    end
+    return Cool.Data.Sets[setKey].enabled
+end
+
+local function SetEnabledState(setKey, state)
+    Cool.synergyPrefs[setKey] = state
+    Cool.Tracking.EnableTrackingForSet(setKey, state)
 end
 
 -- Enabled Status
@@ -108,11 +108,11 @@ local function ForceShow(control)
     Cool.ForceShow = not Cool.ForceShow
 
     if Cool.ForceShow then
-        control:SetText("Hide All Equipped")
+        control:SetText("Hide All Enabled")
         Cool.HUDHidden = false
         Cool.UI.ShowIcon(true)
     else
-        control:SetText("Show All Equipped")
+        control:SetText("Show All Enabled")
         Cool.HUDHidden = true
         Cool.UI.ShowIcon(false)
     end
@@ -146,7 +146,7 @@ function Cool.Settings.Init()
         },
         {
             type = "button",
-            name = function() if Cool.ForceShow then return "Hide All Equipped" else return "Show All Equipped" end end,
+            name = function() if Cool.ForceShow then return "Hide All Enabled" else return "Show All Enabled" end end,
             tooltip = "Force all equipped sets for positioning or previewing display settings.",
             func = function(control) ForceShow(control) end,
             width = "half",
@@ -174,19 +174,30 @@ function Cool.Settings.Init()
     }
 
     -- Copy key/value table to index/value table
-    settingsTable = {}
+    settingsSetTable = {}
+    settingsSynergyTable = {}
     for key, set in pairs(Cool.Data.Sets) do
-        table.insert(settingsTable, {
-            name = key,
-        })
+        if set.isSynergy then
+            table.insert(settingsSynergyTable, {
+                name = key,
+            })
+        else
+            table.insert(settingsSetTable, {
+                name = key,
+            })
+        end
     end
 
-    -- Sort settings table alphabetically
-    table.sort(settingsTable, function(x, y)
+    -- Sort settings tables alphabetically
+    table.sort(settingsSetTable, function(x, y)
         return x.name < y.name
     end)
 
-    for index, set in ipairs(settingsTable) do
+    table.sort(settingsSynergyTable, function(x, y)
+        return x.name < y.name
+    end)
+
+    for index, set in ipairs(settingsSetTable) do
         table.insert(optionsTable, {
             type = "submenu",
             name = function() return GetSetName(set.name) end,
@@ -247,6 +258,108 @@ function Cool.Settings.Init()
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
+                    getFunc = function() return GetOnReadyEnabled(set.name) end,
+                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
+                    width = "full",
+                },
+                {
+                    type = "dropdown",
+                    name = "Sound On Ready",
+                    choices = Cool.Sounds.names,
+                    choicesValues = Cool.Sounds.options,
+                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onReady.sound end,
+                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onReady.sound = value end,
+                    tooltip = "Sound volume based on game interface volume setting.",
+                    sort = "name-up",
+                    width = "full",
+                    scrollable = true,
+                    disabled = function() return not GetOnReadyEnabled(set.name) end,
+                },
+                {
+                    type = "button",
+                    name = "Test Sound",
+                    func = function() PlayTestSound(set.name, 'onReady') end,
+                    width = "full",
+                    disabled = function() return not GetOnReadyEnabled(set.name) end,
+                },
+            },
+        })
+    end
+
+    table.insert(optionsTable, {
+        type = "divider",
+        width = "full",
+        height = 16,
+        alpha = 0,
+    })
+    table.insert(optionsTable, {
+        type = "header",
+        name = "Synergies",
+        width = "full",
+    })
+
+    for index, set in ipairs(settingsSynergyTable) do
+        table.insert(optionsTable, {
+            type = "submenu",
+            name = function() return GetSetName(set.name) end,
+            controls = {
+                {
+                    type = "description",
+                    text = function() return GetDescription(set.name) end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Enable Tracking",
+                    tooltip = "Set to ON to enable tracking for this synergy.",
+                    getFunc = function() return GetEnabledState(set.name) end,
+                    setFunc = function(value) SetEnabledState(set.name, value) end,
+                    width = "full",
+                },
+                {
+                    type = "slider",
+                    name = "Size",
+                    getFunc = function() return GetSize(set.name) end,
+                    setFunc = function(size) SetSize(set.name, size) end,
+                    min = 32,
+                    max = 150,
+                    step = 1,
+                    clampInput = true,
+                    decimals = 0,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Play Sound On Use",
+                    tooltip = "Set to ON to play a sound when the synergy is used.",
+                    getFunc = function() return GetOnProcEnabled(set.name) end,
+                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
+                    width = "full",
+                },
+                {
+                    type = "dropdown",
+                    name = "Sound On Use",
+                    choices = Cool.Sounds.names,
+                    choicesValues = Cool.Sounds.options,
+                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onProc.sound end,
+                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onProc.sound = value end,
+                    tooltip = "Sound volume based on Interface volume setting.",
+                    sort = "name-up",
+                    width = "full",
+                    scrollable = true,
+                    disabled = function() return not GetOnProcEnabled(set.name) end,
+                },
+                {
+                    type = "button",
+                    name = "Test Sound",
+                    func = function() PlayTestSound(set.name, 'onProc') end,
+                    width = "full",
+                    disabled = function() return not GetOnProcEnabled(set.name) end,
+                },
+                {
+                    type = "checkbox",
+                    name = "Play Sound On Ready",
+                    tooltip = "Set to ON to play a sound when the synergy is off cooldown and ready to be used again.",
                     getFunc = function() return GetOnReadyEnabled(set.name) end,
                     setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
                     width = "full",

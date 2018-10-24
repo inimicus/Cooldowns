@@ -137,6 +137,14 @@ end
 -- Utility Functions
 -- ----------------------------------------------------------------------------
 
+function Cool.Tracking.EnableSynergiesFromPrefs()
+    for key, set in pairs(Cool.Data.Sets) do
+        if set.isSynergy then
+            Cool.Tracking.EnableTrackingForSet(key, Cool.synergyPrefs[key])
+        end
+    end
+end
+
 function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
     local set = Cool.Data.Sets[setKey]
 
@@ -156,10 +164,19 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             end
 
             -- Register events
-            EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, set.event, function(...) procFunction(setKey, ...) end)
-            EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, set.event,
-                REGISTER_FILTER_ABILITY_ID, set.id,
-                REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+            if type(set.id) == 'table' then
+                for index, synergyId in ipairs(set.id) do
+                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. synergyId, set.event, function(...) procFunction(setKey, ...) end)
+                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. synergyId, set.event,
+                        REGISTER_FILTER_ABILITY_ID, synergyId,
+                        REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+                end
+            else
+                EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, set.event, function(...) procFunction(setKey, ...) end)
+                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, set.event,
+                    REGISTER_FILTER_ABILITY_ID, set.id,
+                    REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+            end
 
             set.enabled = true
             Cool.UI.Draw(setKey)
@@ -173,7 +190,13 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
         -- Don't disable if already disabled
         if set.enabled then
             Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setKey))
-            EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)
+            if type(set.id) == 'table' then
+                for index, synergyId in ipairs(set.id) do
+                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. synergyId, set.event)
+                end
+            else
+                EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)
+            end
             set.enabled = false
             Cool.UI.Draw(setKey)
         else

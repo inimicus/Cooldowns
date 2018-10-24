@@ -42,7 +42,15 @@ function Cool.Initialize(event, addonName)
     Cool:Trace(1, "Cool Loaded")
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
+    -- Populate default settings for sets
+    Cool.Defaults:Generate()
+
+    -- Account-wide: Sets and synergy prefs
     Cool.preferences = ZO_SavedVars:NewAccountWide("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
+
+    -- Per-Character: Synergy display status
+    -- Other synergy preferences are still account-wide
+    Cool.synergyPrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetSynergies())
     Cool.Settings.Upgrade()
 
     -- Use saved debugMode value
@@ -57,6 +65,7 @@ function Cool.Initialize(event, addonName)
 
     Cool.Settings.Init()
     Cool.Tracking.RegisterEvents()
+    Cool.Tracking.EnableSynergiesFromPrefs()
     Cool.Equipped.UpdateAllSlots()
     Cool.UI.ToggleHUD()
 

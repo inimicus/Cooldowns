@@ -11,16 +11,9 @@ local items = {}
 local sets = {}
 
 local function GetNumSetBonuses(itemLink)
+    local _, _, _, equipType = GetItemLinkInfo(itemLink)
     -- 2H weapons, staves, bows count as two set pieces
-    if GetItemLinkWeaponType(itemLink) == WEAPONTYPE_BOW
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_FIRE_STAFF
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_FROST_STAFF
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_HEALING_STAFF
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_LIGHTNING_STAFF
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_AXE
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_HAMMER
-        or GetItemLinkWeaponType(itemLink) == WEAPONTYPE_TWO_HANDED_SWORD
-    then
+    if equipType == EQUIP_TYPE_TWO_HAND then
         return 2
     else
         return 1

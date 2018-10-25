@@ -69,7 +69,8 @@ function Cool.Initialize(event, addonName)
 
     -- Configure and register LibEquipmentBonus
     local LEB = LibStub("LibEquipmentBonus")
-    local l = LEB:Register(Cool.name, Cool.Tracking.EnableTrackingForSet, {
+    local l = LEB:New()
+    l:Register(Cool.name, Cool.Tracking.EnableTrackingForSet, {
         debugMode = 2,
     })
     --l:SetDebug(2)

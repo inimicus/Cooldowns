@@ -178,9 +178,7 @@ function leb:FilterBySetName(setName)
 end
 
 function leb:Register(addonId, callback, options)
-    local l = {}
     local options = options or {}
-    self.__index = self
 
     self.addonId = addonId
     self.test = 'none'
@@ -208,6 +206,12 @@ function leb:Register(addonId, callback, options)
 
     self:UpdateAllSlots()
 
-    return setmetatable(l, self)
+    return lib
 end
 
+function leb:New(o)
+	o = o or {}
+	setmetatable(o, self)
+	self.__index = self
+	return o
+end

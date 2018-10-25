@@ -60,13 +60,23 @@ function Cool.Initialize(event, addonName)
 
     -- Update initial combat/dead state
     -- In the event that UI is loaded mid-combat or while dead
-	Cool.isInCombat = IsUnitInCombat("player")
-	Cool.isDead = IsUnitDead("player")
+    Cool.isInCombat = IsUnitInCombat("player")
+    Cool.isDead = IsUnitDead("player")
 
     Cool.Settings.Init()
     Cool.Tracking.RegisterEvents()
     Cool.Tracking.EnableSynergiesFromPrefs()
-    Cool.Equipped.UpdateAllSlots()
+
+    -- Configure and register LibEquipmentBonus
+    local LEB = LibStub("LibEquipmentBonus")
+    local l = LEB:Register(Cool.name, Cool.Tracking.EnableTrackingForSet, {
+        debugMode = 2,
+    })
+    --l:SetDebug(2)
+    --d(l.test)
+    --l:SetTest('booty')
+    --d(l.test)
+
     Cool.UI.ToggleHUD()
 
     Cool:Trace(2, "Finished Initialize()")

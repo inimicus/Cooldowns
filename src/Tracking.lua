@@ -104,10 +104,6 @@ end
 function Cool.Tracking.RegisterEvents()
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, OnAlive)
     EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, OnDeath)
-    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, Cool.Equipped.WornSlotUpdate)
-    EVENT_MANAGER:AddFilterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
-        REGISTER_FILTER_BAG_ID, BAG_WORN,
-        REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
 
     if not Cool.preferences.showOutsideCombat then
         Cool.Tracking.RegisterCombatEvent()
@@ -119,7 +115,6 @@ end
 function Cool.Tracking.UnregisterEvents()
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
     EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
-    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
     Cool:Trace(2, "Unregistered Events")
 end
 
@@ -147,6 +142,8 @@ end
 
 function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
     local set = Cool.Data.Sets[setKey]
+
+    if set == nil then return end
 
     -- Full bonus active
     if enabled then

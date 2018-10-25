@@ -12,9 +12,18 @@ local leb, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 -- Exit if same or more recent version is already loaded
 if not leb then return end
+--setmetatable(leb, {__call = leb.Init})
 
 local libName = 'LibEquipmentBonus'
 local prefix = '[LibEquipmentBonus] '
+
+-- Shared Data
+leb.sets = leb.sets or {}
+leb.items = leb.items or {}
+
+-- Upvar
+local sets = leb.sets
+local items = leb.items
 
 -- Slots to monitor
 local ITEM_SLOTS = {
@@ -34,19 +43,19 @@ local ITEM_SLOTS = {
     EQUIP_SLOT_BACKUP_OFF,
 }
 
-function leb:Trace(debugLevel, ...)
-    if debugLevel <= self.debugMode then
-        d(prefix .. '[' .. self.addonId .. '] ' .. ...)
-    end
-end
-
-function leb:GetNumSetBonuses(itemLink)
+local function GetNumSetBonuses(itemLink)
     local _, _, _, equipType = GetItemLinkInfo(itemLink)
     -- 2H weapons, staves, bows count as two set pieces
     if equipType == EQUIP_TYPE_TWO_HAND then
         return 2
     else
         return 1
+    end
+end
+
+function leb:Trace(debugLevel, ...)
+    if debugLevel <= self.debugMode then
+        d(prefix .. '[' .. self.addonId .. '] ' .. ...)
     end
 end
 
@@ -57,14 +66,14 @@ function leb:AddSetBonus(slot, itemLink)
         self:Trace(3, zo_strformat("Adding set bonus for: <<1>> (<<2>>)", itemLink, setName))
 
         -- Initialize first time encountering a set
-        if self.sets[setName] == nil then
-            self.sets[setName] = {}
-            self.sets[setName].maxBonus = maxEquipped
-            self.sets[setName].bonuses = {}
+        if leb.sets[setName] == nil then
+            leb.sets[setName] = {}
+            leb.sets[setName].maxBonus = maxEquipped
+            leb.sets[setName].bonuses = {}
         end
 
         -- Update bonuses
-        self.sets[setName].bonuses[slot] = self:GetNumSetBonuses(itemLink)
+        leb.sets[setName].bonuses[slot] = GetNumSetBonuses(itemLink)
     end
 end
 
@@ -75,15 +84,15 @@ function leb:RemoveSetBonus(slot, itemLink)
         self:Trace(3, zo_strformat("Removing set bonus for: <<1>> (<<2>>)", itemLink, setName))
 
         -- Don't remove bonus if bonus wasn't added to begin with
-        if self.sets[setName] ~= nil and self.sets[setName].bonuses[slot] ~=nil then
-            self.sets[setName].bonuses[slot] = 0
+        if leb.sets[setName] ~= nil and leb.sets[setName].bonuses[slot] ~=nil then
+            leb.sets[setName].bonuses[slot] = 0
         end
     end
 end
 
 function leb:UpdateEnabledSets()
     self:Trace(2, 'Updating Enabled Sets')
-    for key, set in pairs(self.sets) do
+    for key, set in pairs(leb.sets) do
         if set ~= nil then
 
             local totalBonus = 0
@@ -110,10 +119,10 @@ function leb:UpdateEnabledSets()
 end
 
 function leb:UpdateSingleSlot(slotId, itemLink)
-    local previousLink = self.items[slotId]
+    local previousLink = leb.items[slotId]
 
     -- Update equipped item
-    self.items[slotId] = itemLink
+    leb.items[slotId] = itemLink
 
     -- Item did not change
     if itemLink == previousLink then
@@ -150,17 +159,12 @@ function leb:UpdateAllSlots()
         local itemLink = GetItemLink(BAG_WORN, slot)
 
         if itemLink ~= "" then
-            self.items[slot] = itemLink
+            leb.items[slot] = itemLink
             self:AddSetBonus(slot, itemLink)
         end
     end
 
     self:UpdateEnabledSets()
-end
-
-function leb:SetTest(intest)
-    d("Setting " .. intest)
-    self.test = intest
 end
 
 function leb:SetDebug(debugLevel)
@@ -177,41 +181,41 @@ function leb:FilterBySetName(setName)
     self:Trace(1, zo_strformat("Added filter for: <<1>>", setName))
 end
 
-function leb:Register(addonId, callback, options)
-    local options = options or {}
-
-    self.addonId = addonId
-    self.test = 'none'
-    self.debugMode = options.debugMode or 0
-    self.filterBySetName = options.filterBySetName or nil
-    self.sets = {}
-    self.items = {}
-
-    if type(addonId) ~= 'string' then
-        self:Trace(0, 'Addon ID must be a string!')
-        return
-    end
+function leb:Register(callback)
 
     if callback == nil then
         self:Trace(0, 'Callback function required!')
         return
     end
 
-    EVENT_MANAGER:RegisterForEvent(libName .. '_' .. addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(...) self:WornSlotUpdate(...) end)
-    EVENT_MANAGER:AddFilterForEvent(libName .. '_' .. addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
+    EVENT_MANAGER:RegisterForEvent(libName .. '_' .. self.addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(...) self:WornSlotUpdate(...) end)
+    EVENT_MANAGER:AddFilterForEvent(libName .. '_' .. self.addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
         REGISTER_FILTER_BAG_ID, BAG_WORN,
         REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
 
     self.EquipmentUpdateCallback = callback
 
-    self:UpdateAllSlots()
+    if next(leb.items) == nil then
+        self:Trace(1, 'Populating items')
+        self:UpdateAllSlots()
+    else
+        self:Trace(1, 'Already populated, enabling sets')
+        self:UpdateEnabledSets()
+    end
 
+end
+
+function leb:Init(addonId)
+
+    if type(addonId) ~= 'string' then
+        PrintLater('[LibEquipmentBonus] Addon ID must be a string!')
+        return
+    end
+
+    lib = {}
+    lib.addonId = addonId
+    setmetatable(lib, self)
+    self.__index = self
     return lib
 end
 
-function leb:New(o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end

@@ -12,7 +12,6 @@ local leb, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 -- Exit if same or more recent version is already loaded
 if not leb then return end
---setmetatable(leb, {__call = leb.Init})
 
 local libName = 'LibEquipmentBonus'
 local prefix = '[LibEquipmentBonus] '
@@ -20,10 +19,12 @@ local prefix = '[LibEquipmentBonus] '
 -- Shared Data
 leb.sets = leb.sets or {}
 leb.items = leb.items or {}
+leb.addons = leb.addons or {}
 
 -- Upvar
 local sets = leb.sets
 local items = leb.items
+local addons = leb.addons
 
 -- Slots to monitor
 local ITEM_SLOTS = {
@@ -53,22 +54,21 @@ local function GetNumSetBonuses(itemLink)
     end
 end
 
-function leb:Trace(debugLevel, ...)
-    if debugLevel <= self.debugMode then
-        d(prefix .. '[' .. self.addonId .. '] ' .. ...)
+local function Trace(addon, debugLevel, ...)
+    if debugLevel <= addon.debugMode then
+        d(prefix .. '[' .. addon.addonId .. '] ' .. ...)
     end
 end
 
-function leb:AddSetBonus(slot, itemLink)
+local function AddSetBonus(slot, itemLink)
     local hasSet, setName, _, _, maxEquipped = GetItemLinkSetInfo(itemLink, true)
 
-    if hasSet and (self.filterBySetName == nil or setName == self.filterBySetName) then
-        self:Trace(3, zo_strformat("Adding set bonus for: <<1>> (<<2>>)", itemLink, setName))
-
+    if hasSet then
         -- Initialize first time encountering a set
         if leb.sets[setName] == nil then
             leb.sets[setName] = {}
             leb.sets[setName].maxBonus = maxEquipped
+            leb.sets[setName].equippedMax = false
             leb.sets[setName].bonuses = {}
         end
 
@@ -77,48 +77,66 @@ function leb:AddSetBonus(slot, itemLink)
     end
 end
 
-function leb:RemoveSetBonus(slot, itemLink)
+local function RemoveSetBonus(slot, itemLink)
     local hasSet, setName, _, _, _ = GetItemLinkSetInfo(itemLink, true)
 
-    if hasSet and (self.filterBySetName == nil or setName == self.filterBySetName) then
-        self:Trace(3, zo_strformat("Removing set bonus for: <<1>> (<<2>>)", itemLink, setName))
-
+    if hasSet then
         -- Don't remove bonus if bonus wasn't added to begin with
-        if leb.sets[setName] ~= nil and leb.sets[setName].bonuses[slot] ~=nil then
+        if leb.sets[setName] ~= nil and leb.sets[setName].bonuses[slot] ~= nil then
             leb.sets[setName].bonuses[slot] = 0
         end
     end
 end
 
-function leb:UpdateEnabledSets()
-    self:Trace(2, 'Updating Enabled Sets')
+local function UpdateEnabledSets(forceNotify)
+
     for key, set in pairs(leb.sets) do
         if set ~= nil then
 
+            -- Sum bonuses
             local totalBonus = 0
             for slot, bonus in pairs(set.bonuses) do
                 totalBonus = totalBonus + bonus
             end
 
+            -- Establish enabled and changed state
+            local setMaxDidChange = false
             if totalBonus >= set.maxBonus then
-                if not set.equippedMax then
-                    self:Trace(1, zo_strformat("Enabled: <<1>>", key))
-                    set.equippedMax = true
-                    self.EquipmentUpdateCallback(key, true)
+                if not leb.sets[key].equippedMax then
+                    setMaxDidChange = true
+                    leb.sets[key].equippedMax = true
                 end
             else
-                if set.equippedMax then
-                    self:Trace(1, zo_strformat("Disabled: <<1>>", key))
-                    set.equippedMax = false
-                    self.EquipmentUpdateCallback(key, false)
+                if leb.sets[key].equippedMax then
+                    setMaxDidChange = true
+                    leb.sets[key].equippedMax = false
                 end
             end
+
+            if setMaxDidChange or forceNotify ~= nil then
+                -- Notify addons
+                for i=1, #addons do
+                    if (addons[i].filterBySetName == nil or addons[i].filterBySetName == key) then
+                        if (forceNotify ~= nil and forceNotify == addons[i].addonId) or forceNotify == nil then
+                            Trace(addons[i], 1, zo_strformat("Notifying set update for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                            addons[i].EquipmentUpdateCallback(key, leb.sets[key].equippedMax)
+                        else
+                            Trace(addons[i], 2, zo_strformat("Force notify not matched, not notifying for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                        end
+                    else
+                        Trace(addons[i], 2, zo_strformat("Filter prevents notify: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                    end
+                end
+            end
+
+            -- Reset change state
+            setMaxDidChange = false
 
         end
     end
 end
 
-function leb:UpdateSingleSlot(slotId, itemLink)
+local function UpdateSingleSlot(slotId, itemLink)
     local previousLink = leb.items[slotId]
 
     -- Update equipped item
@@ -126,45 +144,40 @@ function leb:UpdateSingleSlot(slotId, itemLink)
 
     -- Item did not change
     if itemLink == previousLink then
-        self:Trace(1, zo_strformat("Same item equipped: <<1>>", itemLink))
         return
 
     -- Item Removed (slot empty)
     elseif itemLink == '' then
-        self:Trace(1, zo_strformat("Item unequipped: <<1>>", previousLink))
-        self:RemoveSetBonus(slotId, previousLink)
+        RemoveSetBonus(slotId, previousLink)
 
     -- Item Changed
     else
-        self:Trace(1, zo_strformat("New item equipped: <<1>>", itemLink))
-        self:RemoveSetBonus(slotId, previousLink)
-        self:AddSetBonus(slotId, itemLink)
+        RemoveSetBonus(slotId, previousLink)
+        AddSetBonus(slotId, itemLink)
     end
 
-    self:UpdateEnabledSets()
+    UpdateEnabledSets()
 end
 
-function leb:WornSlotUpdate(eventCode, bagId, slotId, isNewItem, itemSoundCategory, updateReason)
+local function WornSlotUpdate(eventCode, bagId, slotId, isNewItem, itemSoundCategory, updateReason)
     -- Ignore costume updates
     if slotId == EQUIP_SLOT_COSTUME then return end
 
     local itemLink = GetItemLink(bagId, slotId)
-    self:UpdateSingleSlot(slotId, itemLink)
+    UpdateSingleSlot(slotId, itemLink)
 end
 
-function leb:UpdateAllSlots()
+local function UpdateAllSlots()
 
-    self:Trace(1, 'Updating All Slots')
     for index, slot in pairs(ITEM_SLOTS) do
         local itemLink = GetItemLink(BAG_WORN, slot)
 
         if itemLink ~= "" then
             leb.items[slot] = itemLink
-            self:AddSetBonus(slot, itemLink)
+            AddSetBonus(slot, itemLink)
         end
     end
 
-    self:UpdateEnabledSets()
 end
 
 function leb:SetDebug(debugLevel)
@@ -173,49 +186,55 @@ function leb:SetDebug(debugLevel)
     -- 2: Medium - More information about skills and addon details
     -- 3: High   - Everything
     self.debugMode = debugLevel
-    self:Trace(1, zo_strformat("Setting debug to <<1>>", debugLevel))
+    Trace(self, 1, zo_strformat("Setting debug to <<1>>", debugLevel))
 end
 
 function leb:FilterBySetName(setName)
     self.filterBySetName = setName
-    self:Trace(1, zo_strformat("Added filter for: <<1>>", setName))
+    Trace(self, 1, zo_strformat("Added filter for: <<1>>", setName))
 end
 
 function leb:Register(callback)
 
     if callback == nil then
-        self:Trace(0, 'Callback function required!')
+        Trace(self, 0, 'Callback function required! Aborting register.')
         return
     end
 
-    EVENT_MANAGER:RegisterForEvent(libName .. '_' .. self.addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, function(...) self:WornSlotUpdate(...) end)
-    EVENT_MANAGER:AddFilterForEvent(libName .. '_' .. self.addonId, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
+    self.EquipmentUpdateCallback = callback
+
+    EVENT_MANAGER:RegisterForEvent(libName, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, WornSlotUpdate)
+    EVENT_MANAGER:AddFilterForEvent(libName, EVENT_INVENTORY_SINGLE_SLOT_UPDATE,
         REGISTER_FILTER_BAG_ID, BAG_WORN,
         REGISTER_FILTER_INVENTORY_UPDATE_REASON, INVENTORY_UPDATE_REASON_DEFAULT)
 
-    self.EquipmentUpdateCallback = callback
-
     if next(leb.items) == nil then
-        self:Trace(1, 'Populating items')
-        self:UpdateAllSlots()
+        Trace(self, 2, 'Populating equipped items')
+        UpdateAllSlots()
     else
-        self:Trace(1, 'Already populated, enabling sets')
-        self:UpdateEnabledSets()
+        Trace(self, 2, 'Equipped items already populated')
     end
+
+    UpdateEnabledSets(self.addonId)
 
 end
 
 function leb:Init(addonId)
 
-    if type(addonId) ~= 'string' then
-        PrintLater('[LibEquipmentBonus] Addon ID must be a string!')
+    if type(addonId) ~= 'string' or string.len(addonId) == 0 then
+        PrintLater('[LibEquipmentBonus] Addon ID must be a string! Aborting initialization.')
         return
     end
 
-    lib = {}
+    local lib = {}
     lib.addonId = addonId
+    lib.debugMode = 0
+
     setmetatable(lib, self)
     self.__index = self
+
+    addons[#leb.addons+1] = lib
+
     return lib
 end
 

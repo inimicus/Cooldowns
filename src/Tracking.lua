@@ -143,6 +143,7 @@ end
 function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
     local set = Cool.Data.Sets[setKey]
 
+    -- Ignore sets not in our table
     if set == nil then return end
 
     -- Full bonus active

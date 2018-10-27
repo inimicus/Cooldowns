@@ -28,7 +28,8 @@ Cool.debugMode = 0
 
 function Cool:Trace(debugLevel, ...)
     if debugLevel <= Cool.debugMode then
-        d(Cool.prefix .. ...)
+        local message = zo_strformat(...)
+        d(Cool.prefix .. message)
     end
 end
 

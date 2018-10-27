@@ -82,7 +82,7 @@ end
 local function PlayTestSound(setKey, condition)
     local sound = Cool.preferences.sets[setKey].sounds[condition].sound
 
-    Cool:Trace(2, zo_strformat("Testing sound <<1>>", sound))
+    Cool:Trace(2, "Testing sound <<1>>", sound)
 
     Cool.UI.PlaySound(sound)
 end

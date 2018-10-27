@@ -21,7 +21,7 @@ function Cool.UI.Draw(key)
 
         -- Draw UI and create context if it doesn't exist
         if container == nil then
-            Cool:Trace(2, zo_strformat("Drawing: <<1>>", key))
+            Cool:Trace(2, "Drawing: <<1>>", key)
 
             local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
@@ -78,7 +78,7 @@ function Cool.UI.Draw(key)
 end
 
 function Cool.UI:SetCombatStateDisplay()
-    Cool:Trace(3, zo_strformat("Setting combat state display, in combat: <<1>>", tostring(Cool.isInCombat)))
+    Cool:Trace(3, "Setting combat state display, in combat: <<1>>", tostring(Cool.isInCombat))
 
     if Cool.isInCombat or Cool.preferences.showOutsideCombat and not Cool.isDead then
         Cool.UI.ShowIcon(true)
@@ -166,7 +166,7 @@ function Cool.UI.Position.Save(key)
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
-    Cool:Trace(2, zo_strformat("Saving position for <<1>> - Left: <<2>> Top: <<2>>", key, left, top))
+    Cool:Trace(2, "Saving position for <<1>> - Left: <<2>> Top: <<2>>", key, left, top)
 
     Cool.preferences.sets[key].x = left
     Cool.preferences.sets[key].y = top

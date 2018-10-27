@@ -24,7 +24,7 @@ local function OnCooldownUpdated(setKey, eventCode, abilityId)
     -- Ignore if set is on cooldown
     if set.onCooldown == true then return end
 
-    Cool:Trace(1, zo_strformat("Cooldown proc for <<1>> (<<2>>)", setKey, abilityId))
+    Cool:Trace(1, "Cooldown proc for <<1>> (<<2>>)", setKey, abilityId)
 
     set.onCooldown = true
     set.timeOfProc = GetGameTimeMilliseconds()
@@ -37,22 +37,22 @@ local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
     local set = Cool.Data.Sets[setKey]
 
     if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
-        Cool:Trace(1, zo_strformat("<<1>> (<<2>>) on Cooldown", abilityName, abilityId))
+        Cool:Trace(1, "<<1>> (<<2>>) on Cooldown", abilityName, abilityId)
     elseif result == set.result then
-        Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
         Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
         EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
-        Cool:Trace(1, zo_strformat("Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result))
+        Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
     end
 
 end
 
 local function IsInCombat(_, inCombat)
     Cool.isInCombat = inCombat
-    Cool:Trace(2, zo_strformat("In Combat: <<1>>", tostring(inCombat)))
+    Cool:Trace(2, "In Combat: <<1>>", tostring(inCombat))
     Cool.UI:SetCombatStateDisplay()
 end
 
@@ -83,7 +83,7 @@ local function OnCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _,
         if abilityId == value then return end
     end
 
-    Cool:Trace(1, zo_strformat("<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result))
+    Cool:Trace(1, "<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result)
 end
 
 -- ----------------------------------------------------------------------------
@@ -151,7 +151,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
 
         -- Don't enable if already enabled
         if not set.enabled then
-            Cool:Trace(1, zo_strformat("Full set for: <<1>>, registering events", setKey))
+            Cool:Trace(1, "Full set for: <<1>>, registering events", setKey)
 
             -- Set callback based on event
             local procFunction = nil
@@ -179,7 +179,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             set.enabled = true
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, zo_strformat("Set already enabled for: <<1>>", setKey))
+            Cool:Trace(2, "Set already enabled for: <<1>>", setKey)
         end
 
     -- Full bonus not active
@@ -187,7 +187,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
 
         -- Don't disable if already disabled
         if set.enabled then
-            Cool:Trace(1, zo_strformat("Not active for: <<1>>, unregistering events", setKey))
+            Cool:Trace(1, "Not active for: <<1>>, unregistering events", setKey)
             if type(set.id) == 'table' then
                 for index, synergyId in ipairs(set.id) do
                     EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. synergyId, set.event)
@@ -198,7 +198,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             set.enabled = false
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, zo_strformat("Set already disabled for: <<1>>", setKey))
+            Cool:Trace(2, "Set already disabled for: <<1>>", setKey)
         end
     end
 

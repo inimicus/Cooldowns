@@ -56,7 +56,8 @@ end
 
 local function Trace(addon, debugLevel, ...)
     if debugLevel <= addon.debugMode then
-        d(prefix .. '[' .. addon.addonId .. '] ' .. ...)
+        local message = zo_strformat(...)
+        d(prefix .. '[' .. addon.addonId .. '] ' .. message)
     end
 end
 
@@ -118,13 +119,13 @@ local function UpdateEnabledSets(forceNotify)
                 for i=1, #addons do
                     if (addons[i].filterBySetName == nil or addons[i].filterBySetName == key) then
                         if (forceNotify ~= nil and forceNotify == addons[i].addonId) or forceNotify == nil then
-                            Trace(addons[i], 1, zo_strformat("Notifying set update for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                            Trace(addons[i], 1, "Notifying set update for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
                             addons[i].EquipmentUpdateCallback(key, leb.sets[key].equippedMax)
                         else
-                            Trace(addons[i], 2, zo_strformat("Force notify not matched, not notifying for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                            Trace(addons[i], 2, "Force notify not matched, not notifying for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
                         end
                     else
-                        Trace(addons[i], 2, zo_strformat("Filter prevents notify: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax)))
+                        Trace(addons[i], 2, "Filter prevents notify: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
                     end
                 end
             end
@@ -186,12 +187,12 @@ function leb:SetDebug(debugLevel)
     -- 2: Medium - More information about skills and addon details
     -- 3: High   - Everything
     self.debugMode = debugLevel
-    Trace(self, 1, zo_strformat("Setting debug to <<1>>", debugLevel))
+    Trace(self, 1, "Setting debug to <<1>>", debugLevel)
 end
 
 function leb:FilterBySetName(setName)
     self.filterBySetName = setName
-    Trace(self, 1, zo_strformat("Added filter for: <<1>>", setName))
+    Trace(self, 1, "Added filter for: <<1>>", setName)
 end
 
 function leb:Register(callback)

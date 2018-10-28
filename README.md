@@ -1,9 +1,13 @@
 # Cooldowns
 
-Track procs and cooldowns of various sets.
+Track cooldowns of various sets and synergies.
 
 <p align="center">
     <img src="https://github.com/inimicus/Cooldowns/blob/master/art/Cooldowns.png?raw=true"><br>
+</p>
+
+<p align="center">
+    <img src="https://github.com/inimicus/Cooldowns/blob/master/art/Synergies.png?raw=true"><br>
 </p>
 
 ## Purpose
@@ -14,7 +18,7 @@ be even remotely within the realm of possibility.
 But fret no longer! There is an addon to count your long cooldowns for you.
 
 ## Features
-- Only enables tracking/display when an included set is equipped
+- Only enables tracking/display when an included set is equipped or synergy is toggled on
 - Reposition to any place on your screen
 - Resize display from really small to comically large
 - Optionally hide when out of combat
@@ -22,7 +26,8 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 - Play sound when off cooldown (enabled by default)
 - Includes around 100 different sounds to choose from
 
-## Implemented Sets
+## Implemented Cooldowns
+Sets:
 - Earthgore
 - Magicka Furnace
 - Shroud of the Lich
@@ -30,6 +35,13 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 - Vestment of Olorime
 - Vestments of the Warlock
 - Wyrd Tree's Blessing
+
+Synergies:
+- Blood Altar
+- Boner Shield
+- Conduit
+- Purify
+- Orbs / Shards
 
 ## Addtional Sets
 If you'd like to see a specific set added, please let me know. I would prefer to 

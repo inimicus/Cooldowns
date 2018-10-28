@@ -163,10 +163,10 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
 
             -- Register events
             if type(set.id) == 'table' then
-                for index, synergyId in ipairs(set.id) do
-                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. synergyId, set.event, function(...) procFunction(setKey, ...) end)
-                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. synergyId, set.event,
-                        REGISTER_FILTER_ABILITY_ID, synergyId,
+                for i=1, #set.id do
+                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id[i], set.event, function(...) procFunction(setKey, ...) end)
+                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id[i], set.event,
+                        REGISTER_FILTER_ABILITY_ID, set.id[i],
                         REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                 end
             else
@@ -189,8 +189,8 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
         if set.enabled then
             Cool:Trace(1, "Not active for: <<1>>, unregistering events", setKey)
             if type(set.id) == 'table' then
-                for index, synergyId in ipairs(set.id) do
-                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. synergyId, set.event)
+                for i=1, #set.id do
+                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id[i], set.event)
                 end
             else
                 EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)

@@ -134,8 +134,8 @@ end
 
 function Cool.Tracking.EnableSynergiesFromPrefs()
     for key, set in pairs(Cool.Data.Sets) do
-        if set.isSynergy then
-            Cool.Tracking.EnableTrackingForSet(key, Cool.synergyPrefs[key])
+        if set.isSynergy and Cool.synergyPrefs[key] then
+            Cool.Tracking.EnableTrackingForSet(key, true)
         end
     end
 end

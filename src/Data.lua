@@ -190,6 +190,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = true,
     },
+    ["Harvest"] = {
+        -- Thanks to Liofa for patching and testing for this synergy
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Warden Healing Seed synergy is able to be used or when it will become available.",
+        settingsColor = "CD5031",
+        id = 108826,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 20000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_warden_007.dds",
+        showFrame = true,
+        isSynergy = true,
+    },
 }
 
 Cool.Data.ITEM_SLOTS = {

@@ -15,7 +15,7 @@ local function SnapToGrid(position, gridSize)
     -- Round down
     position = math.floor(position)
 
-    -- Return value to closes grid point
+    -- Return value to closest grid point
     if (position % gridSize >= gridSize / 2) then
         return position + (gridSize - (position % gridSize))
     else

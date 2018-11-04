@@ -8,6 +8,7 @@
 
 Cool.Settings = {}
 
+local WM = WINDOW_MANAGER
 local LAM = LibStub("LibAddonMenu-2.0")
 
 local panelData = {
@@ -68,7 +69,7 @@ local function GetSize(setKey)
 end
 
 local function SetSize(setKey, size)
-    local context = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
+    local context = WM:GetControlByName(setKey .. "_Container")
 
     Cool.preferences.sets[setKey].size = size
 
@@ -108,7 +109,7 @@ end
 local function ToggleLocked(control)
     Cool.preferences.unlocked = not Cool.preferences.unlocked
     for key, set in pairs(Cool.Data.Sets) do
-        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        local context = WM:GetControlByName(key .. "_Container")
         if context ~= nil then
             context:SetMovable(Cool.preferences.unlocked)
             if Cool.preferences.unlocked then

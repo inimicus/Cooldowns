@@ -9,6 +9,8 @@
 Cool.UI = {}
 Cool.UI.scaleBase = 100
 
+local WM = WINDOW_MANAGER
+
 local function SnapToGrid(position, gridSize)
     -- Round down
     position = math.floor(position)
@@ -23,7 +25,7 @@ end
 
 
 local function SavePosition(key)
-    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+    local context = WM:GetControlByName(key .. "_Container")
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
@@ -42,7 +44,7 @@ end
 
 local function SetPosition(key, left, top)
     Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+    local context = WM:GetControlByName(key .. "_Container")
     context:ClearAnchors()
     context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
@@ -51,7 +53,7 @@ end
 function Cool.UI.Draw(key)
 
     local set = Cool.Data.Sets[key];
-    local container = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+    local container = WM:GetControlByName(key .. "_Container")
 
     -- Enable display
     if set.enabled then
@@ -62,7 +64,7 @@ function Cool.UI.Draw(key)
         if container == nil then
             Cool:Trace(2, "Drawing: <<1>>", key)
 
-            local c = WINDOW_MANAGER:CreateTopLevelWindow(key .. "_Container")
+            local c = WM:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
             c:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
             c:ClearAnchors()
@@ -77,19 +79,19 @@ function Cool.UI.Draw(key)
             c:SetScale(saved.size / Cool.UI.scaleBase)
             c:SetHandler("OnMoveStop", function(...) SavePosition(key) end)
 
-            local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
+            local r = WM:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
             r:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
             r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
             if set.showFrame then
-                local f = WINDOW_MANAGER:CreateControl(key .. "_Frame", c, CT_TEXTURE)
+                local f = WM:CreateControl(key .. "_Frame", c, CT_TEXTURE)
                 f:SetTexture("/esoui/art/actionbar/gamepad/gp_abilityframe64.dds")
                 f:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
                 f:SetAnchor(CENTER, c, CENTER, 0, 0)
             end
 
-            local l = WINDOW_MANAGER:CreateControl(key .. "_Label", c, CT_LABEL)
+            local l = WM:CreateControl(key .. "_Label", c, CT_LABEL)
             l:SetAnchor(CENTER, c, CENTER, 0, 0)
             l:SetColor(1, 1, 1, 1)
             l:SetFont("$(MEDIUM_FONT)|36|soft-shadow-thick")
@@ -133,9 +135,9 @@ end
 function Cool.UI.Update(setKey)
 
     local set = Cool.Data.Sets[setKey]
-    local container = WINDOW_MANAGER:GetControlByName(setKey .. "_Container")
-    local texture = WINDOW_MANAGER:GetControlByName(setKey .. "_Texture")
-    local label = WINDOW_MANAGER:GetControlByName(setKey .. "_Label")
+    local container = WM:GetControlByName(setKey .. "_Container")
+    local texture = WM:GetControlByName(setKey .. "_Texture")
+    local label = WM:GetControlByName(setKey .. "_Label")
 
     local countdown = (set.timeOfProc + set.cooldownDurationMs - GetGameTimeMilliseconds()) / 1000
 
@@ -184,7 +186,7 @@ end
 function Cool.UI.ShowIcon(shouldShow)
 
     for key, set in pairs(Cool.Data.Sets) do
-        local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+        local context = WM:GetControlByName(key .. "_Container")
         if context ~= nil then
             if Cool.ForceShow then
                 context:SetHidden(false)

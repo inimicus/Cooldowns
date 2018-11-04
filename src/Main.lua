@@ -71,7 +71,6 @@ function Cool.Initialize(event, addonName)
     -- Configure and register LibEquipmentBonus
     local LEB = LibStub("LibEquipmentBonus")
     local Equip = LEB:Init(Cool.name)
-    --Equip:SetDebug(2)
     Equip:Register(Cool.Tracking.EnableTrackingForSet)
 
     Cool.UI.ToggleHUD()

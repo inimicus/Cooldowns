@@ -9,6 +9,45 @@
 Cool.UI = {}
 Cool.UI.scaleBase = 100
 
+local function SnapToGrid(position, gridSize)
+    -- Round down
+    position = math.floor(position)
+
+    -- Return value to closes grid point
+    if (position % gridSize >= gridSize / 2) then
+        return position + (gridSize - (position % gridSize))
+    else
+        return position - (position % gridSize)
+    end
+end
+
+
+local function SavePosition(key)
+    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+    local top   = context:GetTop()
+    local left  = context:GetLeft()
+
+    if Cool.preferences.snapToGrid then
+        local gridSize = Cool.preferences.gridSize
+        top = SnapToGrid(top, gridSize)
+        left = SnapToGrid(left, gridSize)
+        SetPosition(key, left, top)
+    end
+
+    Cool:Trace(2, "Saving position for <<1>> - Left: <<2>> Top: <<3>>", key, left, top)
+
+    Cool.preferences.sets[key].x = left
+    Cool.preferences.sets[key].y = top
+end
+
+local function SetPosition(key, left, top)
+    Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
+    context:ClearAnchors()
+    context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+end
+
+
 function Cool.UI.Draw(key)
 
     local set = Cool.Data.Sets[key];
@@ -36,7 +75,7 @@ function Cool.UI.Draw(key)
                 c:SetHidden(false)
             end
             c:SetScale(saved.size / Cool.UI.scaleBase)
-            c:SetHandler("OnMoveStop", function(...) Cool.UI.Position.Save(key) end)
+            c:SetHandler("OnMoveStop", function(...) SavePosition(key) end)
 
             local r = WINDOW_MANAGER:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
@@ -58,7 +97,7 @@ function Cool.UI.Draw(key)
             l:SetHorizontalAlignment(RIGHT)
             l:SetPixelRoundingEnabled(true)
 
-            Cool.UI.Position.Set(key, saved.x, saved.y)
+            SetPosition(key, saved.x, saved.y)
 
         -- Reuse context
         else
@@ -157,47 +196,6 @@ function Cool.UI.ShowIcon(shouldShow)
         end
     end
 
-end
-
-Cool.UI.Position = {}
-
-function Cool.UI.Position.Save(key)
-    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
-    local top   = context:GetTop()
-    local left  = context:GetLeft()
-
-    if Cool.preferences.snapToGrid then
-        local gridSize = Cool.preferences.gridSize
-
-        top   = math.floor(top)
-        left  = math.floor(left)
-
-        if (top % gridSize >= gridSize / 2) then
-            top = top + (gridSize - (top % gridSize))
-        else
-            top = top - (top % gridSize)
-        end
-
-        if (left % gridSize >= gridSize / 2) then
-            left = left + (gridSize - (left % gridSize))
-        else
-            left = left - (left % gridSize)
-        end
-
-        Cool.UI.Position.Set(key, left, top)
-    end
-
-    Cool:Trace(2, "Saving position for <<1>> - Left: <<2>> Top: <<3>>", key, left, top)
-
-    Cool.preferences.sets[key].x = left
-    Cool.preferences.sets[key].y = top
-end
-
-function Cool.UI.Position.Set(key, left, top)
-    Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    local context = WINDOW_MANAGER:GetControlByName(key .. "_Container")
-    context:ClearAnchors()
-    context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
 
 function Cool.UI.SlashCommand(command)

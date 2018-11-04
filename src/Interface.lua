@@ -23,6 +23,12 @@ local function SnapToGrid(position, gridSize)
     end
 end
 
+local function SetPosition(key, left, top)
+    Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+    local context = WM:GetControlByName(key .. "_Container")
+    context:ClearAnchors()
+    context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+end
 
 local function SavePosition(key)
     local context = WM:GetControlByName(key .. "_Container")
@@ -41,14 +47,6 @@ local function SavePosition(key)
     Cool.preferences.sets[key].x = left
     Cool.preferences.sets[key].y = top
 end
-
-local function SetPosition(key, left, top)
-    Cool:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    local context = WM:GetControlByName(key .. "_Container")
-    context:ClearAnchors()
-    context:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
-end
-
 
 function Cool.UI.Draw(key)
 

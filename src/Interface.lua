@@ -7,8 +7,8 @@
 -- -----------------------------------------------------------------------------
 
 Cool.UI = {}
-Cool.UI.scaleBase = 100
 
+local scaleBase = 100
 local WM = WINDOW_MANAGER
 
 local function SnapToGrid(position, gridSize)
@@ -66,7 +66,7 @@ function Cool.UI.Draw(key)
 
             local c = WM:CreateTopLevelWindow(key .. "_Container")
             c:SetClampedToScreen(true)
-            c:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
+            c:SetDimensions(scaleBase, scaleBase)
             c:ClearAnchors()
             c:SetMouseEnabled(true)
             c:SetAlpha(1)
@@ -76,18 +76,18 @@ function Cool.UI.Draw(key)
             else
                 c:SetHidden(false)
             end
-            c:SetScale(saved.size / Cool.UI.scaleBase)
+            c:SetScale(saved.size / scaleBase)
             c:SetHandler("OnMoveStop", function(...) SavePosition(key) end)
 
             local r = WM:CreateControl(key .. "_Texture", c, CT_TEXTURE)
             r:SetTexture(set.texture)
-            r:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
+            r:SetDimensions(scaleBase, scaleBase)
             r:SetAnchor(CENTER, c, CENTER, 0, 0)
 
             if set.showFrame then
                 local f = WM:CreateControl(key .. "_Frame", c, CT_TEXTURE)
                 f:SetTexture("/esoui/art/actionbar/gamepad/gp_abilityframe64.dds")
-                f:SetDimensions(Cool.UI.scaleBase, Cool.UI.scaleBase)
+                f:SetDimensions(scaleBase, scaleBase)
                 f:SetAnchor(CENTER, c, CENTER, 0, 0)
             end
 

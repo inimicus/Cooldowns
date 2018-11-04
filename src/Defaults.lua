@@ -12,6 +12,8 @@ local defaults = {
     debugMode = 0,
     sets = {},
     unlocked = true,
+    snapToGrid = false,
+    gridSize = 16,
     showOutsideCombat = true,
 }
 

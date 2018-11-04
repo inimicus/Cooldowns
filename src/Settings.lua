@@ -30,6 +30,23 @@ local function GetDescription(setKey)
     return Cool.Data.Sets[setKey].description
 end
 
+-- Grid Options
+local function GetSnapToGrid()
+    return Cool.preferences.snapToGrid
+end
+
+local function SetSnapToGrid(snap)
+    Cool.preferences.snapToGrid = snap
+end
+
+local function GetGridSize()
+    return Cool.preferences.gridSize
+end
+
+local function SetGridSize(gridSize)
+    Cool.preferences.gridSize = gridSize
+end
+
 -- Enabled State
 local function GetEnabledState(setKey)
     return Cool.Data.Sets[setKey].enabled
@@ -165,6 +182,28 @@ function Cool.Settings.Init()
             getFunc = function() return GetShowOutOfCombat() end,
             setFunc = function(value) SetShowOutOfCombat(value) end,
             width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Snap to Grid",
+            tooltip = "Set to ON to snap position to the specified grid.",
+            getFunc = function() return GetSnapToGrid() end,
+            setFunc = function(value) SetSnapToGrid(value) end,
+            width = "full",
+        },
+        {
+            type = "slider",
+            name = "Grid Size",
+            tooltip = "Grid dimensions to snap positioning of display elements to.",
+            getFunc = function() return GetGridSize() end,
+            setFunc = function(size) SetGridSize(size) end,
+            min = 1,
+            max = 100,
+            step = 1,
+            clampInput = true,
+            decimals = 0,
+            width = "full",
+            disabled = function() return not GetSnapToGrid() end,
         },
         {
             type = "header",

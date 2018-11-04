@@ -166,7 +166,28 @@ function Cool.UI.Position.Save(key)
     local top   = context:GetTop()
     local left  = context:GetLeft()
 
-    Cool:Trace(2, "Saving position for <<1>> - Left: <<2>> Top: <<2>>", key, left, top)
+    if Cool.preferences.snapToGrid then
+        local gridSize = Cool.preferences.gridSize
+
+        top   = math.floor(top)
+        left  = math.floor(left)
+
+        if (top % gridSize >= gridSize / 2) then
+            top = top + (gridSize - (top % gridSize))
+        else
+            top = top - (top % gridSize)
+        end
+
+        if (left % gridSize >= gridSize / 2) then
+            left = left + (gridSize - (left % gridSize))
+        else
+            left = left - (left % gridSize)
+        end
+
+        Cool.UI.Position.Set(key, left, top)
+    end
+
+    Cool:Trace(2, "Saving position for <<1>> - Left: <<2>> Top: <<3>>", key, left, top)
 
     Cool.preferences.sets[key].x = left
     Cool.preferences.sets[key].y = top

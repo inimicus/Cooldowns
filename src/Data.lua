@@ -118,6 +118,20 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Vykosa"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 111354, -- Major Maim
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 15000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_debuff_major_maim.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

@@ -86,11 +86,34 @@ local function OnCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _,
     Cool:Trace(1, "<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result)
 end
 
+local function OnEffectChangedUnfiltered(_, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    -- Exclude common unnecessary abilities
+    local ignoreList = {
+        sprint        = 973,
+        sprintDrain   = 15356,
+        block         = 14890,
+        interrupt     = 55146,
+        roll          = 28549,
+        immov         = 29721,
+        phase         = 98294,
+        dodgeFatigue  = 69143,
+    }
+
+    for index, value in pairs(ignoreList) do
+        if abilityId == value then return end
+    end
+
+    Cool:Trace(1, "<<1>> (<<2>>) with change type <<3>> <<4>>", effectName, abilityId, changeType, iconName)
+end
+
 -- ----------------------------------------------------------------------------
 -- Event Register/Unregister
 -- ----------------------------------------------------------------------------
 
 function Cool.Tracking.RegisterUnfiltered()
+    --EVENT_MANAGER:RegisterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, OnEffectChangedUnfiltered)
+    --EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+
     EVENT_MANAGER:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, OnCombatEventUnfiltered)
     EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
     Cool:Trace(1, "Registered Unfiltered Events")

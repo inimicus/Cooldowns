@@ -132,6 +132,20 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Steadfast Hero"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "FCFCCB",
+        id = 113509, -- Major Protection
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 10000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_buff_major_protection.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

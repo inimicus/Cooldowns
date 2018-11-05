@@ -130,6 +130,7 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_debuff_major_maim.dds",
+        --texture = "/esoui/art/icons/gear_undvykosa_helmet_a.dds",
         showFrame = true,
         isSynergy = false,
     },

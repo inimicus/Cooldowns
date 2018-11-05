@@ -8,6 +8,7 @@
 
 Cool.Tracking = {}
 
+local EM = EVENT_MANAGER
 local updateIntervalMs = 100
 
 -- ----------------------------------------------------------------------------
@@ -29,7 +30,7 @@ local function OnCooldownUpdated(setKey, eventCode, abilityId)
     set.onCooldown = true
     set.timeOfProc = GetGameTimeMilliseconds()
     Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
-    EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
+    EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
 end
 
 local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
@@ -43,7 +44,7 @@ local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
         Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
-        EVENT_MANAGER:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
+        EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
         Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
     end
@@ -111,22 +112,22 @@ end
 -- ----------------------------------------------------------------------------
 
 function Cool.Tracking.RegisterUnfiltered()
-    --EVENT_MANAGER:RegisterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, OnEffectChangedUnfiltered)
-    --EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+    --EM:RegisterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, OnEffectChangedUnfiltered)
+    --EM:AddFilterForEvent(Cool.name .. "_UnfilteredEffect", EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
 
-    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, OnCombatEventUnfiltered)
-    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+    EM:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, OnCombatEventUnfiltered)
+    EM:AddFilterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
     Cool:Trace(1, "Registered Unfiltered Events")
 end
 
 function Cool.Tracking.UnregisterUnfiltered()
-    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT)
+    EM:UnregisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT)
     Cool:Trace(1, "Unregistered Unfiltered Events")
 end
 
 function Cool.Tracking.RegisterEvents()
-    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, OnAlive)
-    EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, OnDeath)
+    EM:RegisterForEvent(Cool.name, EVENT_PLAYER_ALIVE, OnAlive)
+    EM:RegisterForEvent(Cool.name, EVENT_PLAYER_DEAD, OnDeath)
 
     if not Cool.preferences.showOutsideCombat then
         Cool.Tracking.RegisterCombatEvent()
@@ -136,18 +137,18 @@ function Cool.Tracking.RegisterEvents()
 end
 
 function Cool.Tracking.UnregisterEvents()
-    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
-    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
+    EM:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
+    EM:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
     Cool:Trace(2, "Unregistered Events")
 end
 
 function Cool.Tracking.RegisterCombatEvent()
-    EVENT_MANAGER:RegisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE, IsInCombat)
+    EM:RegisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE, IsInCombat)
     Cool:Trace(2, "Registered combat events")
 end
 
 function Cool.Tracking.UnregisterCombatEvent()
-    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE)
+    EM:UnregisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE)
     Cool:Trace(2, "Unregistered combat events")
 end
 
@@ -187,14 +188,14 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             -- Register events
             if type(set.id) == 'table' then
                 for i=1, #set.id do
-                    EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id[i], set.event, function(...) procFunction(setKey, ...) end)
-                    EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id[i], set.event,
+                    EM:RegisterForEvent(Cool.name .. "_" .. set.id[i], set.event, function(...) procFunction(setKey, ...) end)
+                    EM:AddFilterForEvent(Cool.name .. "_" .. set.id[i], set.event,
                         REGISTER_FILTER_ABILITY_ID, set.id[i],
                         REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
                 end
             else
-                EVENT_MANAGER:RegisterForEvent(Cool.name .. "_" .. set.id, set.event, function(...) procFunction(setKey, ...) end)
-                EVENT_MANAGER:AddFilterForEvent(Cool.name .. "_" .. set.id, set.event,
+                EM:RegisterForEvent(Cool.name .. "_" .. set.id, set.event, function(...) procFunction(setKey, ...) end)
+                EM:AddFilterForEvent(Cool.name .. "_" .. set.id, set.event,
                     REGISTER_FILTER_ABILITY_ID, set.id,
                     REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
             end
@@ -213,10 +214,10 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             Cool:Trace(1, "Not active for: <<1>>, unregistering events", setKey)
             if type(set.id) == 'table' then
                 for i=1, #set.id do
-                    EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id[i], set.event)
+                    EM:UnregisterForEvent(Cool.name .. "_" .. set.id[i], set.event)
                 end
             else
-                EVENT_MANAGER:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)
+                EM:UnregisterForEvent(Cool.name .. "_" .. set.id, set.event)
             end
             set.enabled = false
             Cool.UI.Draw(setKey)

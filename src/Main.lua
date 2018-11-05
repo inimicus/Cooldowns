@@ -18,6 +18,8 @@ Cool.ForceShow  = false
 Cool.isInCombat = false
 Cool.isDead     = false
 
+local EM = EVENT_MANAGER
+
 -- -----------------------------------------------------------------------------
 -- Level of debug output
 -- 1: Low    - Basic debug info, show core functionality
@@ -41,7 +43,7 @@ function Cool.Initialize(event, addonName)
     if addonName ~= Cool.name then return end
 
     Cool:Trace(1, "Cool Loaded")
-    EVENT_MANAGER:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
+    EM:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
     -- Populate default settings for sets
     Cool.Defaults:Generate()
@@ -82,5 +84,5 @@ end
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EVENT_MANAGER:RegisterForEvent(Cool.name, EVENT_ADD_ON_LOADED, Cool.Initialize)
+EM:RegisterForEvent(Cool.name, EVENT_ADD_ON_LOADED, Cool.Initialize)
 

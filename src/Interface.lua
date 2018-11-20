@@ -7,8 +7,9 @@
 -- -----------------------------------------------------------------------------
 
 Cool.UI = {}
+Cool.UI.scaleBase = 100
 
-local scaleBase = 100
+local scaleBase = Cool.UI.scaleBase
 local WM = WINDOW_MANAGER
 
 local function SnapToGrid(position, gridSize)

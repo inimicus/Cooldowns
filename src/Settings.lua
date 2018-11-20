@@ -10,6 +10,7 @@ Cool.Settings = {}
 
 local WM = WINDOW_MANAGER
 local LAM = LibStub("LibAddonMenu-2.0")
+local scaleBase = Cool.UI.scaleBase
 
 local panelData = {
     type        = "panel",
@@ -74,7 +75,7 @@ local function SetSize(setKey, size)
     Cool.preferences.sets[setKey].size = size
 
     if context ~= nil then
-        context:SetScale(size / Cool.UI.scaleBase)
+        context:SetScale(size / scaleBase)
     end
 end
 

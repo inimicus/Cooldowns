@@ -148,6 +148,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Zaan"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the cheese beam of fiery death is ready to ruin someone's day.",
+        settingsColor = "3A97CF",
+        id = 102136,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 18000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/gear_undaunted_dragonpriest_head_a.dds",
+        --LuiExtended/media/icons/abilities/ability_set_monster_zaan.dds
+        showFrame = false,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

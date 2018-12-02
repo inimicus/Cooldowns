@@ -50,13 +50,16 @@ Synergies:
 - Orbs/Shards (Undaunted/Templar)
 
 ## FAQ
-_What about Alkosh?_
+_*What about Alkosh?*_
+
 Alkosh's 5-item proc condition is "When you activate a synergy..." and, as such, here isn't a cooldown for Alkosh beyond those for activating synergies. Tracking cooldowns for synergies and using them at the right moment is your best bet at maximizing your Alkosh uptime. If you'd like to track the Alkosh debuff applied to targets, configure your buff/debuff tracker or check out Wheels' awesome (RaidBuffs)[https://www.esoui.com/downloads/info1939-RaidBuffs.html] addon.
 
-_What about Powerful Assault?_
+_*What about Powerful Assault?*_
+
 Similar to Alkosh, the 5-item proc condition is "When you cast an Assault ability..." and has no cooldown in the traditional sense. Tracking your Powerful Assault uptime is better suited to a buff tracker as it will help you identify group members that have not yet received the buff.
 
-_How hard would it be to add [this] set?_
+_*How hard would it be to add [this] set?*_
+
 Barring any special conditions not already accounted for in the code, it's not too difficult at all. The code to add and manage tracked sets and synergies (Data.lua) is very straight-forward, it's just a matter of testing and making sure everything works as intended. Testing new sets, now that the code has been established, is what takes the longest. So don't hesitate to reach out with anything you'd like to see included!
 
 ## Addtional Sets

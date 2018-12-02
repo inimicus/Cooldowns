@@ -121,7 +121,7 @@ Cool.Data.Sets = {
     },
     ["Vykosa"] = {
         event = EVENT_COMBAT_EVENT,
-        description = "",
+        description = "Displays when the Major Maim debuff is able to be applied.",
         settingsColor = "CD5031",
         id = 111354, -- Major Maim
         enabled = false,
@@ -136,7 +136,7 @@ Cool.Data.Sets = {
     },
     ["Steadfast Hero"] = {
         event = EVENT_COMBAT_EVENT,
-        description = "",
+        description = "Displays when the Major Protection buff is available through cleansing a negative effect on yourself or an ally.",
         settingsColor = "FCFCCB",
         id = 113509, -- Major Protection
         enabled = false,

@@ -181,6 +181,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Mechanical Acuity"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Mechanical Acuity proc is ready or when it will be available, but not the duration of the crit bonus.",
+        settingsColor = "CD5031",
+        id = 99204,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 18000,
+        onCooldown = false,
+        timeOfProc = 0,
+        --texture = "/esoui/art/icons/gear_clockwork_medium_head_a.dds",
+        texture = "/esoui/art/icons/ability_buff_major_sorcery.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

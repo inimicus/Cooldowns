@@ -196,6 +196,20 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Blood Spawn"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Blood Spawn ultimate generation and resistance buffs are ready or when they will be available, but not their duration.",
+        settingsColor = "CD5031",
+        id = 59517,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 6000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/gear_undauntedgargoyle_head_a.dds",
+        showFrame = false,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

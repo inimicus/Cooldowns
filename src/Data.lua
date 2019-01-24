@@ -210,6 +210,21 @@ Cool.Data.Sets = {
         showFrame = false,
         isSynergy = false,
     },
+    ["Stonekeeper"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Stonekeeper can generate Charge stacks or until it can generate stacks again. Does not show current Charge stacks.",
+        settingsColor = "CD5031",
+        id = 116877,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 14000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/gear_undauntedstonekeeper_head_a.dds",
+        --texture = "/esoui/art/champion/champion_points_health_icon-hud.dds",
+        showFrame = false,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

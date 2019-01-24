@@ -225,6 +225,20 @@ Cool.Data.Sets = {
         showFrame = false,
         isSynergy = false,
     },
+    ["Symphony of Blades"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when Meridia's Favor is ready or when it will become available to be applied to an ally.",
+        settingsColor = "CD5031",
+        id = 117111,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 18000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/gear_undnarlimor_head_a.dds",
+        showFrame = false,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

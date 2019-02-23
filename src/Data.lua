@@ -253,6 +253,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Ravager"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when The Ravager weapon damage buff proc is ready or when it will become available.",
+        settingsColor = "92C843",
+        id = 34872,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 10000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_warrior_012.dds",
+        --texture = "/LuiExtended/media/icons/abilities/ability_set_the_ravager.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

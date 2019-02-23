@@ -239,6 +239,20 @@ Cool.Data.Sets = {
         showFrame = false,
         isSynergy = false,
     },
+    ["Crest of Cyrodiil"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the heal on block from Crest of Cyrodiil is ready or when it will become available.",
+        settingsColor = "92C843",
+        id = 111575,
+        enabled = false,
+        result = ACTION_RESULT_HEAL,
+        cooldownDurationMs = 5000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "esoui/art/icons/placeholder/icon_offensive_shieldsword_01.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

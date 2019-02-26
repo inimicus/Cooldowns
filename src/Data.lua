@@ -313,8 +313,9 @@ function Cool.GetSetData()
             showFrame = true,
             isSynergy = false,
         },
-        --[[
-        ["Curse Eater"] = {
+        -- Curse Eater
+        [104] = {
+            name = libSets.GetSetName(104, clientLang),
             event = EVENT_COMBAT_EVENT,
             description = "Displays when the Curse Eater removal of negative effects is ready or when it will become available.",
             settingsColor = "92C843",
@@ -328,7 +329,6 @@ function Cool.GetSetData()
             showFrame = true,
             isSynergy = false,
         },
-        ]]
 
         -- Synergies --------------------------------------------------------------
         ["Orbs / Shards"] = {

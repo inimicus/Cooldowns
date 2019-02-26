@@ -313,6 +313,22 @@ function Cool.GetSetData()
             showFrame = true,
             isSynergy = false,
         },
+        --[[
+        ["Curse Eater"] = {
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Curse Eater removal of negative effects is ready or when it will become available.",
+            settingsColor = "92C843",
+            id = 117359,
+            enabled = false,
+            result = ACTION_RESULT_POWER_ENERGIZE,
+            cooldownDurationMs = 8000,
+            onCooldown = false,
+            timeOfProc = 0,
+            texture = "/esoui/art/icons/ability_ava_005_a.dds",
+            showFrame = true,
+            isSynergy = false,
+        },
+        ]]
 
         -- Synergies --------------------------------------------------------------
         ["Orbs / Shards"] = {

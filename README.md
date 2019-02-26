@@ -29,9 +29,12 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 ## Implemented Cooldowns
 Sets:
 - Caluurion's Legacy
+- Crest of Cyrodiil
+- Curse Eater
 - Earthgore
 - Magicka Furnace
 - Mechanical Acuity - For more robust tracking, check out [Acuity by Wheels](https://www.esoui.com/downloads/info1950-Acuity.html)
+- Ravager
 - Shroud of the Lich
 - Steadfast Hero
 - Trappings of Invigoration

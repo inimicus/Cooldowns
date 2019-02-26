@@ -5,7 +5,7 @@
 --
 -- Settings.lua
 -- -----------------------------------------------------------------------------
-
+Cool = Cool or {}
 Cool.Settings = {}
 
 local WM = WINDOW_MANAGER
@@ -19,12 +19,22 @@ local panelData = {
     author      = "g4rr3t (NA)",
     version     = Cool.version,
     registerForRefresh  = true,
+    website     = "",
 }
 
 -- Set Submenu
-local function GetSetName(setKey)
+local function GetSetName(setKey, setName, isSynergy)
+    isSynergy = isSynergy or false
     local color = Cool.Data.Sets[setKey].settingsColor
-    return zo_strformat("|c<<1>><<2>>|r", color, setKey)
+    --Synergy? Use localized name
+    if isSynergy == true then
+        local setData = Cool.Data.Sets
+        local setNameSynergy = setData[setKey].name[Cool.clientLang] or setName
+        if setNameSynergy ~= nil and setNameSynergy ~= "" and setNameSynergy ~= setName then
+            setName = setNameSynergy
+        end
+    end
+    return zo_strformat("|c<<1>><<2>>|r", color, setName)
 end
 
 -- Description
@@ -157,7 +167,26 @@ end
 -- Initialize
 function Cool.Settings.Init()
 
-    optionsTable = {
+    --Addon panels were loaded
+    local function updateSliderLabelText(setKey, type)
+        local setSoundOnProcSlider = WINDOW_MANAGER:GetControlByName("Cooldowns_Settings_PlaySound" .. tostring(type) .. "_" .. tostring(setKey), "")
+        if setSoundOnProcSlider then
+            setSoundOnProcSlider.label:SetText("Selected: " .. tostring(Cool.Sounds[Cool.preferences.sets[setKey].sounds[type].sound]))
+        end
+    end
+    local function addonMenuOnLoadCallback(panel)
+        if panel == Cool.LAMpanel then
+            for index, set in ipairs(Cool.settingsSetTable) do
+                updateSliderLabelText(set.key, "onProc")
+            end
+            for index, set in ipairs(Cool.settingsSynergyTable) do
+                updateSliderLabelText(set.key, "onReady")
+            end
+            CALLBACK_MANAGER:UnregisterCallback("LAM-PanelControlsCreated", addonMenuOnLoadCallback)
+        end
+    end
+
+    local optionsTable = {
         {
             type = "header",
             name = "Global Settings",
@@ -215,37 +244,39 @@ function Cool.Settings.Init()
     }
 
     -- Copy key/value table to index/value table
-    settingsSetTable = {}
-    settingsSynergyTable = {}
+    Cool.settingsSetTable = {}
+    Cool.settingsSynergyTable = {}
     for key, set in pairs(Cool.Data.Sets) do
         if set.isSynergy then
-            table.insert(settingsSynergyTable, {
+            table.insert(Cool.settingsSynergyTable, {
                 name = key,
+                key = key,
             })
         else
-            table.insert(settingsSetTable, {
-                name = key,
+            table.insert(Cool.settingsSetTable, {
+                name = set.name,
+                key = key,
             })
         end
     end
 
     -- Sort settings tables alphabetically
-    table.sort(settingsSetTable, function(x, y)
+    table.sort(Cool.settingsSetTable, function(x, y)
         return x.name < y.name
     end)
 
-    table.sort(settingsSynergyTable, function(x, y)
+    table.sort(Cool.settingsSynergyTable, function(x, y)
         return x.name < y.name
     end)
 
-    for index, set in ipairs(settingsSetTable) do
+    for index, set in ipairs(Cool.settingsSetTable) do
         table.insert(optionsTable, {
             type = "submenu",
-            name = function() return GetSetName(set.name) end,
+            name = function() return GetSetName(set.key, set.name) end,
             controls = {
                 {
                     type = "description",
-                    text = function() return GetDescription(set.name) end,
+                    text = function() return GetDescription(set.key) end,
                     width = "full",
                 },
                 --[[ {
@@ -258,8 +289,8 @@ function Cool.Settings.Init()
                 {
                     type = "slider",
                     name = "Size",
-                    getFunc = function() return GetSize(set.name) end,
-                    setFunc = function(size) SetSize(set.name, size) end,
+                    getFunc = function() return GetSize(set.key) end,
+                    setFunc = function(size) SetSize(set.key, size) end,
                     min = 32,
                     max = 150,
                     step = 1,
@@ -271,57 +302,55 @@ function Cool.Settings.Init()
                     type = "checkbox",
                     name = "Play Sound On Proc",
                     tooltip = "Set to ON to play a sound when the set procs.",
-                    getFunc = function() return GetOnProcEnabled(set.name) end,
-                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
+                    getFunc = function() return GetOnProcEnabled(set.key) end,
+                    setFunc = function(value) SetOnProcEnabled(set.key, value) end,
                     width = "full",
                 },
                 {
-                    type = "dropdown",
+                    type = "slider",
                     name = "Sound On Proc",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onProc.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onProc.sound = value end,
+                    min = 1,
+                    max = #Cool.Sounds,
+                    step = 1,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onProc.sound end,
+                    setFunc = function(value)
+                        Cool.preferences.sets[set.key].sounds.onProc.sound = value
+                        updateSliderLabelText(set.key, "onProc")
+                        if value ~= 1 and SOUNDS ~= nil and SOUNDS[Cool.Sounds[value]] ~= nil then
+                            Cool.UI.PlaySound(Cool.Sounds[value])
+                        end
+                    end,
                     tooltip = "Sound volume based on Interface volume setting.",
-                    sort = "name-up",
                     width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onProc') end,
-                    width = "full",
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
+                    disabled = function() return not GetOnProcEnabled(set.key) end,
+                    reference = "Cooldowns_Settings_PlaySoundonProc_" .. tostring(set.key),
                 },
                 {
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
-                    getFunc = function() return GetOnReadyEnabled(set.name) end,
-                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
+                    getFunc = function() return GetOnReadyEnabled(set.key) end,
+                    setFunc = function(value) SetOnReadyEnabled(set.key, value) end,
                     width = "full",
                 },
                 {
-                    type = "dropdown",
+                    type = "slider",
                     name = "Sound On Ready",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onReady.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onReady.sound = value end,
+                    min = 1,
+                    max = #Cool.Sounds,
+                    step = 1,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onReady.sound end,
+                    setFunc = function(value)
+                        Cool.preferences.sets[set.key].sounds.onReady.sound = value
+                        updateSliderLabelText(set.key, "onReady")
+                        if value ~= 1 and SOUNDS ~= nil and SOUNDS[Cool.Sounds[value]] ~= nil then
+                            Cool.UI.PlaySound(Cool.Sounds[value])
+                        end
+                    end,
                     tooltip = "Sound volume based on game interface volume setting.",
-                    sort = "name-up",
                     width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onReady') end,
-                    width = "full",
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
+                    disabled = function() return not GetOnReadyEnabled(set.key) end,
+                    reference = "Cooldowns_Settings_PlaySoundonReady_" .. tostring(set.key),
                 },
             },
         })
@@ -339,29 +368,29 @@ function Cool.Settings.Init()
         width = "full",
     })
 
-    for index, set in ipairs(settingsSynergyTable) do
+    for index, set in ipairs(Cool.settingsSynergyTable) do
         table.insert(optionsTable, {
             type = "submenu",
-            name = function() return GetSetName(set.name) end,
+            name = function() return GetSetName(set.key, set.name, set.isSynergy) end,
             controls = {
                 {
                     type = "description",
-                    text = function() return GetDescription(set.name) end,
+                    text = function() return GetDescription(set.key) end,
                     width = "full",
                 },
                 {
                     type = "checkbox",
                     name = "Enable Tracking",
                     tooltip = "Set to ON to enable tracking for this synergy.",
-                    getFunc = function() return GetEnabledState(set.name) end,
-                    setFunc = function(value) SetEnabledState(set.name, value) end,
+                    getFunc = function() return GetEnabledState(set.key) end,
+                    setFunc = function(value) SetEnabledState(set.key, value) end,
                     width = "full",
                 },
                 {
                     type = "slider",
                     name = "Size",
-                    getFunc = function() return GetSize(set.name) end,
-                    setFunc = function(size) SetSize(set.name, size) end,
+                    getFunc = function() return GetSize(set.key) end,
+                    setFunc = function(size) SetSize(set.key, size) end,
                     min = 32,
                     max = 150,
                     step = 1,
@@ -373,64 +402,64 @@ function Cool.Settings.Init()
                     type = "checkbox",
                     name = "Play Sound On Use",
                     tooltip = "Set to ON to play a sound when the synergy is used.",
-                    getFunc = function() return GetOnProcEnabled(set.name) end,
-                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
+                    getFunc = function() return GetOnProcEnabled(set.key) end,
+                    setFunc = function(value) SetOnProcEnabled(set.key, value) end,
                     width = "full",
                 },
                 {
-                    type = "dropdown",
+                    type = "slider",
                     name = "Sound On Use",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onProc.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onProc.sound = value end,
+                    min = 1,
+                    max = #Cool.Sounds,
+                    step = 1,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onProc.sound end,
+                    setFunc = function(value)
+                        Cool.preferences.sets[set.key].sounds.onProc.sound = value
+                        updateSliderLabelText(set.key, "onProc")
+                        if value ~= 1 and SOUNDS ~= nil and SOUNDS[Cool.Sounds[value]] ~= nil then
+                            Cool.UI.PlaySound(Cool.Sounds[value])
+                        end
+                    end,
                     tooltip = "Sound volume based on Interface volume setting.",
-                    sort = "name-up",
                     width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onProc') end,
-                    width = "full",
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
+                    disabled = function() return not GetOnProcEnabled(set.key) end,
+                    reference = "Cooldowns_Settings_PlaySoundonProc_" .. tostring(set.key),
                 },
                 {
                     type = "checkbox",
                     name = "Play Sound On Ready",
                     tooltip = "Set to ON to play a sound when the synergy is off cooldown and ready to be used again.",
-                    getFunc = function() return GetOnReadyEnabled(set.name) end,
-                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
+                    getFunc = function() return GetOnReadyEnabled(set.key) end,
+                    setFunc = function(value) SetOnReadyEnabled(set.key, value) end,
                     width = "full",
                 },
                 {
-                    type = "dropdown",
+                    type = "slider",
                     name = "Sound On Ready",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onReady.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onReady.sound = value end,
+                    min = 1,
+                    max = #Cool.Sounds,
+                    step = 1,
+                    getFunc = function() return Cool.preferences.sets[set.key].sounds.onReady.sound end,
+                    setFunc = function(value)
+                        Cool.preferences.sets[set.key].sounds.onReady.sound = value
+                        updateSliderLabelText(set.key, "onReady")
+                        if value ~= 1 and SOUNDS ~= nil and SOUNDS[Cool.Sounds[value]] ~= nil then
+                            Cool.UI.PlaySound(Cool.Sounds[value])
+                        end
+                    end,
                     tooltip = "Sound volume based on game interface volume setting.",
-                    sort = "name-up",
                     width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onReady') end,
-                    width = "full",
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
+                    disabled = function() return not GetOnReadyEnabled(set.key) end,
+                    reference = "Cooldowns_Settings_PlaySoundonReady_" .. tostring(set.key),
                 },
             },
         })
     end
 
-    LAM:RegisterAddonPanel(Cool.name, panelData)
+    Cool.LAMpanel = LAM:RegisterAddonPanel(Cool.name, panelData)
     LAM:RegisterOptionControls(Cool.name, optionsTable)
+
+    CALLBACK_MANAGER:RegisterCallback("LAM-PanelControlsCreated", addonMenuOnLoadCallback)
 
     Cool:Trace(2, "Finished InitSettings()")
 end
@@ -438,23 +467,20 @@ end
 function Cool.Settings.Upgrade()
     -- v1.1.0 changes setKey names, restore previous user settings
     if Cool.preferences.upgradedv110 == nil or not Cool.preferences.upgradedv110 then
-        local previousSetKeys = {
-            ["Lich"] = "Shroud of the Lich",
-            ["Olorime"] = "Vestment of Olorime",
-            ["Trappings"] = "Trappings of Invigoration",
-            ["Warlock"] = "Vestments of the Warlock",
-            ["Wyrd"] = "Wyrd Tree's Blessing",
+        local previousStringSetKeys2NewSetIds = {
+            ["Lich"]        = 134,
+            ["Olorime"]     = 391,
+            ["Trappings"]   = 344,
+            ["Warlock"]     = 19,
+            ["Wyrd"]        = 344,
         }
-
-        for previous, new in pairs(previousSetKeys) do
+        for previous, new in pairs(previousStringSetKeys2NewSetIds) do
             if Cool.preferences.sets[previous] ~= nil then
                 Cool.preferences.sets[new] = Cool.preferences.sets[previous]
                 Cool.preferences.sets[previous] = nil
             end
         end
-
-        d("[Cooldowns] Upgraded settings to v1.1.0")
+        d("[Cooldowns] Upgraded settings to v" .. tostring(Cool.version))
         Cool.preferences.upgradedv110 = true
     end
 end
-

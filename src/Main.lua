@@ -7,10 +7,10 @@
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-Cool            = {}
+Cool            = Cool or {}
 Cool.name       = "Cooldowns"
-Cool.version    = "1.4.1"
-Cool.dbVersion  = 1
+Cool.version    = "1.4.2"
+Cool.dbVersion  = 1.42
 Cool.slash      = "/cool"
 Cool.prefix     = "[Cooldowns] "
 Cool.HUDHidden  = false
@@ -45,15 +45,22 @@ function Cool.Initialize(event, addonName)
     Cool:Trace(1, "Cool Loaded")
     EM:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
+    --Get the sounds
+    Cool.GetSounds()
+
+    --Load the sets data (using LibSets)
+    Cool.clientLang = GetCVar("language.2")
+    Cool.GetSetData()
+
     -- Populate default settings for sets
     Cool.Defaults:Generate()
 
     -- Account-wide: Sets and synergy prefs
-    Cool.preferences = ZO_SavedVars:NewAccountWide("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.Get())
+    Cool.preferences = ZO_SavedVars:NewAccountWide("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.Get(), GetWorldName())
 
     -- Per-Character: Synergy display status
     -- Other synergy preferences are still account-wide
-    Cool.synergyPrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetSynergies())
+    Cool.synergyPrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetSynergies(), GetWorldName())
     Cool.Settings.Upgrade()
 
     -- Use saved debugMode value

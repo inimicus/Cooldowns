@@ -5,7 +5,7 @@
 --
 -- Defaults.lua
 -- -----------------------------------------------------------------------------
-
+Cool = Cool or {}
 Cool.Defaults = {}
 
 local defaults = {
@@ -30,11 +30,11 @@ function Cool.Defaults:Generate()
             sounds = {
                 onProc = {
                     enabled = true,
-                    sound = 'STATS_PURCHASE',
+                    sound = 1, --None
                 },
                 onReady = {
                     enabled = true,
-                    sound = 'SKILL_LINE_ADDED',
+                    sound = 1, --None
                 },
             },
         }

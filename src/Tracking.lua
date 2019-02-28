@@ -25,12 +25,23 @@ local function OnCooldownUpdated(setKey, eventCode, abilityId)
     -- Ignore if set is on cooldown
     if set.onCooldown == true then return end
 
-    Cool:Trace(1, "Cooldown proc for <<1>> (<<2>>)", setKey, abilityId)
+    set.timeOfProc = GetGameTimeMilliseconds()
+
+    -- Delay proc time by the current frame duration if lag compensation is enabled
+    -- This helps mitigate false procs when the set is seen as off cooldown,
+    -- but the COOLDOWN_UPDATED event is still being called.
+    -- This delay aims to let COOLDOWN_UPDATED finish, which can vary depending
+    -- on lag conditions, before deeming the set as off cooldown.
+    if Cool.preferences.lagCompensation then
+        -- Add current frame delta - does NOT account for wide variances/spikes
+        set.timeOfProc = set.timeOfProc + GetFrameDeltaTimeMilliseconds()
+    end
 
     set.onCooldown = true
-    set.timeOfProc = GetGameTimeMilliseconds()
     Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc)
     EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
+
+    Cool:Trace(1, "Cooldown proc for <<1>> (<<2>>)", setKey, abilityId)
 end
 
 local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)

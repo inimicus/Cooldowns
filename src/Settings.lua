@@ -154,6 +154,15 @@ local function SetShowOutOfCombat(value)
     end
 end
 
+-- Lag Compensation
+local function GetLagCompensation()
+    return Cool.preferences.lagCompensation
+end
+
+local function SetLagCompensation(value)
+    Cool.preferences.lagCompensation = value
+end
+
 -- Initialize
 function Cool.Settings.Init()
 
@@ -176,6 +185,14 @@ function Cool.Settings.Init()
             tooltip = "Toggle locked/unlocked state.",
             func = function(control) ToggleLocked(control) end,
             width = "half",
+        },
+        {
+            type = "checkbox",
+            name = "Lag Compensation",
+            tooltip = "Attempt to adjust proc timing based on lag conditions. Set to ON if you are falsely seeing back-to-back procs and set to OFF if procs in close proximity to being ready are being missed.",
+            getFunc = function() return GetLagCompensation() end,
+            setFunc = function(value) SetLagCompensation(value) end,
+            width = "full",
         },
         {
             type = "checkbox",

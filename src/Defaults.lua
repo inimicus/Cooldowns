@@ -15,6 +15,7 @@ local defaults = {
     snapToGrid = false,
     gridSize = 16,
     showOutsideCombat = true,
+    lagCompensation = true,
 }
 
 local synergies = {}

@@ -270,10 +270,11 @@ Cool.Data.Sets = {
         isSynergy = false,
     },
     ["Curse Eater"] = {
-        event = EVENT_COMBAT_EVENT,
+        event = EVENT_ABILITY_COOLDOWN_UPDATED,
         description = "Displays when the Curse Eater removal of negative effects is ready or when it will become available.",
         settingsColor = "92C843",
-        id = 117359,
+        --id = 117359, -- Event
+        id = 117360, -- Cooldown
         enabled = false,
         result = ACTION_RESULT_POWER_ENERGIZE,
         cooldownDurationMs = 8000,

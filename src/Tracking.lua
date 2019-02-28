@@ -29,7 +29,7 @@ local function OnCooldownUpdated(setKey, eventCode, abilityId)
 
     set.onCooldown = true
     set.timeOfProc = GetGameTimeMilliseconds()
-    Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
+    Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc)
     EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
 end
 
@@ -43,7 +43,7 @@ local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
         Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
-        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc.sound)
+        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc)
         EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
         Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)

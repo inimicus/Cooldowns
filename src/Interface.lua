@@ -128,7 +128,9 @@ function Cool.UI:SetCombatStateDisplay()
 end
 
 function Cool.UI.PlaySound(sound)
-    PlaySound(SOUNDS[sound])
+    if sound.enabled then
+        PlaySound(SOUNDS[sound.sound])
+    end
 end
 
 function Cool.UI.Update(setKey)
@@ -148,7 +150,7 @@ function Cool.UI.Update(setKey)
         set.onCooldown = false
         label:SetText("")
         texture:SetColor(1, 1, 1, 1)
-        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady.sound)
+        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady)
     elseif (countdown < 10) then
         label:SetText(string.format("%.1f", countdown))
     else

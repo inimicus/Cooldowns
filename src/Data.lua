@@ -299,6 +299,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Hide of the Werewolf"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "92C843",
+        id = 34508, -- Cooldown
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 5000,
+        onCooldown = false,
+        timeOfProc = 0,
+        -- LuiExtended/media/icons/abilities/ability_set_werewolf_hide.dds
+        texture = "/esoui/art/icons/ability_werewolf_004_a.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

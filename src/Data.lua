@@ -284,6 +284,21 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = false,
     },
+    ["Icy Conjuror"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "3A97CF",
+        id = 117666,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 12000,
+        onCooldown = false,
+        timeOfProc = 0,
+        -- LuiExtended/media/icons/abilities/ability_set_icy_conjuror.dds
+        texture = "/esoui/art/icons/death_recap_cold_ranged.dds",
+        showFrame = true,
+        isSynergy = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

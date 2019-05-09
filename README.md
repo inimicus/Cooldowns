@@ -32,6 +32,7 @@ Sets:
 - Crest of Cyrodiil
 - Curse Eater
 - Earthgore
+- Icy Conjuror
 - Magicka Furnace
 - Mechanical Acuity - For more robust tracking, check out [Acuity by Wheels](https://www.esoui.com/downloads/info1950-Acuity.html)
 - Ravager
@@ -41,6 +42,7 @@ Sets:
 - Vestment of Olorime
 - Vykosa
 - Vestments of the Warlock
+- Werewolf Hide
 - Wyrd Tree's Blessing
 - Zaan
 
@@ -64,6 +66,10 @@ Similar to Alkosh, the 5-item proc condition is "When you cast an Assault abilit
 _How hard would it be to add [this] set?_
 
 Barring any special conditions not already accounted for in the code, it's not too difficult at all. The code to add and manage tracked sets and synergies (Data.lua) is very straight-forward, it's just a matter of testing and making sure everything works as intended. Testing new sets, now that the code has been established, is what takes the longest. So don't hesitate to reach out with anything you'd like to see included!
+
+## Planned Updates / Known Issues
+- Multilanguage support - Hard-coded values means Cooldowns doesn't work for non-English clients. This will be fixed in the future. Big thanks to Baertram for assisting with this.
+- Menu Optimization - Loading the addon settings menu bogs down the system as it generates all of the options (and sounds). This will be streamlined and improved so that it loads instantly without taxing any system.
 
 ## Addtional Sets
 If you'd like to see a specific set added, please let me know. I would prefer to

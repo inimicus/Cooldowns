@@ -85,8 +85,17 @@ function Cool.UI.Draw(key)
 
             if set.showFrame then
                 local f = WM:CreateControl(key .. "_Frame", c, CT_TEXTURE)
-                f:SetTexture("/esoui/art/actionbar/gamepad/gp_abilityframe64.dds")
-                f:SetDimensions(scaleBase, scaleBase)
+                if string.match(set.texture, "passive") then
+                    -- Gamepad frame is pretty, but looks bad scaled up
+                    --f:SetTexture("/esoui/art/miscellaneous/gamepad/gp_passiveframe_128.dds")
+                    f:SetTexture("/esoui/art/actionbar/passiveabilityframe_round_up.dds")
+
+                    -- Add 5 to make the frame sit where it should.
+                    f:SetDimensions(scaleBase + 5, scaleBase + 5)
+                else
+                    f:SetTexture("/esoui/art/actionbar/gamepad/gp_abilityframe64.dds")
+                    f:SetDimensions(scaleBase, scaleBase)
+                end
                 f:SetAnchor(CENTER, c, CENTER, 0, 0)
             end
 

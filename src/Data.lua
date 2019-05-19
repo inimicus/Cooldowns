@@ -429,6 +429,22 @@ Cool.Data.Sets = {
         showFrame = true,
         isSynergy = true,
     },
+
+    -- Passives ---------------------------------------------------------------
+    ["Corpse Consumption"] = {
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 120612,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 16000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/passive_necromancer_011.dds",
+        showFrame = true,
+        isSynergy = true,
+    },
 }
 
 Cool.Data.ITEM_SLOTS = {

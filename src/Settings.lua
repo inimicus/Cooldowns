@@ -284,6 +284,7 @@ function Cool.Settings.Init()
                     decimals = 0,
                     width = "full",
                 },
+                --[[
                 {
                     type = "checkbox",
                     name = "Play Sound On Proc",
@@ -340,6 +341,7 @@ function Cool.Settings.Init()
                     width = "full",
                     disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
+                ]]
             },
         })
     end
@@ -394,6 +396,7 @@ function Cool.Settings.Init()
                     setFunc = function(value) SetOnProcEnabled(set.name, value) end,
                     width = "full",
                 },
+                --[[
                 {
                     type = "dropdown",
                     name = "Sound On Use",
@@ -442,6 +445,7 @@ function Cool.Settings.Init()
                     width = "full",
                     disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
+                ]]
             },
         })
     end

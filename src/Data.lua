@@ -193,7 +193,8 @@ Cool.Data.Sets = {
         onCooldown = false,
         timeOfProc = 0,
         --texture = "/esoui/art/icons/gear_clockwork_medium_head_a.dds",
-        texture = "/esoui/art/icons/ability_buff_major_sorcery.dds",
+        --texture = "/esoui/art/icons/ability_buff_major_sorcery.dds",
+        texture = "/esoui/art/icons/ability_rogue_039.dds",
         showFrame = true,
     },
     ["Blood Spawn"] = {

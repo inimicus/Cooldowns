@@ -232,6 +232,12 @@ function Cool.Settings.Init()
             disabled = function() return not GetSnapToGrid() end,
         },
         {
+            type = "divider",
+            width = "full",
+            height = 16,
+            alpha = 0,
+        },
+        {
             type = "header",
             name = "Sets",
             width = "full",

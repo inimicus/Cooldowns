@@ -21,16 +21,173 @@ local panelData = {
     registerForRefresh  = true,
 }
 
--- Set Submenu
-local function GetSetName(setKey)
-    local color = Cool.Data.Sets[setKey].settingsColor
-    return zo_strformat("|c<<1>><<2>>|r", color, setKey)
+local function SetSize(setKey, size)
+    local context = WM:GetControlByName(setKey .. "_Container")
+
+    Cool.preferences.sets[setKey].size = size
+
+    if context ~= nil then
+        context:SetScale(size / scaleBase)
+    end
 end
 
--- Description
-local function GetDescription(setKey)
-    return Cool.Data.Sets[setKey].description
+-- ============================================================================
+-- Sets
+-- ============================================================================
+
+-- Selection
+local default = {
+    set = "-- Select a Set --",
+    synergy = "-- Select a Synergy --",
+    passive = "-- Select a Passive --",
+}
+
+local selected = {
+    set = default.set,
+    synergy = default.synergy,
+    passive = default.passive,
+}
+
+-- Selection
+local function GetSelected(procType)
+    return selected[procType]
 end
+
+local function SetSelected(procType, selection)
+    selected[procType] = selection
+end
+
+local function HasSelected(procType)
+    if selected[procType] ~= default[procType] then
+        return true
+    else
+        return false
+    end
+end
+
+-- Enabled
+local function GetSelectedEnabled(procType)
+    if HasSelected(procType) then
+        return Cool.Data.Sets[selected[procType]].enabled
+    else
+        return false
+    end
+end
+
+local function SetSelectedEnabled(procType, state)
+    if procType == "synergy" then
+        Cool.synergyPrefs[selected[procType]] = state
+    elseif procType == "passive" then
+        Cool.passivePrefs[selected[procType]] = state
+    else
+        Cool:Trace(1, 'Invalid Set procType!')
+    end
+
+    Cool.Tracking.EnableTrackingForSet(selected[procType], state)
+end
+
+-- Size
+local function GetSelectedSize(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].size
+    else
+        return Cool.preferences.size
+    end
+end
+
+local function SetSelectedSize(procType, size)
+    Cool.preferences.sets[selected[procType]].size = size
+    SetSize(selected[procType], size)
+end
+
+-- Sounds
+local function GetSelectedSoundOnProcEnabled(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].sounds.onProc.enabled
+    else
+        return Cool.preferences.sounds.onProc.enabled
+    end
+end
+
+local function SetSelectedSoundOnProcEnabled(procType, enabled)
+    Cool.preferences.sets[selected[procType]].sounds.onProc.enabled = enabled
+end
+
+local function GetSelectedSoundOnReadyEnabled(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].sounds.onReady.enabled
+    else
+        return Cool.preferences.sounds.onReady.enabled
+    end
+end
+
+local function SetSelectedSoundOnReadyEnabled(procType, enabled)
+    Cool.preferences.sets[selected[procType]].sounds.onReady.enabled = enabled
+end
+
+local function GetSelectedSoundOnProc(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].sounds.onProc.sound
+    else
+        return Cool.preferences.sounds.onProc.sound
+    end
+end
+
+local function SetSelectedSoundOnProc(procType, sound)
+    Cool.preferences.sets[selected[procType]].sounds.onProc.sound = sound
+end
+
+local function GetSelectedSoundOnReady(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].sounds.onReady.sound
+    else
+        return Cool.preferences.sounds.onReady.sound
+    end
+end
+
+local function SetSelectedSoundOnReady(procType, sound)
+    Cool.preferences.sets[selected[procType]].sounds.onReady.sound = sound
+end
+
+-- Test Sound
+local function PlaySelectedTestSound(procType, condition)
+    local sound = Cool.preferences.sets[selected[procType]].sounds[condition]
+
+    Cool:Trace(2, "Testing sound <<1>>", sound)
+
+    Cool.UI.PlaySound(sound)
+end
+
+-- Disabled Controls
+local function ShouldOptionBeDisabled(procType, consider)
+
+    -- Nothing selected, always disable
+    if not HasSelected(procType) then
+        return true
+
+    -- Something selected
+    else
+
+        -- For Synergies/Passives
+        if procType ~= "set" then
+            -- If disabled, disable all fields
+            if not GetSelectedEnabled(procType) then
+                return true
+            end
+        end
+
+        -- If our other consideration says to disable, do it
+        if consider ~= nil and not consider then
+            return true
+        end
+
+    end
+
+end
+
+-- ============================================================================
+-- Global Options
+-- ============================================================================
 
 -- Grid Options
 local function GetSnapToGrid()
@@ -74,16 +231,6 @@ end
 -- Display Size
 local function GetSize(setKey)
     return Cool.preferences.sets[setKey].size
-end
-
-local function SetSize(setKey, size)
-    local context = WM:GetControlByName(setKey .. "_Container")
-
-    Cool.preferences.sets[setKey].size = size
-
-    if context ~= nil then
-        context:SetScale(size / scaleBase)
-    end
 end
 
 -- OnProc Sound Settings
@@ -173,6 +320,37 @@ end
 -- Initialize
 function Cool.Settings.Init()
 
+    -- Copy key/value table to index/value table
+    local settingsBreakout = {
+        set = {
+            name = "|cCD5031Sets|r",
+            data = {default.set},
+        },
+        synergy = {
+            name = "|c92C843Synergies|r",
+            data = {default.synergy},
+        },
+        passive = {
+            name = "|c3A97CFPassives|r",
+            data = {default.passive},
+        },
+    }
+
+    for key, set in pairs(Cool.Data.Sets) do
+        if set.procType == "set" then
+            table.insert(settingsBreakout.set.data, key)
+        elseif set.procType == "synergy" then
+            table.insert(settingsBreakout.synergy.data, key)
+        elseif set.procType == "passive" then
+            -- Only show options for current player class
+            if GetUnitClassId("player") == set.classId then
+                table.insert(settingsBreakout.passive.data, key)
+            end
+        else
+            Cool:Trace(1, "Invalid procType: <<1>>", set.procType)
+        end
+    end
+
     optionsTable = {
         {
             type = "header",
@@ -235,47 +413,111 @@ function Cool.Settings.Init()
             type = "divider",
             width = "full",
             height = 16,
-            alpha = 0,
-        },
-        {
-            type = "header",
-            name = "Sets",
-            width = "full",
-        },
+            alpha = 0.25,
+        }
     }
 
-    -- Copy key/value table to index/value table
-    local settingsSetTable = {}
-    local settingsSynergyTable = {}
-    local settingsPassiveTable = {}
-    for key, set in pairs(Cool.Data.Sets) do
-        if set.procType == "synergy" then
-            table.insert(settingsSynergyTable, {
-                name = key,
-            })
-        elseif set.procType == "set" then
-            table.insert(settingsSetTable, {
-                name = key,
-            })
-        else
-            -- Only show options for current player class
-            if GetUnitClassId("player") == set.classId then
-                table.insert(settingsPassiveTable, {
-                    name = key,
-                })
-            end
-        end
+    for procType, options in pairs(settingsBreakout) do
+        table.insert(optionsTable, {
+                type = "submenu",
+                name = options.name,
+                controls = {
+                    {
+                        type = "dropdown",
+                        name = "Option",
+                        choices = options.data,
+                        getFunc = function() return GetSelected(procType) end,
+                        setFunc = function(set) SetSelected(procType, set) end,
+                        sort = "name-up",
+                        width = "full",
+                        scrollable = true,
+                    },
+                    {
+                        type = "checkbox",
+                        name = "Enable Tracking",
+                        tooltip = "Set to ON to enable tracking. Tracking override not supported for sets.",
+                        getFunc = function() return GetSelectedEnabled(procType) end,
+                        setFunc = function(value) SetSelectedEnabled(procType, value) end,
+                        width = "full",
+                        disabled = function() return not HasSelected(procType) or procType == "set" end,
+                    },
+                    {
+                        type = "slider",
+                        name = "Size",
+                        getFunc = function() return GetSelectedSize(procType) end,
+                        setFunc = function(size) SetSelectedSize(procType, size) end,
+                        min = 32,
+                        max = 150,
+                        step = 1,
+                        clampInput = true,
+                        decimals = 0,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType) end,
+                    },
+                    {
+                        type = "checkbox",
+                        name = "Play Sound On Proc",
+                        tooltip = "Set to ON to play a sound when the set procs.",
+                        getFunc = function() return GetSelectedSoundOnProcEnabled(procType) end,
+                        setFunc = function(value) SetSelectedSoundOnProcEnabled(procType, value) end,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType) end,
+                    },
+                    {
+                        type = "dropdown",
+                        name = "Sound On Proc",
+                        choices = Cool.Sounds.names,
+                        choicesValues = Cool.Sounds.options,
+                        getFunc = function() return GetSelectedSoundOnProc(procType) end,
+                        setFunc = function(value) SetSelectedSoundOnProc(procType, value) end,
+                        tooltip = "Sound volume based on Interface volume setting.",
+                        sort = "name-up",
+                        width = "full",
+                        scrollable = true,
+                        disabled = function() return ShouldOptionBeDisabled(procType, GetSelectedSoundOnProcEnabled(procType)) end,
+                    },
+                    {
+                        type = "button",
+                        name = "Test Sound",
+                        func = function() return end,
+                        func = function() PlaySelectedTestSound(procType, "onProc") end,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType, GetSelectedSoundOnProcEnabled(procType)) end,
+                    },
+                    {
+                        type = "checkbox",
+                        name = "Play Sound On Ready",
+                        tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
+                        getFunc = function() return GetSelectedSoundOnReadyEnabled(procType) end,
+                        setFunc = function(value) SetSelectedSoundOnReadyEnabled(procType, value) end,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType) end,
+                    },
+                    {
+                        type = "dropdown",
+                        name = "Sound On Ready",
+                        choices = Cool.Sounds.names,
+                        choicesValues = Cool.Sounds.options,
+                        getFunc = function() return GetSelectedSoundOnReady(procType) end,
+                        setFunc = function(value) SetSelectedSoundOnReady(procType, value) end,
+                        tooltip = "Sound volume based on game interface volume setting.",
+                        sort = "name-up",
+                        width = "full",
+                        scrollable = true,
+                        disabled = function() return ShouldOptionBeDisabled(procType, GetSelectedSoundOnReadyEnabled(procType)) end,
+                    },
+                    {
+                        type = "button",
+                        name = "Test Sound",
+                        func = function() PlaySelectedTestSound(procType, "onReady") end,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType, GetSelectedSoundOnReadyEnabled(procType)) end,
+                    },
+                },
+        })
     end
 
-    -- Sort settings tables alphabetically
-    table.sort(settingsSetTable, function(x, y)
-        return x.name < y.name
-    end)
-
-    table.sort(settingsSynergyTable, function(x, y)
-        return x.name < y.name
-    end)
-
+    --[[
     for index, set in ipairs(settingsSetTable) do
         table.insert(optionsTable, {
             type = "submenu",
@@ -286,13 +528,6 @@ function Cool.Settings.Init()
                     text = function() return GetDescription(set.name) end,
                     width = "full",
                 },
-                --[[ {
-                    type = "button",
-                    name = function() return GetEnabledState(set.name) end,
-                    func = function() return end,
-                    width = "full",
-                    disabled = true,
-                }, ]]
                 {
                     type = "slider",
                     name = "Size",
@@ -305,7 +540,6 @@ function Cool.Settings.Init()
                     decimals = 0,
                     width = "full",
                 },
-                --[[
                 {
                     type = "checkbox",
                     name = "Play Sound On Proc",
@@ -362,7 +596,6 @@ function Cool.Settings.Init()
                     width = "full",
                     disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
-                ]]
             },
         })
     end
@@ -409,7 +642,6 @@ function Cool.Settings.Init()
                     decimals = 0,
                     width = "full",
                 },
-                --[[
                 {
                     type = "checkbox",
                     name = "Play Sound On Use",
@@ -466,7 +698,6 @@ function Cool.Settings.Init()
                     width = "full",
                     disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
-                ]]
             },
         })
     end
@@ -516,6 +747,7 @@ function Cool.Settings.Init()
             },
         })
     end
+    ]]
 
     LAM:RegisterAddonPanel(Cool.name, panelData)
     LAM:RegisterOptionControls(Cool.name, optionsTable)

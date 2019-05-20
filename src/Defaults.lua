@@ -16,6 +16,17 @@ local defaults = {
     gridSize = 16,
     showOutsideCombat = true,
     lagCompensation = true,
+    size = 64,
+    sounds = {
+        onProc = {
+            enabled = true,
+            sound = 'STATS_PURCHASE',
+        },
+        onReady = {
+            enabled = true,
+            sound = 'SKILL_LINE_ADDED',
+        },
+    },
 }
 
 local synergies = {}
@@ -28,17 +39,8 @@ function Cool.Defaults:Generate()
         defaults.sets[key] = {
             x = 150,
             y = 150,
-            size = 64,
-            sounds = {
-                onProc = {
-                    enabled = true,
-                    sound = 'STATS_PURCHASE',
-                },
-                onReady = {
-                    enabled = true,
-                    sound = 'SKILL_LINE_ADDED',
-                },
-            },
+            size = defaults.size,
+            sounds = defaults.sounds,
         }
 
         -- Populate Synergies

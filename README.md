@@ -28,21 +28,24 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 
 ## Implemented Cooldowns
 Sets:
+- Blood Spawn
 - Caluurion's Legacy
 - Crest of Cyrodiil
 - Curse Eater
 - Earthgore
+- Hide of the Werewolf
 - Icy Conjuror
 - Magicka Furnace
 - Mechanical Acuity - For more robust tracking, check out [Acuity by Wheels](https://www.esoui.com/downloads/info1950-Acuity.html)
 - Ravager
 - Shroud of the Lich
 - Steadfast Hero
+- Stonekeeper
+- Symphony of Blades
 - Trappings of Invigoration
 - Vestment of Olorime
-- Vykosa
 - Vestments of the Warlock
-- Werewolf Hide
+- Vykosa
 - Wyrd Tree's Blessing
 - Zaan
 
@@ -50,9 +53,11 @@ Synergies:
 - Blood Altar (Undaunted)
 - Boner Shield (Undaunted)
 - Conduit (Sorcerer)
+- Grave Robber (Necromancer)
 - Harvest (Warden)
-- Purify (Templar)
 - Orbs/Shards (Undaunted/Templar)
+- Pure Agony (Necromancer)
+- Purify (Templar)
 
 ## FAQ
 _What about Alkosh?_
@@ -69,7 +74,6 @@ Barring any special conditions not already accounted for in the code, it's not t
 
 ## Planned Updates / Known Issues
 - Multilanguage support - Hard-coded values means Cooldowns doesn't work for non-English clients. This will be fixed in the future. Big thanks to Baertram for assisting with this.
-- Menu Optimization - Loading the addon settings menu bogs down the system as it generates all of the options (and sounds). This will be streamlined and improved so that it loads instantly without taxing any system.
 
 ## Addtional Sets
 If you'd like to see a specific set added, please let me know. I would prefer to

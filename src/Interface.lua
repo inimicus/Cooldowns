@@ -198,7 +198,7 @@ function Cool.UI.ShowIcon(shouldShow)
     for key, set in pairs(Cool.Data.Sets) do
         local context = WM:GetControlByName(key .. "_Container")
         if context ~= nil then
-            if Cool.ForceShow then
+            if Cool.ForceShow and set.enabled then
                 context:SetHidden(false)
             elseif (shouldShow and set.enabled and not Cool.HUDHidden) then
                 context:SetHidden(false)

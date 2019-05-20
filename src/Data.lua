@@ -22,6 +22,7 @@ Cool.Data = {}
 
 Cool.Data.Sets = {
     ["Magicka Furnace"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Magicka Furnace proc is available or cooldown until it is ready again.",
         settingsColor = "3A97CF",
@@ -33,9 +34,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Wyrd Tree's Blessing"] = {
+        procType = "set",
         event = EVENT_ABILITY_COOLDOWN_UPDATED,
         description = "Displays when the Wyrd Tree proc is available or cooldown until it is ready again.",
         settingsColor = "FCFCCB",
@@ -47,9 +48,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_ava_005.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Vestments of the Warlock"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Magicka Flood proc is available or cooldown until it is ready again.",
         settingsColor = "3A97CF",
@@ -61,9 +62,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Trappings of Invigoration"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the stamina return proc is available or cooldown until it is ready again.",
         settingsColor = "92C843",
@@ -75,9 +76,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_stamina_icon-hud.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Shroud of the Lich"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the magicka recovery proc is ready or when it will be available, but not the duration of increased magicka recovery.",
         settingsColor = "3A97CF",
@@ -89,9 +90,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Earthgore"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the heal proc is ready or when it will be available, but not the duration of the heal over time.",
         settingsColor = "CD5031",
@@ -103,9 +104,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Vestment of Olorime"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Major Courage area of effect is able to be placed, but does not indicate the duration of Major Courage.",
         settingsColor = "FCFCCB",
@@ -117,9 +118,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Vykosa"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Major Maim debuff is able to be applied.",
         settingsColor = "CD5031",
@@ -132,9 +133,9 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_debuff_major_maim.dds",
         --texture = "/esoui/art/icons/gear_undvykosa_helmet_a.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Steadfast Hero"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Major Protection buff is available through cleansing a negative effect on yourself or an ally.",
         settingsColor = "FCFCCB",
@@ -146,9 +147,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_buff_major_protection.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Zaan"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the cheese beam of fiery death is ready to ruin someone's day.",
         settingsColor = "3A97CF",
@@ -160,9 +161,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/gear_undaunted_dragonpriest_head_a.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Caluurion's Legacy"] = {
+        procType = "set",
         -- Caluurion Duration = 102060
         -- Disease  = 102033
         -- Fire     = 102027
@@ -179,9 +180,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/death_recap_fire_ranged.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Mechanical Acuity"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Mechanical Acuity proc is ready or when it will be available, but not the duration of the crit bonus.",
         settingsColor = "CD5031",
@@ -194,9 +195,9 @@ Cool.Data.Sets = {
         --texture = "/esoui/art/icons/gear_clockwork_medium_head_a.dds",
         texture = "/esoui/art/icons/ability_buff_major_sorcery.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Blood Spawn"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Blood Spawn ultimate generation and resistance buffs are ready or when they will be available, but not their duration.",
         settingsColor = "CD5031",
@@ -208,9 +209,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/gear_undauntedgargoyle_head_a.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Stonekeeper"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Stonekeeper can generate Charge stacks or until it can generate stacks again. Does not show current Charge stacks.",
         settingsColor = "CD5031",
@@ -223,9 +224,9 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/gear_undauntedstonekeeper_head_a.dds",
         --texture = "/esoui/art/champion/champion_points_health_icon-hud.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Symphony of Blades"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when Meridia's Favor is ready or when it will become available to be applied to an ally.",
         settingsColor = "CD5031",
@@ -238,9 +239,9 @@ Cool.Data.Sets = {
         --texture = "/esoui/art/icons/gear_undnarlimor_head_a.dds",
         texture = "/esoui/art/icons/ability_mage_050.dds",
         showFrame = false,
-        isSynergy = false,
     },
     ["Crest of Cyrodiil"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the heal on block from Crest of Cyrodiil is ready or when it will become available.",
         settingsColor = "92C843",
@@ -252,9 +253,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "esoui/art/icons/placeholder/icon_offensive_shieldsword_01.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Ravager"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when The Ravager weapon damage buff proc is ready or when it will become available.",
         settingsColor = "92C843",
@@ -267,9 +268,9 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_warrior_012.dds",
         --texture = "/LuiExtended/media/icons/abilities/ability_set_the_ravager.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Curse Eater"] = {
+        procType = "set",
         event = EVENT_ABILITY_COOLDOWN_UPDATED,
         description = "Displays when the Curse Eater removal of negative effects is ready or when it will become available.",
         settingsColor = "FCFCCB",
@@ -282,9 +283,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_ava_005_a.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Icy Conjuror"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "",
         settingsColor = "3A97CF",
@@ -297,9 +298,9 @@ Cool.Data.Sets = {
         -- LuiExtended/media/icons/abilities/ability_set_icy_conjuror.dds
         texture = "/esoui/art/icons/death_recap_cold_ranged.dds",
         showFrame = true,
-        isSynergy = false,
     },
     ["Hide of the Werewolf"] = {
+        procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "",
         settingsColor = "92C843",
@@ -312,11 +313,11 @@ Cool.Data.Sets = {
         -- LuiExtended/media/icons/abilities/ability_set_werewolf_hide.dds
         texture = "/esoui/art/icons/ability_werewolf_004_a.dds",
         showFrame = true,
-        isSynergy = false,
     },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Undaunted orb or Templar shard synergy is able to be used or when it will become available.",
         settingsColor = "FCFCCB",
@@ -328,9 +329,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_undaunted_004b.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Conduit"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Conduit synergy from the Sorcerer Lightning Splash ability is able to be used or when it will become available.",
         settingsColor = "3A97CF",
@@ -342,9 +343,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_sorcerer_liquid_lightning.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Purify"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Purify synergy from the Templar Cleansing Ritual ability is able to be used or when it will become available.",
         settingsColor = "FCFCCB",
@@ -356,9 +357,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_templar_extended_ritual.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Boner Shield"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Undaunted Bone Wall/Bone Shield synergy is able to be used or when it will become available.",
         settingsColor = "92C843",
@@ -370,9 +371,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_undaunted_005.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Blood Altar"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Undaunted Blood Altar/Overflowing Altar synergy is able to be used or when it will become available.",
         settingsColor = "CD5031",
@@ -384,9 +385,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_undaunted_001_b.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Harvest"] = {
+        procType = "synergy",
         -- Thanks to Liofa for patching and testing for this synergy
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Warden Healing Seed synergy is able to be used or when it will become available.",
@@ -399,9 +400,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_warden_007.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Grave Robber"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "",
         settingsColor = "3A97CF",
@@ -413,9 +414,9 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_necromancer_004_b.dds",
         showFrame = true,
-        isSynergy = true,
     },
     ["Pure Agony"] = {
+        procType = "synergy",
         event = EVENT_COMBAT_EVENT,
         description = "",
         settingsColor = "3A97CF",
@@ -427,11 +428,20 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/ability_necromancer_010_b.dds",
         showFrame = true,
-        isSynergy = true,
     },
 
     -- Passives ---------------------------------------------------------------
+    -- UnitClassId
+    -- 1: Dragonknight
+    -- 2: Sorcerer
+    -- 3: Nightblade
+    -- 4: Warden
+    -- 5: Necromancer
+    -- 6: Templar
+
     ["Corpse Consumption"] = {
+        procType = "passive",
+        classId = 5,
         event = EVENT_COMBAT_EVENT,
         description = "",
         settingsColor = "CD5031",
@@ -443,7 +453,66 @@ Cool.Data.Sets = {
         timeOfProc = 0,
         texture = "/esoui/art/icons/passive_necromancer_011.dds",
         showFrame = true,
-        isSynergy = true,
+    },
+    ["Prism"] = {
+        procType = "passive",
+        classId = 6,
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 45217,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 6000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/passive_templar_030.dds",
+        showFrame = true,
+    },
+    ["Mountain's Blessing"] = {
+        procType = "passive",
+        classId = 1,
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 45005,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 6000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/passive_dragonknight_020.dds",
+        showFrame = true,
+    },
+    ["Transfer"] = {
+        procType = "passive",
+        classId = 3,
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 45146,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 4000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/passive_sorcerer_002.dds",
+        showFrame = true,
+    },
+    ["Savage Beast"] = {
+        procType = "passive",
+        classId = 4,
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        id = 88513,
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 8000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/passive_warden_009.dds",
+        showFrame = true,
     },
 }
 

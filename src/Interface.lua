@@ -85,7 +85,7 @@ function Cool.UI.Draw(key)
 
             if set.showFrame then
                 local f = WM:CreateControl(key .. "_Frame", c, CT_TEXTURE)
-                if string.match(set.texture, "passive") then
+                if set.procType == "passive" then
                     -- Gamepad frame is pretty, but looks bad scaled up
                     --f:SetTexture("/esoui/art/miscellaneous/gamepad/gp_passiveframe_128.dds")
                     f:SetTexture("/esoui/art/actionbar/passiveabilityframe_round_up.dds")

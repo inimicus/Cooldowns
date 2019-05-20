@@ -21,6 +21,86 @@ local panelData = {
     registerForRefresh  = true,
 }
 
+
+-- ============================================================================
+-- Global Options
+-- ============================================================================
+
+-- Grid Options
+local function GetSnapToGrid()
+    return Cool.preferences.snapToGrid
+end
+
+local function SetSnapToGrid(snap)
+    Cool.preferences.snapToGrid = snap
+end
+
+local function GetGridSize()
+    return Cool.preferences.gridSize
+end
+
+local function SetGridSize(gridSize)
+    Cool.preferences.gridSize = gridSize
+end
+
+-- Locked State
+local function ToggleLocked(control)
+    Cool.preferences.unlocked = not Cool.preferences.unlocked
+    for key, set in pairs(Cool.Data.Sets) do
+        local context = WM:GetControlByName(key .. "_Container")
+        if context ~= nil then
+            context:SetMovable(Cool.preferences.unlocked)
+            if Cool.preferences.unlocked then
+                control:SetText("Lock All")
+            else
+                control:SetText("Unlock All")
+            end
+        end
+    end
+end
+
+-- Force Showing
+local function ForceShow(control)
+    Cool.ForceShow = not Cool.ForceShow
+
+    if Cool.ForceShow then
+        control:SetText("Hide All Enabled")
+        Cool.HUDHidden = false
+        Cool.UI.ShowIcon(true)
+    else
+        control:SetText("Show All Enabled")
+        Cool.HUDHidden = true
+        Cool.UI.ShowIcon(false)
+    end
+
+end
+
+-- Combat State Display
+local function GetShowOutOfCombat()
+    return Cool.preferences.showOutsideCombat
+end
+
+local function SetShowOutOfCombat(value)
+    Cool.preferences.showOutsideCombat = value
+    Cool.UI:SetCombatStateDisplay()
+
+    if value then
+        Cool.Tracking.UnregisterCombatEvent()
+    else
+        Cool.Tracking.RegisterCombatEvent()
+    end
+end
+
+-- Lag Compensation
+local function GetLagCompensation()
+    return Cool.preferences.lagCompensation
+end
+
+local function SetLagCompensation(value)
+    Cool.preferences.lagCompensation = value
+end
+
+-- Sizing
 local function SetSize(setKey, size)
     local context = WM:GetControlByName(setKey .. "_Container")
 
@@ -30,6 +110,7 @@ local function SetSize(setKey, size)
         context:SetScale(size / scaleBase)
     end
 end
+
 
 -- ============================================================================
 -- Sets
@@ -186,136 +267,8 @@ local function ShouldOptionBeDisabled(procType, consider)
 end
 
 -- ============================================================================
--- Global Options
+-- Create Menu
 -- ============================================================================
-
--- Grid Options
-local function GetSnapToGrid()
-    return Cool.preferences.snapToGrid
-end
-
-local function SetSnapToGrid(snap)
-    Cool.preferences.snapToGrid = snap
-end
-
-local function GetGridSize()
-    return Cool.preferences.gridSize
-end
-
-local function SetGridSize(gridSize)
-    Cool.preferences.gridSize = gridSize
-end
-
--- Enabled State
-local function GetEnabledState(setKey)
-    return Cool.Data.Sets[setKey].enabled
-end
-
-local function SetEnabledState(setKey, state)
-    if Cool.Data.Sets[setKey].procType == "synergy" then
-        Cool.synergyPrefs[setKey] = state
-    elseif Cool.Data.Sets[setKey].procType == "passive" then
-        Cool.passivePrefs[setKey] = state
-    else
-        Cool:Trace(1, 'Invalid Set procType!')
-    end
-
-    Cool.Tracking.EnableTrackingForSet(setKey, state)
-end
-
--- Enabled Status
-local function GetIsEnabled(setKey)
-    return Cool.Data.Sets[setKey].enabled
-end
-
--- Display Size
-local function GetSize(setKey)
-    return Cool.preferences.sets[setKey].size
-end
-
--- OnProc Sound Settings
-local function GetOnProcEnabled(setKey)
-    return Cool.preferences.sets[setKey].sounds.onProc.enabled
-end
-
-local function SetOnProcEnabled(setKey, enabled)
-    Cool.preferences.sets[setKey].sounds.onProc.enabled = enabled
-end
-
--- OnReady Sound Settings
-local function GetOnReadyEnabled(setKey)
-    return Cool.preferences.sets[setKey].sounds.onReady.enabled
-end
-
-local function SetOnReadyEnabled(setKey, enabled)
-    Cool.preferences.sets[setKey].sounds.onReady.enabled = enabled
-end
-
--- Test Sound
-local function PlayTestSound(setKey, condition)
-    local sound = Cool.preferences.sets[setKey].sounds[condition].sound
-
-    Cool:Trace(2, "Testing sound <<1>>", sound)
-
-    Cool.UI.PlaySound(sound)
-end
-
--- Locked State
-local function ToggleLocked(control)
-    Cool.preferences.unlocked = not Cool.preferences.unlocked
-    for key, set in pairs(Cool.Data.Sets) do
-        local context = WM:GetControlByName(key .. "_Container")
-        if context ~= nil then
-            context:SetMovable(Cool.preferences.unlocked)
-            if Cool.preferences.unlocked then
-                control:SetText("Lock All")
-            else
-                control:SetText("Unlock All")
-            end
-        end
-    end
-end
-
--- Force Showing
-local function ForceShow(control)
-    Cool.ForceShow = not Cool.ForceShow
-
-    if Cool.ForceShow then
-        control:SetText("Hide All Enabled")
-        Cool.HUDHidden = false
-        Cool.UI.ShowIcon(true)
-    else
-        control:SetText("Show All Enabled")
-        Cool.HUDHidden = true
-        Cool.UI.ShowIcon(false)
-    end
-
-end
-
--- Combat State Display
-local function GetShowOutOfCombat()
-    return Cool.preferences.showOutsideCombat
-end
-
-local function SetShowOutOfCombat(value)
-    Cool.preferences.showOutsideCombat = value
-    Cool.UI:SetCombatStateDisplay()
-
-    if value then
-        Cool.Tracking.UnregisterCombatEvent()
-    else
-        Cool.Tracking.RegisterCombatEvent()
-    end
-end
-
--- Lag Compensation
-local function GetLagCompensation()
-    return Cool.preferences.lagCompensation
-end
-
-local function SetLagCompensation(value)
-    Cool.preferences.lagCompensation = value
-end
 
 -- Initialize
 function Cool.Settings.Init()
@@ -516,238 +469,6 @@ function Cool.Settings.Init()
                 },
         })
     end
-
-    --[[
-    for index, set in ipairs(settingsSetTable) do
-        table.insert(optionsTable, {
-            type = "submenu",
-            name = function() return GetSetName(set.name) end,
-            controls = {
-                {
-                    type = "description",
-                    text = function() return GetDescription(set.name) end,
-                    width = "full",
-                },
-                {
-                    type = "slider",
-                    name = "Size",
-                    getFunc = function() return GetSize(set.name) end,
-                    setFunc = function(size) SetSize(set.name, size) end,
-                    min = 32,
-                    max = 150,
-                    step = 1,
-                    clampInput = true,
-                    decimals = 0,
-                    width = "full",
-                },
-                {
-                    type = "checkbox",
-                    name = "Play Sound On Proc",
-                    tooltip = "Set to ON to play a sound when the set procs.",
-                    getFunc = function() return GetOnProcEnabled(set.name) end,
-                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "dropdown",
-                    name = "Sound On Proc",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onProc.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onProc.sound = value end,
-                    tooltip = "Sound volume based on Interface volume setting.",
-                    sort = "name-up",
-                    width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onProc') end,
-                    width = "full",
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "checkbox",
-                    name = "Play Sound On Ready",
-                    tooltip = "Set to ON to play a sound when the set is off cooldown and ready to proc again.",
-                    getFunc = function() return GetOnReadyEnabled(set.name) end,
-                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "dropdown",
-                    name = "Sound On Ready",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onReady.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onReady.sound = value end,
-                    tooltip = "Sound volume based on game interface volume setting.",
-                    sort = "name-up",
-                    width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onReady') end,
-                    width = "full",
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-            },
-        })
-    end
-
-    table.insert(optionsTable, {
-        type = "divider",
-        width = "full",
-        height = 16,
-        alpha = 0,
-    })
-    table.insert(optionsTable, {
-        type = "header",
-        name = "Synergies",
-        width = "full",
-    })
-
-    for index, set in ipairs(settingsSynergyTable) do
-        table.insert(optionsTable, {
-            type = "submenu",
-            name = function() return GetSetName(set.name) end,
-            controls = {
-                {
-                    type = "description",
-                    text = function() return GetDescription(set.name) end,
-                    width = "full",
-                },
-                {
-                    type = "checkbox",
-                    name = "Enable Tracking",
-                    tooltip = "Set to ON to enable tracking for this synergy.",
-                    getFunc = function() return GetEnabledState(set.name) end,
-                    setFunc = function(value) SetEnabledState(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "slider",
-                    name = "Size",
-                    getFunc = function() return GetSize(set.name) end,
-                    setFunc = function(size) SetSize(set.name, size) end,
-                    min = 32,
-                    max = 150,
-                    step = 1,
-                    clampInput = true,
-                    decimals = 0,
-                    width = "full",
-                },
-                {
-                    type = "checkbox",
-                    name = "Play Sound On Use",
-                    tooltip = "Set to ON to play a sound when the synergy is used.",
-                    getFunc = function() return GetOnProcEnabled(set.name) end,
-                    setFunc = function(value) SetOnProcEnabled(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "dropdown",
-                    name = "Sound On Use",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onProc.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onProc.sound = value end,
-                    tooltip = "Sound volume based on Interface volume setting.",
-                    sort = "name-up",
-                    width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onProc') end,
-                    width = "full",
-                    disabled = function() return not GetOnProcEnabled(set.name) end,
-                },
-                {
-                    type = "checkbox",
-                    name = "Play Sound On Ready",
-                    tooltip = "Set to ON to play a sound when the synergy is off cooldown and ready to be used again.",
-                    getFunc = function() return GetOnReadyEnabled(set.name) end,
-                    setFunc = function(value) SetOnReadyEnabled(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "dropdown",
-                    name = "Sound On Ready",
-                    choices = Cool.Sounds.names,
-                    choicesValues = Cool.Sounds.options,
-                    getFunc = function() return Cool.preferences.sets[set.name].sounds.onReady.sound end,
-                    setFunc = function(value) Cool.preferences.sets[set.name].sounds.onReady.sound = value end,
-                    tooltip = "Sound volume based on game interface volume setting.",
-                    sort = "name-up",
-                    width = "full",
-                    scrollable = true,
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-                {
-                    type = "button",
-                    name = "Test Sound",
-                    func = function() PlayTestSound(set.name, 'onReady') end,
-                    width = "full",
-                    disabled = function() return not GetOnReadyEnabled(set.name) end,
-                },
-            },
-        })
-    end
-
-    table.insert(optionsTable, {
-        type = "divider",
-        width = "full",
-        height = 16,
-        alpha = 0,
-    })
-    table.insert(optionsTable, {
-        type = "header",
-        name = "Passives",
-        width = "full",
-    })
-
-    for index, set in ipairs(settingsPassiveTable) do
-        table.insert(optionsTable, {
-            type = "submenu",
-            name = function() return GetSetName(set.name) end,
-            controls = {
-                {
-                    type = "description",
-                    text = function() return GetDescription(set.name) end,
-                    width = "full",
-                },
-                {
-                    type = "checkbox",
-                    name = "Enable Tracking",
-                    tooltip = "Set to ON to enable tracking for this synergy.",
-                    getFunc = function() return GetEnabledState(set.name) end,
-                    setFunc = function(value) SetEnabledState(set.name, value) end,
-                    width = "full",
-                },
-                {
-                    type = "slider",
-                    name = "Size",
-                    getFunc = function() return GetSize(set.name) end,
-                    setFunc = function(size) SetSize(set.name, size) end,
-                    min = 32,
-                    max = 150,
-                    step = 1,
-                    clampInput = true,
-                    decimals = 0,
-                    width = "full",
-                },
-            },
-        })
-    end
-    ]]
 
     LAM:RegisterAddonPanel(Cool.name, panelData)
     LAM:RegisterOptionControls(Cool.name, optionsTable)

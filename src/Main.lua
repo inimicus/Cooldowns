@@ -54,6 +54,7 @@ function Cool.Initialize(event, addonName)
     -- Per-Character: Synergy display status
     -- Other synergy preferences are still account-wide
     Cool.synergyPrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetSynergies())
+    Cool.passivePrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetPassives())
     Cool.Settings.Upgrade()
 
     -- Use saved debugMode value
@@ -69,6 +70,7 @@ function Cool.Initialize(event, addonName)
     Cool.Settings.Init()
     Cool.Tracking.RegisterEvents()
     Cool.Tracking.EnableSynergiesFromPrefs()
+    Cool.Tracking.EnablePassivesFromPrefs()
 
     -- Configure and register LibEquipmentBonus
     local LEB = LibStub("LibEquipmentBonus")

@@ -19,6 +19,7 @@ local defaults = {
 }
 
 local synergies = {}
+local passives = {}
 
 function Cool.Defaults:Generate()
     for key, set in pairs(Cool.Data.Sets) do
@@ -43,6 +44,9 @@ function Cool.Defaults:Generate()
         -- Populate Synergies
         synergies[key] = false
 
+        -- Populate Passives
+        passives[key] = false
+
     end
 end
 
@@ -54,5 +58,9 @@ end
 -- Per-character
 function Cool.Defaults.GetSynergies()
     return synergies
+end
+
+function Cool.Defaults.GetPassives()
+    return passives
 end
 

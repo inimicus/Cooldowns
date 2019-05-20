@@ -55,7 +55,14 @@ local function GetEnabledState(setKey)
 end
 
 local function SetEnabledState(setKey, state)
-    Cool.synergyPrefs[setKey] = state
+    if Cool.Data.Sets[setKey].procType == "synergy" then
+        Cool.synergyPrefs[setKey] = state
+    elseif Cool.Data.Sets[setKey].procType == "passive" then
+        Cool.passivePrefs[setKey] = state
+    else
+        Cool:Trace(1, 'Invalid Set procType!')
+    end
+
     Cool.Tracking.EnableTrackingForSet(setKey, state)
 end
 
@@ -232,17 +239,25 @@ function Cool.Settings.Init()
     }
 
     -- Copy key/value table to index/value table
-    settingsSetTable = {}
-    settingsSynergyTable = {}
+    local settingsSetTable = {}
+    local settingsSynergyTable = {}
+    local settingsPassiveTable = {}
     for key, set in pairs(Cool.Data.Sets) do
-        if set.isSynergy then
+        if set.procType == "synergy" then
             table.insert(settingsSynergyTable, {
                 name = key,
             })
-        else
+        elseif set.procType == "set" then
             table.insert(settingsSetTable, {
                 name = key,
             })
+        else
+            -- Only show options for current player class
+            if GetUnitClassId("player") == set.classId then
+                table.insert(settingsPassiveTable, {
+                    name = key,
+                })
+            end
         end
     end
 
@@ -388,6 +403,7 @@ function Cool.Settings.Init()
                     decimals = 0,
                     width = "full",
                 },
+                --[[
                 {
                     type = "checkbox",
                     name = "Play Sound On Use",
@@ -396,7 +412,6 @@ function Cool.Settings.Init()
                     setFunc = function(value) SetOnProcEnabled(set.name, value) end,
                     width = "full",
                 },
-                --[[
                 {
                     type = "dropdown",
                     name = "Sound On Use",
@@ -446,6 +461,52 @@ function Cool.Settings.Init()
                     disabled = function() return not GetOnReadyEnabled(set.name) end,
                 },
                 ]]
+            },
+        })
+    end
+
+    table.insert(optionsTable, {
+        type = "divider",
+        width = "full",
+        height = 16,
+        alpha = 0,
+    })
+    table.insert(optionsTable, {
+        type = "header",
+        name = "Passives",
+        width = "full",
+    })
+
+    for index, set in ipairs(settingsPassiveTable) do
+        table.insert(optionsTable, {
+            type = "submenu",
+            name = function() return GetSetName(set.name) end,
+            controls = {
+                {
+                    type = "description",
+                    text = function() return GetDescription(set.name) end,
+                    width = "full",
+                },
+                {
+                    type = "checkbox",
+                    name = "Enable Tracking",
+                    tooltip = "Set to ON to enable tracking for this synergy.",
+                    getFunc = function() return GetEnabledState(set.name) end,
+                    setFunc = function(value) SetEnabledState(set.name, value) end,
+                    width = "full",
+                },
+                {
+                    type = "slider",
+                    name = "Size",
+                    getFunc = function() return GetSize(set.name) end,
+                    setFunc = function(size) SetSize(set.name, size) end,
+                    min = 32,
+                    max = 150,
+                    step = 1,
+                    clampInput = true,
+                    decimals = 0,
+                    width = "full",
+                },
             },
         })
     end

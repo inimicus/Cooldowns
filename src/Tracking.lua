@@ -169,7 +169,15 @@ end
 
 function Cool.Tracking.EnableSynergiesFromPrefs()
     for key, set in pairs(Cool.Data.Sets) do
-        if set.isSynergy and Cool.synergyPrefs[key] then
+        if set.procType == "synergy" and Cool.synergyPrefs[key] then
+            Cool.Tracking.EnableTrackingForSet(key, true)
+        end
+    end
+end
+
+function Cool.Tracking.EnablePassivesFromPrefs()
+    for key, set in pairs(Cool.Data.Sets) do
+        if set.procType == "passive" and Cool.passivePrefs[key] then
             Cool.Tracking.EnableTrackingForSet(key, true)
         end
     end

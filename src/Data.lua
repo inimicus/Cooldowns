@@ -197,7 +197,7 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_rogue_039.dds",
         showFrame = true,
     },
-    ["Blood Spawn"] = {
+    ["Bloodspawn"] = {
         procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Blood Spawn ultimate generation and resistance buffs are ready or when they will be available, but not their duration.",

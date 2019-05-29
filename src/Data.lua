@@ -515,6 +515,23 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/passive_warden_009.dds",
         showFrame = true,
     },
+    ["Combustion"] = {
+        procType = "passive",
+        classId = 1,
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "CD5031",
+        -- Combustion on 108815 through 108818
+        -- Stamina, Magicka
+        id = {108815, 108816},
+        enabled = false,
+        result = ACTION_RESULT_POWER_ENERGIZE,
+        cooldownDurationMs = 5000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_sorcerer_011.dds",
+        showFrame = true,
+    },
 }
 
 Cool.Data.ITEM_SLOTS = {

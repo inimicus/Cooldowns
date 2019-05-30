@@ -315,6 +315,20 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_werewolf_004_a.dds",
         showFrame = true,
     },
+    ["Essence Thief"] = {
+        procType = "set",
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "92C843",
+        id = 67324,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 10000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_warrior_012.dds",
+        showFrame = true,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

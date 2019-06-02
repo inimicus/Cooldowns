@@ -28,11 +28,13 @@ But fret no longer! There is an addon to count your long cooldowns for you.
 
 ## Implemented Cooldowns
 Sets:
+- Armor of Truth
 - Blood Spawn
 - Caluurion's Legacy
 - Crest of Cyrodiil
 - Curse Eater
 - Earthgore
+- Essence Thief
 - Hide of the Werewolf
 - Icy Conjuror
 - Magicka Furnace
@@ -58,6 +60,13 @@ Synergies:
 - Orbs/Shards (Undaunted/Templar)
 - Pure Agony (Necromancer)
 - Purify (Templar)
+
+Passives:
+- Dragonknight: Mountain's Blessing (ultimate generation portion), Combustion
+- Nightblade: Transfer
+- Warden: Savage Beast
+- Necromancer: Corpse Consumption
+- Templar: Prism
 
 ## FAQ
 _What about Alkosh?_

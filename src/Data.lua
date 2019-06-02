@@ -329,6 +329,20 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_warrior_012.dds",
         showFrame = true,
     },
+    ["Armor of Truth"] = {
+        procType = "set",
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "92C843",
+        id = 86070,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 10000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_debuff_offbalance.dds",
+        showFrame = true,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

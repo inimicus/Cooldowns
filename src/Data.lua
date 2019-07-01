@@ -20,6 +20,13 @@
 
 Cool.Data = {}
 
+-- Detect Perfect versions
+-- Note: Trailing space!
+Cool.Data.PerfectString = {
+    "Perfected ",
+    "Perfect ",
+}
+
 Cool.Data.Sets = {
     ["Magicka Furnace"] = {
         procType = "set",

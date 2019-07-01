@@ -31,6 +31,7 @@ Sets:
 - Armor of Truth
 - Blood Spawn
 - Caluurion's Legacy
+- Claw of Yolnahkriin
 - Crest of Cyrodiil
 - Curse Eater
 - Earthgore
@@ -39,6 +40,7 @@ Sets:
 - Icy Conjuror
 - Magicka Furnace
 - Mechanical Acuity - For more robust tracking, check out [Acuity by Wheels](https://www.esoui.com/downloads/info1950-Acuity.html)
+- Pirate Skeleton
 - Ravager
 - Shroud of the Lich
 - Steadfast Hero
@@ -52,6 +54,7 @@ Sets:
 - Zaan
 
 Synergies:
+- Black Widows (Undaunted)
 - Blood Altar (Undaunted)
 - Boner Shield (Undaunted)
 - Conduit (Sorcerer)

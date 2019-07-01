@@ -480,6 +480,20 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_necromancer_010_b.dds",
         showFrame = true,
     },
+    ["Black Widows"] = {
+        procType = "synergy",
+        event = EVENT_COMBAT_EVENT,
+        description = "",
+        settingsColor = "92C843",
+        id = {108766, 108791, 108792},
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 20000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_undaunted_003_b.dds",
+        showFrame = true,
+    },
 
     -- Passives ---------------------------------------------------------------
     -- UnitClassId

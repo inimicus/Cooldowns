@@ -278,26 +278,32 @@ function Cool.Settings.Init()
         set = {
             name = "|cCD5031Sets|r",
             data = {default.set},
+            description = {"Select a set to customize."},
         },
         synergy = {
             name = "|c92C843Synergies|r",
             data = {default.synergy},
+            description = {"Select a synergy to customize."},
         },
         passive = {
             name = "|c3A97CFPassives|r",
             data = {default.passive},
+            description = {"Select a passive to customize."},
         },
     }
 
     for key, set in pairs(Cool.Data.Sets) do
         if set.procType == "set" then
             table.insert(settingsBreakout.set.data, key)
+            table.insert(settingsBreakout.set.description, set.description)
         elseif set.procType == "synergy" then
             table.insert(settingsBreakout.synergy.data, key)
+            table.insert(settingsBreakout.synergy.description, set.description)
         elseif set.procType == "passive" then
             -- Only show options for current player class
             if GetUnitClassId("player") == set.classId then
                 table.insert(settingsBreakout.passive.data, key)
+                table.insert(settingsBreakout.passive.description, set.description)
             end
         else
             Cool:Trace(1, "Invalid procType: <<1>>", set.procType)
@@ -381,6 +387,7 @@ function Cool.Settings.Init()
                         choices = options.data,
                         getFunc = function() return GetSelected(procType) end,
                         setFunc = function(set) SetSelected(procType, set) end,
+                        choicesTooltips = options.description,
                         sort = "name-up",
                         width = "full",
                         scrollable = true,

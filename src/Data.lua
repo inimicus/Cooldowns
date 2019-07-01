@@ -350,6 +350,21 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/ability_debuff_offbalance.dds",
         showFrame = true,
     },
+    ["Claw of Yolnahkriin"] = {
+        -- Thanks to Troodon80 for providing code and suggestion for this!
+        procType = "set",
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Minor Courage effect is able to be applied, but does not indicate the duration of Minor Courage.",
+        settingsColor = "FCFCCB",
+        id = 121878,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 8000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
+        showFrame = true,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

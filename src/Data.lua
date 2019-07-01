@@ -365,6 +365,23 @@ Cool.Data.Sets = {
         texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
         showFrame = true,
     },
+    ["Pirate Skeleton"] = {
+        procType = "set",
+        event = EVENT_COMBAT_EVENT,
+        description = "Displays when the Major Protection/Minor Defile effect from the Pirate Skeleton set can be proc, but does not indicate the duration of these buffs/debuffs.",
+        settingsColor = "CD5031",
+        id = 98421,
+        enabled = false,
+        result = ACTION_RESULT_EFFECT_GAINED,
+        cooldownDurationMs = 15000,
+        onCooldown = false,
+        timeOfProc = 0,
+        texture = "/esoui/art/icons/ability_buff_major_protection.dds",
+        showFrame = true,
+        -- Helm icon Looks like ass
+        -- texture = "/esoui/art/icons/gear_undauntedpirateskeleton_head_a.dds",
+        -- showFrame = false,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

@@ -53,8 +53,7 @@ function Cool.Initialize(event, addonName)
 
     -- Per-Character: Synergy display status
     -- Other synergy preferences are still account-wide
-    Cool.synergyPrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetSynergies())
-    Cool.passivePrefs = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetPassives())
+    Cool.character = ZO_SavedVars:New("CooldownsVariables", Cool.dbVersion, nil, Cool.Defaults.GetCharacter())
     Cool.Settings.Upgrade()
 
     -- Use saved debugMode value

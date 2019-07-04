@@ -31,6 +31,7 @@ local defaults = {
 
 local synergies = {}
 local passives = {}
+local sets = {}
 
 function Cool.Defaults:Generate()
     for key, set in pairs(Cool.Data.Sets) do
@@ -43,11 +44,18 @@ function Cool.Defaults:Generate()
             sounds = defaults.sounds,
         }
 
-        -- Populate Synergies
-        synergies[key] = false
-
-        -- Populate Passives
-        passives[key] = false
+        if set.procType == "synergy" then
+            -- Populate Synergies
+            synergies[key] = false
+        elseif set.procType == "passive" then
+            -- Populate Passives
+            passives[key] = false
+        elseif set.procType == "set" then
+            -- Populate Sets
+            sets[key] = true
+        else
+            -- Unsupported procType
+        end
 
     end
 end
@@ -58,11 +66,11 @@ function Cool.Defaults.Get()
 end
 
 -- Per-character
-function Cool.Defaults.GetSynergies()
-    return synergies
-end
-
-function Cool.Defaults.GetPassives()
-    return passives
+function Cool.Defaults.GetCharacter()
+    return {
+		["set"] = sets,
+		["synergy"] = synergies,
+		["passive"] = passives,
+	}
 end
 

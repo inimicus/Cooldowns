@@ -149,21 +149,28 @@ end
 -- Enabled
 local function GetSelectedEnabled(procType)
     if HasSelected(procType) then
-        return Cool.Data.Sets[selected[procType]].enabled
+        return Cool.character[procType][selected[procType]]
     else
         return false
     end
 end
 
 local function SetSelectedEnabled(procType, state)
-    if procType == "synergy" then
-        Cool.synergyPrefs[selected[procType]] = state
-    elseif procType == "passive" then
-        Cool.passivePrefs[selected[procType]] = state
-    else
-        Cool:Trace(1, 'Invalid Set procType!')
+    if procType == "set" then
+        if Cool.character[procType][selected[procType]] == false and state == true then
+            -- A set was forced disable, now it's on
+            -- Notify player to re-equip
+            Cool:Trace(0, 'Re-enabling <<1>>. You may need to take off and re-equip this set to resume tracking.', selected[procType])
+            Cool.character[procType][selected[procType]] = true
+            return
+        elseif state == false then
+            Cool:Trace(0, 'Forcing tracking off for <<1>>. It will not be tracked until you enable it again.', selected[procType])
+        else
+            Cool:Trace(1, 'Setting <<1>> to <<2>>', selected[procType], tostring(state))
+        end
     end
 
+    Cool.character[procType][selected[procType]] = state
     Cool.Tracking.EnableTrackingForSet(selected[procType], state)
 end
 
@@ -249,12 +256,9 @@ local function ShouldOptionBeDisabled(procType, consider)
     -- Something selected
     else
 
-        -- For Synergies/Passives
-        if procType ~= "set" then
-            -- If disabled, disable all fields
-            if not GetSelectedEnabled(procType) then
-                return true
-            end
+        -- If disabled, disable all fields
+        if not GetSelectedEnabled(procType) then
+            return true
         end
 
         -- If our other consideration says to disable, do it
@@ -395,11 +399,16 @@ function Cool.Settings.Init()
                     {
                         type = "checkbox",
                         name = "Enable Tracking",
-                        tooltip = "Set to ON to enable tracking. Tracking override not supported for sets.",
+                        tooltip = "Set to ON to enable tracking. Note: Sets will still disable automatically when not worn.",
                         getFunc = function() return GetSelectedEnabled(procType) end,
                         setFunc = function(value) SetSelectedEnabled(procType, value) end,
                         width = "full",
-                        disabled = function() return not HasSelected(procType) or procType == "set" end,
+                        disabled = function() return not HasSelected(procType) end,
+                    },
+                    {
+                        type = "description",
+                        text = "Setting ON or OFF is per-character. All other settings (such as size, sounds, and position) apply account-wide.",
+                        width = "full",
                     },
                     {
                         type = "slider",
@@ -503,6 +512,30 @@ function Cool.Settings.Upgrade()
 
         d("[Cooldowns] Upgraded settings to v1.1.0")
         Cool.preferences.upgradedv110 = true
+    end
+
+    -- v1.6.0 changes character settings, migrate
+    if Cool.character.upgradedv154 == nil or not Cool.character.upgradedv154 then
+
+        for key, set in pairs(Cool.Data.Sets) do
+            if Cool.character[key] ~= nil then
+
+                if set.procType == "synergy" then
+                    Cool.character.synergy[key] = Cool.character[key]
+                elseif set.procType == "passive" then
+                    Cool.character.passive[key] = Cool.character[key]
+                elseif set.procType == "set" then
+                    Cool.character.set[key] = true
+                else
+                    -- Unsupported procType
+                end
+
+                Cool.character[key] = nil
+            end
+        end
+
+        Cool:Trace(0, "Upgraded character settings to v1.6.0")
+        Cool.character.upgradedv154 = true
     end
 end
 

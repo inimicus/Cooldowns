@@ -198,16 +198,16 @@ local function RenameWhenPerfectSet(setKey)
 end
 
 function Cool.Tracking.EnableSynergiesFromPrefs()
-    for key, set in pairs(Cool.Data.Sets) do
-        if set.procType == "synergy" and Cool.synergyPrefs[key] then
+    for key, enable in pairs(Cool.character.synergy) do
+        if enable == true then
             Cool.Tracking.EnableTrackingForSet(key, true)
         end
     end
 end
 
 function Cool.Tracking.EnablePassivesFromPrefs()
-    for key, set in pairs(Cool.Data.Sets) do
-        if set.procType == "passive" and Cool.passivePrefs[key] then
+    for key, enable in pairs(Cool.character.passive) do
+        if enable == true then
             Cool.Tracking.EnableTrackingForSet(key, true)
         end
     end
@@ -221,8 +221,17 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
     -- Ignore sets not in our table
     if set == nil then return end
 
+
     -- Full bonus active
     if enabled then
+
+        -- Check manual disable first
+        if Cool.character[set.procType][setKey] ~= nil
+				and Cool.character[set.procType][setKey] == false then
+            -- Skip enabling set
+            Cool:Trace(1, "Force disabled <<1>>, skipping enable", setKey)
+            return
+        end
 
         -- Don't enable if already enabled
         if not set.enabled then

@@ -382,6 +382,22 @@ Cool.Data.Sets = {
         -- texture = "/esoui/art/icons/gear_undauntedpirateskeleton_head_a.dds",
         -- showFrame = false,
     },
+    ["Maarselok"] = {
+        procType = "set",
+        event = EVENT_COMBAT_EVENT,
+        description = "RIP Velidreth",
+        settingsColor = "FCFCCB",
+        id = 126941,
+        enabled = false,
+        result = ACTION_RESULT_DAMAGE,
+        cooldownDurationMs = 7000,
+        onCooldown = false,
+        timeOfProc = 0,
+        -- Helm texture looks like ass
+        -- texture = "/esoui/art/icons/gear_undmaarselok_helmet_a.dds",
+        texture = "/esoui/art/icons/death_recap_disease_melee.dds",
+        showFrame = true,
+    },
 
     -- Synergies --------------------------------------------------------------
     ["Orbs / Shards"] = {

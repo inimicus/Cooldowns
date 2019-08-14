@@ -5,7 +5,7 @@
 ## Version: 1.6.1
 ## AddOnVersion: 161
 ## Author: |cFFCCCC@g4rr3t|r (NA)
-## DependsOn: LibAddonMenu-2.0>=28 LibStub
+## DependsOn: LibAddonMenu-2.0>=28
 
 lib/LibEquipmentBonus/LibEquipmentBonus.lua
 

@@ -9,7 +9,7 @@
 Cool.Settings = {}
 
 local WM = WINDOW_MANAGER
-local LAM = LibStub("LibAddonMenu-2.0")
+local LAM = LibAddonMenu2
 local scaleBase = Cool.UI.scaleBase
 
 local panelData = {

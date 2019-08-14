@@ -72,7 +72,7 @@ function Cool.Initialize(event, addonName)
     Cool.Tracking.EnablePassivesFromPrefs()
 
     -- Configure and register LibEquipmentBonus
-    local LEB = LibStub("LibEquipmentBonus")
+    local LEB = LibEquipmentBonus
     local Equip = LEB:Init(Cool.name)
     Equip:Register(Cool.Tracking.EnableTrackingForSet)
 

@@ -24,7 +24,9 @@
 --
 --      /cool all on
 --
--- You'll get spammed with all the abilities/effects in chat.
+-- You'll get spammed with all the abilities in chat. There might even be
+-- a similar debug for effects commented somewhere else in the code, too.
+--
 -- Proc your set/synergy/whatever, then look for it in the chat. You'll get
 -- the name, the ID, and the result. Take note of these values and then add
 -- them to the Sets table below along with any other values needed.
@@ -477,7 +479,7 @@ Cool.Data.Sets = {
         settingsColor = "CD5031",
         -- This is fucked, why different based on class?
         id = {
-            80501, -- ?
+            --80501, -- Equipped?
             81675, -- Necro
             83288, -- ?
             83287, -- ?

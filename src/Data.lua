@@ -376,7 +376,7 @@ Cool.Data.Sets = {
         cooldownDurationMs = 15000,
         onCooldown = false,
         timeOfProc = 0,
-        texture = "/esoui/art/icons/ability_buff_major_protection.dds",
+        texture = "/esoui/art/icons/event_witchfest_sacking_skelet.dds",
         showFrame = true,
         -- Helm icon Looks like ass
         -- texture = "/esoui/art/icons/gear_undauntedpirateskeleton_head_a.dds",

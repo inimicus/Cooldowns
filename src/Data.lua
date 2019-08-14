@@ -5,18 +5,122 @@
 --
 -- Data.lua
 -- -----------------------------------------------------------------------------
+--
+-- To all you helpful individuals who romp in here to add things
+-- on your own, thank you.
+--
+-- I'm sorry my updates overwrite your changes and you have to constantly
+-- backup this file or ignore updates in order to keep your version working.
+--
+-- If you'd like to submit a pull request on GitHub, I'd happily take a look.
+--
+--      https://github.com/inimicus/cooldowns
+--
+-- Here is some information that might be helpful:
+--
+-- Debugging/Finding IDs:
+-- When finding information about new sets, you can get chat log spammed with
+-- information about every EVENT_COMBAT_EVENT by typing in game chat:
+--
+--      /cool all on
+--
+-- You'll get spammed with all the abilities/effects in chat.
+-- Proc your set/synergy/whatever, then look for it in the chat. You'll get
+-- the name, the ID, and the result. Take note of these values and then add
+-- them to the Sets table below along with any other values needed.
+--
+-- Turn off chat spam with:
+--
+--      /cool all off
+--
+-- Easy as that.
+--
+-- Cool.Data.Sets (table):
+-- This table contains all the set, synergy, and passive information that
+-- the addon uses. But you probably already knew that.
+--
+-- Each entry is stored in a table with its key being the string name
+-- of the set to track. Because of this, non-English clients don't work.
+--
+-- There are plans to implement better tracking that doesn't use the set name
+-- and there is already a new branch on GitHub to track efforts there. But it
+-- is quite a bit out of date, unfortunately.
+--
+-- Big thanks to Baertram for helping out on multi-language support.
+--
+-- Configuration Options:
+--
+-- * procType (string):     One of "set", "synergy", or "passive" to indicate
+--                          what kind of tracking it is. Duhhhhh.
+--
+-- * event (number):        What kind of action identifies the proc happened.
+--                          Generally this is EVENT_COMBAT_EVENT or 131102, but
+--                          some other values do exist (Wyrd Tree, others).
+--
+-- * description (string):  Cosmetic. Adds a description to the tooltip.
+--
+-- * settingsColor (string):    Color in hex. Used to be used for the colors
+--                              for each set in the settings menu, but since
+--                              the menu was updated they aren't used. Will
+--                              probably clean them up at some point.
+--
+-- * id (number | array):   The ID that identifies the proc condition.
+--                          This can also be an array of numbers for proc
+--                          conditions that span multiple IDs (Perfected/Non,
+--                          synergies, stupid Pirate Skelly, and more).
+--
+-- * enabled (bool):        Used to identify if tracking and display are enabled.
+--                          This is different from if the set is enabled in the
+--                          settings. That's a different value stored in savedvars.
+--                          This value is pointless here and will probably be
+--                          removed in the future.
+--
+-- * result (number):       The result of the proc. These are numeric, defined
+--                          in the table using their constants. When debugging,
+--                          the number will appear instead of the constant name,
+--                          so refer to the constants section below to match.
+--
+-- * cooldownDurationMs (number):   Number in milliseconds for the cooldown.
+--                                  e.g. 30 seconds is 30000
+--
+-- * onCooldown (bool):     If the set is on cooldown.
+--                          This is also pointless here and will
+--                          probably be removed in the future.
+--
+-- * timeOfProc (number):   Time that the proc happened, used in maths to
+--                          provide the countdown and cooldown time remaining.
+--                          Pointless here, will be removed in the future.
+--
+-- * texture (string):      The path to the texture to use for the cooldown
+--                          display. You can find textures with the TextureIt
+--                          addon (though what's there is largely out of date)
+--                          or via the method `GetAbilityIcon([abilityId])`.
+--                          I just generally use any icon that doesn't
+--                          look like ass. A lot look like ass.
+--
+-- * showFrame (bool):      Enables or disables showing the frame around
+--                          the icon. Not used for monster helm icons.
+--                          But most monster helm icons look like ass.
+--
+-- Constants:
+--
+-- Reference this section to make sense of what result and event numbers in
+-- debug messages mean.
+--
+-- Results:
+-- ACTION_RESULT_DAMAGE                 = 1
+-- ACTION_RESULT_POWER_ENERGIZE         = 128
+-- ACTION_RESULT_HEAL                   = 16
+-- ACTION_RESULT_EFFECT_GAINED          = 2240 - The most common
+-- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245 - Use 2240 if both show up
+-- ACTION_RESULT_ABILITY_ON_COOLDOWN    = 2080
 
--- Constants
-
--- ACTION_RESULT_POWER_ENERGIZE = 128
--- ACTION_RESULT_HEAL = 16
--- ACTION_RESULT_EFFECT_GAINED = 2240
--- ACTION_RESULT_EFFECT_GAINED_DURATION = 2245
--- ACTION_RESULT_ABILITY_ON_COOLDOWN = 2080
-
--- EVENT_ABILITY_COOLDOWN_UPDATED = 131181
--- EVENT_COMBAT_EVENT = 131102
--- EVENT_EFFECT_CHANGED = 131150
+-- Events:
+-- EVENT_ABILITY_COOLDOWN_UPDATED       = 131181
+-- EVENT_COMBAT_EVENT                   = 131102
+-- EVENT_EFFECT_CHANGED                 = 131150
+--
+-- -----------------------------------------------------------------------------
 
 Cool.Data = {}
 
@@ -189,6 +293,7 @@ Cool.Data.Sets = {
         showFrame = true,
     },
     ["Mechanical Acuity"] = {
+        -- Wheels does it better
         procType = "set",
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Mechanical Acuity proc is ready or when it will be available, but not the duration of the crit bonus.",
@@ -645,6 +750,10 @@ Cool.Data.Sets = {
     },
 }
 
+-- These two tables work together
+-- to map item slot constants to
+-- human-readable names.
+-- Why two tables? Good question.
 Cool.Data.ITEM_SLOTS = {
     EQUIP_SLOT_HEAD,
     EQUIP_SLOT_NECK,

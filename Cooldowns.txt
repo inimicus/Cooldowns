@@ -4,25 +4,9 @@
 ## Description: Displays cooldowns for various procs from set bonuses, synergies, or class passives.
 ## Version: 1.6.1
 ## Author: |cFFCCCC@g4rr3t|r (NA)
-## OptionalDependsOn:  LibAddonMenu-2.0
+## DependsOn: LibAddonMenu-2.0>=28 LibStub
 
-lib/LibStub/LibStub.lua
 lib/LibEquipmentBonus/LibEquipmentBonus.lua
-lib/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
-lib/LibAddonMenu-2.0/controls/panel.lua
-lib/LibAddonMenu-2.0/controls/submenu.lua
-lib/LibAddonMenu-2.0/controls/button.lua
-lib/LibAddonMenu-2.0/controls/checkbox.lua
-lib/LibAddonMenu-2.0/controls/colorpicker.lua
-lib/LibAddonMenu-2.0/controls/custom.lua
-lib/LibAddonMenu-2.0/controls/description.lua
-lib/LibAddonMenu-2.0/controls/dropdown.lua
-lib/LibAddonMenu-2.0/controls/editbox.lua
-lib/LibAddonMenu-2.0/controls/header.lua
-lib/LibAddonMenu-2.0/controls/slider.lua
-lib/LibAddonMenu-2.0/controls/texture.lua
-lib/LibAddonMenu-2.0/controls/iconpicker.lua
-lib/LibAddonMenu-2.0/controls/divider.lua
 
 src/Main.lua
 src/Data.lua

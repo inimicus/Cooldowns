@@ -6,12 +6,13 @@
 -- LibEquipmentBonus.lua
 -- -----------------------------------------------------------------------------
 
--- Register LEB with LibStub
-local MAJOR, MINOR = "LibEquipmentBonus", 2
-local leb, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+local leb = {}
 
--- Exit if same or more recent version is already loaded
-if not leb then return end
+if not LibEquipmentBonus then
+    LibEquipmentBonus = leb
+else
+    return
+end
 
 local libName = 'LibEquipmentBonus'
 local prefix = '[LibEquipmentBonus] '

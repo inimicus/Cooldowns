@@ -475,7 +475,16 @@ Cool.Data.Sets = {
         event = EVENT_COMBAT_EVENT,
         description = "Displays when the Major Protection/Minor Defile effect from the Pirate Skeleton set can be proc, but does not indicate the duration of these buffs/debuffs.",
         settingsColor = "CD5031",
-        id = 98421,
+        -- This is fucked, why different based on class?
+        id = {
+            80501, -- ?
+            81675, -- Necro
+            83288, -- ?
+            83287, -- ?
+            98419, -- Templar
+            98420, -- ?
+            98421, -- Sorcerer?
+        },
         enabled = false,
         result = ACTION_RESULT_EFFECT_GAINED,
         cooldownDurationMs = 15000,

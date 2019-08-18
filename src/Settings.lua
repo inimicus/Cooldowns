@@ -111,6 +111,16 @@ local function SetSize(setKey, size)
     end
 end
 
+local function SetTimerSize(setKey, size)
+    local context = WM:GetControlByName(setKey .. "_Label")
+
+    Cool.preferences.sets[setKey].timerSize = size
+
+    if context ~= nil then
+        context:SetFont("$(MEDIUM_FONT)|" .. size .. "|soft-shadow-thick")
+    end
+end
+
 
 -- ============================================================================
 -- Sets
@@ -182,10 +192,22 @@ local function GetSelectedSize(procType)
         return Cool.preferences.size
     end
 end
+local function GetSelectedTimerSize(procType)
+    if HasSelected(procType) then
+        return Cool.preferences.sets[selected[procType]].timerSize
+    else
+        return Cool.preferences.timerSize
+    end
+end
 
 local function SetSelectedSize(procType, size)
     Cool.preferences.sets[selected[procType]].size = size
     SetSize(selected[procType], size)
+end
+
+local function SetSelectedTimerSize(procType, size)
+    Cool.preferences.sets[selected[procType]].timerSize = size
+    SetTimerSize(selected[procType], size)
 end
 
 -- Sounds
@@ -424,6 +446,19 @@ function Cool.Settings.Init()
                         disabled = function() return ShouldOptionBeDisabled(procType) end,
                     },
                     {
+                        type = "slider",
+                        name = "Timer Size",
+                        getFunc = function() return GetSelectedTimerSize(procType) end,
+                        setFunc = function(size) SetSelectedTimerSize(procType, size) end,
+                        min = 32,
+                        max = 150,
+                        step = 1,
+                        clampInput = true,
+                        decimals = 0,
+                        width = "full",
+                        disabled = function() return ShouldOptionBeDisabled(procType) end,
+                    },
+                    {
                         type = "checkbox",
                         name = "Play Sound On Proc",
                         tooltip = "Set to ON to play a sound when the set procs.",
@@ -538,4 +573,3 @@ function Cool.Settings.Upgrade()
         Cool.character.upgradedv154 = true
     end
 end
-

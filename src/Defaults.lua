@@ -17,6 +17,7 @@ local defaults = {
     showOutsideCombat = true,
     lagCompensation = true,
     size = 64,
+    timerSize = 36,
     sounds = {
         onProc = {
             enabled = true,
@@ -41,6 +42,7 @@ function Cool.Defaults:Generate()
             x = 150,
             y = 150,
             size = defaults.size,
+            timerSize = defaults.timerSize,
             sounds = defaults.sounds,
         }
 
@@ -73,4 +75,3 @@ function Cool.Defaults.GetCharacter()
 		["passive"] = passives,
 	}
 end
-

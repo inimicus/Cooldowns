@@ -5,7 +5,7 @@
 ## Version: 1.7.0
 ## AddOnVersion: 10700
 ## Author: |cFFCCCC@g4rr3t|r (NA)
-## DependsOn: LibAddonMenu-2.0>=28
+## DependsOn: LibAddonMenu-2.0>=28 LibSets>=010
 
 lib/LibEquipmentBonus/LibEquipmentBonus.lua
 

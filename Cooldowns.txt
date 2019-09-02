@@ -17,6 +17,8 @@ src/Sounds.lua
 src/Settings.lua
 src/Tracking.lua
 
+; Configuration for makePackage.sh
+; See github.com/inimicus/makePackage for more information
 ; PackageExcludes: art/*
 ; PackageReleaseDir: release
 ; PackageBumpFiles: src/Main.lua

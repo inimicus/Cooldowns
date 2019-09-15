@@ -9,8 +9,8 @@
 
 lib/LibEquipmentBonus/LibEquipmentBonus.lua
 
-src/Main.lua
 src/Data.lua
+src/Main.lua
 src/Defaults.lua
 src/Interface.lua
 src/Sounds.lua

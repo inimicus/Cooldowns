@@ -241,6 +241,12 @@ function Cool.UI.SlashCommand(command)
         Cool.debugMode = 0
         Cool.preferences.debugMode = 0
 
+    -- Language Helper
+    elseif string.sub(command, 0, 4) == "lang" then
+        local lang = string.sub(command, 6)
+        Cool:Trace(0, "Setting language to <<1>>", lang)
+        SetCVar("language.2", lang)
+
     -- Default ----------------------------------------------------------------
     else
         d(Cool.prefix .. "Command not recognized!")

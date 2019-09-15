@@ -213,7 +213,7 @@ function Cool.Tracking.EnablePassivesFromPrefs()
     end
 end
 
-function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
+function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
 
     setKey = RenameWhenPerfectSet(setKey);
     local set = Cool.Data.Sets[setKey]
@@ -229,13 +229,13 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
         if Cool.character[set.procType][setKey] ~= nil
 				and Cool.character[set.procType][setKey] == false then
             -- Skip enabling set
-            Cool:Trace(1, "Force disabled <<1>>, skipping enable", setKey)
+            Cool:Trace(1, "Force disabled <<1>> (<<2>>), skipping enable", setName, setKey)
             return
         end
 
         -- Don't enable if already enabled
         if not set.enabled then
-            Cool:Trace(1, "Full set for: <<1>>, registering events", setKey)
+            Cool:Trace(1, "Full set for: <<1>> (<<2>>), registering events", setName, setKey)
 
             -- Set callback based on event
             local procFunction = nil
@@ -263,7 +263,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             set.enabled = true
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, "Set already enabled for: <<1>>", setKey)
+            Cool:Trace(2, "Set already enabled for: <<1>> (<<2>>)", setName, setKey)
         end
 
     -- Full bonus not active
@@ -271,7 +271,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
 
         -- Don't disable if already disabled
         if set.enabled then
-            Cool:Trace(1, "Not active for: <<1>>, unregistering events", setKey)
+            Cool:Trace(1, "Not active for: <<1>> (<<2>>), unregistering events", setName, setKey)
             if type(set.id) == 'table' then
                 for i=1, #set.id do
                     EM:UnregisterForEvent(Cool.name .. "_" .. set.id[i], set.event)
@@ -282,7 +282,7 @@ function Cool.Tracking.EnableTrackingForSet(setKey, enabled)
             set.enabled = false
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, "Set already disabled for: <<1>>", setKey)
+            Cool:Trace(2, "Set already disabled for: <<1>> (<<2>>)", setName, setKey)
         end
     end
 

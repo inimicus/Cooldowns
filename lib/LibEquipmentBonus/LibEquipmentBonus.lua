@@ -63,7 +63,7 @@ local function Trace(addon, debugLevel, ...)
 end
 
 local function AddSetBonus(slot, itemLink)
-    local hasSet, setName, _, _, maxEquipped = GetItemLinkSetInfo(itemLink, true)
+    local hasSet, setName, _, _, maxEquipped, setId = GetItemLinkSetInfo(itemLink, true)
 
     if hasSet then
         -- Initialize first time encountering a set
@@ -72,6 +72,7 @@ local function AddSetBonus(slot, itemLink)
             leb.sets[setName].maxBonus = maxEquipped
             leb.sets[setName].equippedMax = false
             leb.sets[setName].bonuses = {}
+            leb.sets[setName].setId = setId
         end
 
         -- Update bonuses
@@ -121,12 +122,12 @@ local function UpdateEnabledSets(forceNotify)
                     if (addons[i].filterBySetName == nil or addons[i].filterBySetName == key) then
                         if (forceNotify ~= nil and forceNotify == addons[i].addonId) or forceNotify == nil then
                             Trace(addons[i], 1, "Notifying set update for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
-                            addons[i].EquipmentUpdateCallback(key, leb.sets[key].equippedMax)
+                            addons[i].EquipmentUpdateCallback(key, leb.sets[key].equippedMax, set.setId)
                         else
-                            Trace(addons[i], 2, "Force notify not matched, not notifying for: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
+                            Trace(addons[i], 2, "Force notify not matched, not notifying for: <<1>> (<<3>>) Enabled: <<2>>", key, tostring(leb.sets[key].equippedMax), set.setId)
                         end
                     else
-                        Trace(addons[i], 2, "Filter prevents notify: <<1>> (Enabled: <<2>>)", key, tostring(leb.sets[key].equippedMax))
+                        Trace(addons[i], 2, "Filter prevents notify: <<1>> (<<3>>) Enabled: <<2>>", key, tostring(leb.sets[key].equippedMax), set.setId)
                     end
                 end
             end

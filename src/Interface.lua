@@ -162,9 +162,9 @@ function Cool.UI.Update(setKey)
         texture:SetColor(1, 1, 1, 1)
         Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady)
     elseif (countdown < 10) then
-        label:SetText(string.format("%.1f", countdown))
+        label:SetText(zo_strformat("<<1>>", string.format("%.1f", countdown)))
     else
-        label:SetText(string.format("%.0f", countdown))
+        label:SetText(zo_strformat("<<1>>", string.format("%.0f", countdown)))
     end
 
 end

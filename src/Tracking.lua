@@ -79,42 +79,38 @@ local function OnDeath()
     Cool.UI:SetCombatStateDisplay()
 end
 
+-- Common unnecessary ability ids
+local ignoreList = {
+    --sprint
+    [973] = true,
+    --sprintDrain
+    [15356] = true,
+    --block
+    [14890] = true,
+    --interrupt
+    [55146] = true,
+    --roll
+    [28549] = true,
+    --immov
+    [29721] = true,
+    --phase
+    [98294] = true,
+    --dodgeFatigue
+    [69143] = true,
+}
+
 local function OnCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
     -- Exclude common unnecessary abilities
-    local ignoreList = {
-        sprint        = 973,
-        sprintDrain   = 15356,
-        block         = 14890,
-        interrupt     = 55146,
-        roll          = 28549,
-        immov         = 29721,
-        phase         = 98294,
-        dodgeFatigue  = 69143,
-    }
-
-    for index, value in pairs(ignoreList) do
-        if abilityId == value then return end
-    end
+    local abortNow = ignoreList[abilityId] or false
+    if abortNow then return end
 
     Cool:Trace(1, "<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result)
 end
 
 local function OnEffectChangedUnfiltered(_, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
     -- Exclude common unnecessary abilities
-    local ignoreList = {
-        sprint        = 973,
-        sprintDrain   = 15356,
-        block         = 14890,
-        interrupt     = 55146,
-        roll          = 28549,
-        immov         = 29721,
-        phase         = 98294,
-        dodgeFatigue  = 69143,
-    }
-
-    for index, value in pairs(ignoreList) do
-        if abilityId == value then return end
-    end
+    local abortNow = ignoreList[abilityId] or false
+    if abortNow then return end
 
     Cool:Trace(1, "<<1>> (<<2>>) with change type <<3>> <<4>>", effectName, abilityId, changeType, iconName)
 end

@@ -135,9 +135,9 @@ local default = {
 }
 
 local selected = {
-    set = default.set,
-    synergy = default.synergy,
-    passive = default.passive,
+    set = 0,
+    synergy = 0,
+    passive = 0,
 }
 
 -- Selection
@@ -150,7 +150,7 @@ local function SetSelected(procType, selection)
 end
 
 local function HasSelected(procType)
-    if selected[procType] ~= default[procType] then
+    if selected[procType] ~= 0 then
         return true
     else
         return false
@@ -304,17 +304,20 @@ function Cool.Settings.Init()
     local settingsBreakout = {
         set = {
             name = "|cCD5031Sets|r",
-            data = {default.set},
+            data = {0},
+            values = {default.set},
             description = {"Select a set to customize."},
         },
         synergy = {
             name = "|c92C843Synergies|r",
-            data = {default.synergy},
+            data = {0},
+            values = {default.synergy},
             description = {"Select a synergy to customize."},
         },
         passive = {
             name = "|c3A97CFPassives|r",
-            data = {default.passive},
+            data = {0},
+            values = {default.passive},
             description = {"Select a passive to customize."},
         },
     }
@@ -322,14 +325,17 @@ function Cool.Settings.Init()
     for key, set in pairs(Cool.Data.Sets) do
         if set.procType == "set" then
             table.insert(settingsBreakout.set.data, key)
+            table.insert(settingsBreakout.set.values, set.name)
             table.insert(settingsBreakout.set.description, set.description)
         elseif set.procType == "synergy" then
             table.insert(settingsBreakout.synergy.data, key)
+            table.insert(settingsBreakout.synergy.values, key)
             table.insert(settingsBreakout.synergy.description, set.description)
         elseif set.procType == "passive" then
             -- Only show options for current player class
             if GetUnitClassId("player") == set.classId then
                 table.insert(settingsBreakout.passive.data, key)
+                table.insert(settingsBreakout.passive.values, key)
                 table.insert(settingsBreakout.passive.description, set.description)
             end
         else
@@ -411,7 +417,8 @@ function Cool.Settings.Init()
                     {
                         type = "dropdown",
                         name = "Option",
-                        choices = options.data,
+                        choices = options.values,
+                        choicesValues = options.data,
                         getFunc = function() return GetSelected(procType) end,
                         setFunc = function(set) SetSelected(procType, set) end,
                         choicesTooltips = options.description,

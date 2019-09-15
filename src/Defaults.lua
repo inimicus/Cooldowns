@@ -36,6 +36,8 @@ local passives = {}
 local sets = {}
 
 function Cool.Defaults:Generate()
+    local libSets = LibSets
+
     for key, set in pairs(Cool.Data.Sets) do
 
         -- Populate Sets
@@ -55,6 +57,7 @@ function Cool.Defaults:Generate()
             passives[key] = false
         elseif set.procType == "set" then
             -- Populate Sets
+            Cool.Data.Sets[key].name = libSets.GetSetName(key, clientLang)
             sets[key] = true
         else
             -- Unsupported procType

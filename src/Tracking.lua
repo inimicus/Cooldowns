@@ -164,36 +164,6 @@ end
 -- Utility Functions
 -- ----------------------------------------------------------------------------
 
-local function RenameWhenPerfectSet(setKey)
-    -- Check for Perfect/Perfected
-    local isPerfect = string.find(setKey, "Perfect")
-
-    -- Only if a perfect set is suspect do we run through
-    -- our table of "Perfect" strings to replace
-    if isPerfect ~= nil and isPerfect > 0 then
-        Cool:Trace(3, "Perfect suspect, string matches: <<1>>", isPerfect)
-
-        -- Normalize Perfect and Non-Perfect variant names
-        for _, perfectString in ipairs(Cool.Data.PerfectString) do
-
-            -- Find strings related to being Perfect
-            local newSetKey, count = string.gsub(setKey, perfectString, "")
-
-            -- Update name if a perfect version is detected
-            if count > 0 then
-                Cool:Trace(1, "Found <<1>> version of <<2>>", perfectString, newSetKey)
-                return newSetKey
-            end
-
-            Cool:Trace(3, "Perfect suspect, but no match for \"<<1>>\"", perfectString)
-        end
-    end
-
-    -- Return unmodified if perfect could not be matched
-    return setKey
-
-end
-
 function Cool.Tracking.EnableSynergiesFromPrefs()
     for key, enable in pairs(Cool.character.synergy) do
         if enable == true then
@@ -212,12 +182,10 @@ end
 
 function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
 
-    setKey = RenameWhenPerfectSet(setKey);
     local set = Cool.Data.Sets[setKey]
 
     -- Ignore sets not in our table
     if set == nil then return end
-
 
     -- Full bonus active
     if enabled then

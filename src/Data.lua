@@ -108,13 +108,6 @@
 Cool = Cool or {}
 Cool.Data = {}
 
--- Detect Perfect versions
--- Note: Trailing space!
-Cool.Data.PerfectString = {
-    "Perfected ",
-    "Perfect ",
-}
-
 function Cool.GetSetData()
     local libSets = LibSets
 

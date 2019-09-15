@@ -45,6 +45,10 @@ function Cool.Initialize(event, addonName)
     Cool:Trace(1, "Cool Loaded")
     EM:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
+    -- Load the sets data (using LibSets)
+    Cool.clientLang = GetCVar("language.2")
+    Cool.GetSetData()
+
     -- Populate default settings for sets
     Cool.Defaults:Generate()
 

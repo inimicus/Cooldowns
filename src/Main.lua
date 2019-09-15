@@ -7,7 +7,7 @@
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-Cool            = {}
+Cool            = Cool or {}
 Cool.name       = "Cooldowns"
 Cool.version    = "1.7.0"
 Cool.dbVersion  = 1

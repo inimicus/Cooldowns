@@ -6,6 +6,7 @@
 -- Tracking.lua
 -- -----------------------------------------------------------------------------
 
+Cool = Cool or {}
 Cool.Tracking = {}
 
 local EM = EVENT_MANAGER

@@ -6,6 +6,7 @@
 -- Defaults.lua
 -- -----------------------------------------------------------------------------
 
+Cool = Cool or {}
 Cool.Defaults = {}
 
 local defaults = {

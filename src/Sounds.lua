@@ -6,6 +6,7 @@
 -- Sounds.lua
 -- -----------------------------------------------------------------------------
 
+Cool = Cool or {}
 Cool.Sounds = {
     options = {
         "ACTIVE_SKILL_MORPH_CHOSEN",

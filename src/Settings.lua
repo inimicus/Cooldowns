@@ -6,6 +6,7 @@
 -- Settings.lua
 -- -----------------------------------------------------------------------------
 
+Cool = Cool or {}
 Cool.Settings = {}
 
 local WM = WINDOW_MANAGER

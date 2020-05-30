@@ -182,7 +182,7 @@ local function SetSelectedEnabled(procType, state)
     end
 
     Cool.character[procType][selected[procType]] = state
-    Cool.Tracking.EnableTrackingForSet(selected[procType], state)
+    Cool.Tracking.EnableTrackingForSet(selected[procType], state, selected[procType])
 end
 
 -- Size

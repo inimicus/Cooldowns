@@ -551,6 +551,7 @@ function Cool.GetSetData()
 
         -- Passives ---------------------------------------------------------------
         -- UnitClassId
+        -- 0: All classes
         -- 1: Dragonknight
         -- 2: Sorcerer
         -- 3: Nightblade
@@ -558,6 +559,18 @@ function Cool.GetSetData()
         -- 5: Necromancer
         -- 6: Templar
 
+        ["Last Stand"] = {
+            -- Requested by Cairnkid on ESOUI
+            procType = "passive",
+            classId = 0,
+            event = EVENT_COMBAT_EVENT,
+            description = "TODO: Add this",
+            id = 65133,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 20000,
+            texture = "/esoui/art/icons/ability_buff_major_heroism.dds",
+            showFrame = true,
+        },
         ["Corpse Consumption"] = {
             procType = "passive",
             classId = 5,

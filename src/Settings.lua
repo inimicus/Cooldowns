@@ -333,7 +333,7 @@ function Cool.Settings.Init()
             table.insert(settingsBreakout.synergy.description, set.description)
         elseif set.procType == "passive" then
             -- Only show options for current player class
-            if GetUnitClassId("player") == set.classId then
+            if GetUnitClassId("player") == set.classId or set.classId == 0 then
                 table.insert(settingsBreakout.passive.data, key)
                 table.insert(settingsBreakout.passive.values, key)
                 table.insert(settingsBreakout.passive.description, set.description)

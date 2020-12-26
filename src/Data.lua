@@ -128,6 +128,39 @@ function Cool.GetSetData()
     -- local isSet, setName, _, _, _, setId = GetItemLinkSetInfo(itemLink, false)
 
     Cool.Data.Sets = {
+    --["Mantle of Siroria"] = {
+        [390] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Mantle of Siroria proc is available or cooldown until it is ready again.",
+            id = 110067,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 10000,
+            texture = "/esoui/art/icons/placeholder/icon_offense_weaponcharge_01.dds",
+            showFrame = true,
+        },
+    --["Domihaus"] = {
+        [342] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Domihaus proc is available or cooldown until it is ready again.",
+            id = {97901,97882},
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 15000,
+            texture = "/esoui/art/icons/gear_undauntedminotaur_a.dds",
+            showFrame = false,
+        },
+    --["Winter's Respite"] = {
+        [487] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Winter's Respite proc is available or cooldown until it is ready again.",
+            id = 135659,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 10000,
+            texture = "/esoui/art/champion/champion_points_magicka_icon-hud.dds",
+            showFrame = true,
+        },
         --["Magicka Furnace"] = {
         [103] = {
             procType = "set",

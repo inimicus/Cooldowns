@@ -223,7 +223,7 @@ function Cool.GetSetData()
             description = "Displays when the heal proc is ready or when it will be available, but not the duration of the heal over time.",
             id = 97855,
             result = ACTION_RESULT_EFFECT_GAINED,
-            cooldownDurationMs = 35000,
+            cooldownDurationMs = 20000,
             texture = "/esoui/art/icons/gear_undaunted_ironatronach_head_a.dds",
             showFrame = false,
         },

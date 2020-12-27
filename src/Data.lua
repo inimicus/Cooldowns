@@ -128,6 +128,50 @@ function Cool.GetSetData()
     -- local isSet, setName, _, _, _, setId = GetItemLinkSetInfo(itemLink, false)
 
     Cool.Data.Sets = {
+    --["Perfected Void Bash"] = {
+        [564] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Perfected Void Bash proc is available or cooldown until it is ready again.",
+            id = 147744,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 13000,
+            texture = "/esoui/art/icons/gear_voriplasm_shield_a.dds",
+            showFrame = false,
+        },
+    --["Void Bash"] = {
+        [558] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Void Bash proc is available or cooldown until it is ready again.",
+            id = 147744,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 13000,
+            texture = "/esoui/art/icons/gear_voriplasm_shield_a.dds",
+            showFrame = false,
+        },
+    --["Sentinel of Rkugamz"] = {
+        [268] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Sentinel of Rkugamz proc is available or cooldown until it is ready again.",
+            id = {81036},
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 15000,
+            texture = "/esoui/art/icons/gear_undauntedcenturion_head_a.dds",
+            showFrame = false,
+        },
+    --["Tremorscale"] = {
+        [276] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Tremorscale proc is available or cooldown until it is ready again.",
+            id = {80517,80865},
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 8000,
+            texture = "/esoui/art/icons/gear_undauntedsuneripper_head_a.dds",
+            showFrame = false,
+        },
     --["Mantle of Siroria"] = {
         [390] = {
             procType = "set",
@@ -416,6 +460,17 @@ function Cool.GetSetData()
             result = ACTION_RESULT_EFFECT_GAINED,
             cooldownDurationMs = 10000,
             texture = "/esoui/art/icons/ability_debuff_offbalance.dds",
+            showFrame = true,
+        },
+        -- ["Perfected Claw of Yolnahkriin"] = {
+        [451] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Minor Courage effect is able to be applied, but does not indicate the duration of Minor Courage.",
+            id = 121878,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 8000,
+            texture = "/esoui/art/icons/placeholder/icon_health_major.dds",
             showFrame = true,
         },
         -- ["Claw of Yolnahkriin"] = {

@@ -160,7 +160,7 @@ function Cool.UI.Update(setKey)
         set.onCooldown = false
         label:SetText("")
         texture:SetColor(1, 1, 1, 1)
-        Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady)
+        if Cool.preferences.audioNotifications then Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onReady) end
     elseif (countdown < 10) then
         label:SetText(zo_strformat("<<1>>", string.format("%.1f", countdown)))
     else

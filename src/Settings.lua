@@ -101,6 +101,15 @@ local function SetLagCompensation(value)
     Cool.preferences.lagCompensation = value
 end
 
+-- Audio Notifications
+local function GetAudioNotifications()
+    return Cool.preferences.audioNotifications
+end
+
+local function SetAudioNotifications(value)
+    Cool.preferences.audioNotifications = value
+end
+
 -- Sizing
 local function SetSize(setKey, size)
     local context = WM:GetControlByName(setKey .. "_Container")
@@ -369,6 +378,14 @@ function Cool.Settings.Init()
             tooltip = "Attempt to adjust proc timing based on lag conditions. Set to ON if you are falsely seeing back-to-back procs and set to OFF if procs in close proximity to being ready are being missed.",
             getFunc = function() return GetLagCompensation() end,
             setFunc = function(value) SetLagCompensation(value) end,
+            width = "full",
+        },
+        {
+            type = "checkbox",
+            name = "Enable Audio Notifications",
+            tooltip = "Disable audio notifications globally.",
+            getFunc = function() return GetAudioNotifications() end,
+            setFunc = function(value) SetAudioNotifications(value) end,
             width = "full",
         },
         {

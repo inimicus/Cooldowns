@@ -17,6 +17,7 @@ local defaults = {
     gridSize = 16,
     showOutsideCombat = true,
     lagCompensation = true,
+    audioNotifications = true,
     size = 64,
     timerSize = 36,
     sounds = {

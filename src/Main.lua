@@ -19,6 +19,7 @@ Cool.isInCombat = false
 Cool.isDead     = false
 
 local EM = EVENT_MANAGER
+local S = Cool.Locale.Get
 
 -- -----------------------------------------------------------------------------
 -- Startup
@@ -27,11 +28,10 @@ local EM = EVENT_MANAGER
 function Cool.Initialize(event, addonName)
     if addonName ~= Cool.name then return end
 
-    Cool:Trace(1, "Cool Loaded")
+    Cool:Trace(1, S("Addon_Loaded"))
     EM:UnregisterForEvent(Cool.name, EVENT_ADD_ON_LOADED)
 
     -- Load the sets data (using LibSets)
-    Cool.clientLang = GetCVar("language.2")
     Cool.GetSetData()
 
     -- Populate default settings for sets
@@ -67,7 +67,7 @@ function Cool.Initialize(event, addonName)
 
     Cool.UI.ToggleHUD()
 
-    Cool:Trace(2, "Finished Initialize()")
+    Cool:Trace(2, S("Addon_Initialized"))
 end
 
 -- -----------------------------------------------------------------------------

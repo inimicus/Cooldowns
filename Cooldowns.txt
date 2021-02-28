@@ -9,6 +9,10 @@
 
 lib/LibEquipmentBonus/LibEquipmentBonus.lua
 
+src/Debug.lua
+src/Locale.lua
+lang/en.lua
+lang/$(language).lua
 src/Data.lua
 src/Main.lua
 src/Defaults.lua

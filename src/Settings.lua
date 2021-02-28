@@ -12,6 +12,7 @@ Cool.Settings = {}
 local WM = WINDOW_MANAGER
 local LAM = LibAddonMenu2
 local scaleBase = Cool.UI.scaleBase
+local S = Cool.Locale.Get
 
 local panelData = {
     type        = "panel",

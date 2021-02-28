@@ -21,21 +21,6 @@ Cool.isDead     = false
 local EM = EVENT_MANAGER
 
 -- -----------------------------------------------------------------------------
--- Level of debug output
--- 1: Low    - Basic debug info, show core functionality
--- 2: Medium - More information about skills and addon details
--- 3: High   - Everything
-Cool.debugMode = 0
--- -----------------------------------------------------------------------------
-
-function Cool:Trace(debugLevel, ...)
-    if debugLevel <= Cool.debugMode then
-        local message = zo_strformat(...)
-        d(Cool.prefix .. message)
-    end
-end
-
--- -----------------------------------------------------------------------------
 -- Startup
 -- -----------------------------------------------------------------------------
 

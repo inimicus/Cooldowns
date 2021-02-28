@@ -11,6 +11,7 @@ Cool.Tracking = {}
 
 local EM = EVENT_MANAGER
 local updateIntervalMs = 100
+local S = Cool.Locale.Get
 
 -- ----------------------------------------------------------------------------
 -- Callback Functions
@@ -42,7 +43,7 @@ local function OnCooldownUpdated(setKey, eventCode, abilityId)
     Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc)
     EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
 
-    Cool:Trace(1, "Cooldown proc for <<1>> (<<2>>)", setKey, abilityId)
+    Cool:Trace(1, S("Tracking_Cooldown_Proc"), setKey, abilityId)
 end
 
 local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _, _, _, _, _, _, _, abilityId)
@@ -50,22 +51,22 @@ local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
     local set = Cool.Data.Sets[setKey]
 
     if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
-        Cool:Trace(1, "<<1>> (<<2>>) on Cooldown", abilityName, abilityId)
+        Cool:Trace(1, S("Tracking_Combat_OnCooldown"), abilityName, abilityId)
     elseif result == set.result then
-        Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
+        Cool:Trace(1, S("Tracking_Combat_ResultDetails"), abilityName, abilityId, result)
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()
         Cool.UI.PlaySound(Cool.preferences.sets[setKey].sounds.onProc)
         EM:RegisterForUpdate(Cool.name .. setKey .. "Count", updateIntervalMs, function(...) Cool.UI.Update(setKey) return end)
     else
-        Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
+        Cool:Trace(1, S("Tracking_Combat_ResultDetails"), abilityName, abilityId, result)
     end
 
 end
 
 local function IsInCombat(_, inCombat)
     Cool.isInCombat = inCombat
-    Cool:Trace(2, "In Combat: <<1>>", tostring(inCombat))
+    Cool:Trace(2, S("Tracking_Combat_InCombat"), tostring(inCombat))
     Cool.UI:SetCombatStateDisplay()
 end
 
@@ -104,7 +105,7 @@ local function OnCombatEventUnfiltered(_, result, _, abilityName, _, _, _, _, _,
     local abortNow = ignoreList[abilityId] or false
     if abortNow then return end
 
-    Cool:Trace(1, "<<1>> (<<2>>) with result <<3>>", abilityName, abilityId, result)
+    Cool:Trace(1, S("Tracking_Combat_ResultDetails"), abilityName, abilityId, result)
 end
 
 local function OnEffectChangedUnfiltered(_, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
@@ -112,7 +113,7 @@ local function OnEffectChangedUnfiltered(_, changeType, effectSlot, effectName, 
     local abortNow = ignoreList[abilityId] or false
     if abortNow then return end
 
-    Cool:Trace(1, "<<1>> (<<2>>) with change type <<3>> <<4>>", effectName, abilityId, changeType, iconName)
+    Cool:Trace(1, S("Tracking_Effect_Changed"), effectName, abilityId, changeType, iconName)
 end
 
 -- ----------------------------------------------------------------------------
@@ -125,12 +126,12 @@ function Cool.Tracking.RegisterUnfiltered()
 
     EM:RegisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, OnCombatEventUnfiltered)
     EM:AddFilterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-    Cool:Trace(1, "Registered Unfiltered Events")
+    Cool:Trace(1, S("Tracking_Register_UnfilteredOn"))
 end
 
 function Cool.Tracking.UnregisterUnfiltered()
     EM:UnregisterForEvent(Cool.name .. "_Unfiltered", EVENT_COMBAT_EVENT)
-    Cool:Trace(1, "Unregistered Unfiltered Events")
+    Cool:Trace(1, S("Tracking_Register_UnfilteredOff"))
 end
 
 function Cool.Tracking.RegisterEvents()
@@ -141,23 +142,23 @@ function Cool.Tracking.RegisterEvents()
         Cool.Tracking.RegisterCombatEvent()
     end
 
-    Cool:Trace(2, "Registered Events")
+    Cool:Trace(1, S("Tracking_Register_On"))
 end
 
 function Cool.Tracking.UnregisterEvents()
     EM:UnregisterForEvent(Cool.name, EVENT_PLAYER_ALIVE)
     EM:UnregisterForEvent(Cool.name, EVENT_PLAYER_DEAD)
-    Cool:Trace(2, "Unregistered Events")
+    Cool:Trace(1, S("Tracking_Register_Off"))
 end
 
 function Cool.Tracking.RegisterCombatEvent()
     EM:RegisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE, IsInCombat)
-    Cool:Trace(2, "Registered combat events")
+    Cool:Trace(2, S("Tracking_Register_CombatOn"))
 end
 
 function Cool.Tracking.UnregisterCombatEvent()
     EM:UnregisterForEvent(Cool.name .. "COMBAT", EVENT_PLAYER_COMBAT_STATE)
-    Cool:Trace(2, "Unregistered combat events")
+    Cool:Trace(2, S("Tracking_Register_CombatOff"))
 end
 
 -- ----------------------------------------------------------------------------
@@ -194,13 +195,13 @@ function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
         if Cool.character[set.procType][setKey] ~= nil
 				and Cool.character[set.procType][setKey] == false then
             -- Skip enabling set
-            Cool:Trace(1, "Force disabled <<1>> (<<2>>), skipping enable", setName, setKey)
+            Cool:Trace(1, S("Tracking_Set_ForceDisabled"), setName, setKey)
             return
         end
 
         -- Don't enable if already enabled
         if not set.enabled then
-            Cool:Trace(1, "Full set for: <<1>> (<<2>>), registering events", setName, setKey)
+            Cool:Trace(1, S("Tracking_Set_FullSet"), setName, setKey)
 
             -- Set callback based on event
             local procFunction = nil
@@ -228,7 +229,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
             set.enabled = true
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, "Set already enabled for: <<1>> (<<2>>)", setName, setKey)
+            Cool:Trace(2, S("Tracking_Set_AlreadyEnabled"), setName, setKey)
         end
 
     -- Full bonus not active
@@ -236,7 +237,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
 
         -- Don't disable if already disabled
         if set.enabled then
-            Cool:Trace(1, "Not active for: <<1>> (<<2>>), unregistering events", setName, setKey)
+            Cool:Trace(1, S("Tracking_Set_NotActive"), setName, setKey)
             if type(set.id) == 'table' then
                 for i=1, #set.id do
                     EM:UnregisterForEvent(Cool.name .. "_" .. set.id[i], set.event)
@@ -247,7 +248,7 @@ function Cool.Tracking.EnableTrackingForSet(setName, enabled, setKey)
             set.enabled = false
             Cool.UI.Draw(setKey)
         else
-            Cool:Trace(2, "Set already disabled for: <<1>> (<<2>>)", setName, setKey)
+            Cool:Trace(2, S("Tracking_Set_AlreadyDisabled"), setName, setKey)
         end
     end
 

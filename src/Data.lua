@@ -128,6 +128,28 @@ function Cool.GetSetData()
     -- local isSet, setName, _, _, _, setId = GetItemLinkSetInfo(itemLink, false)
 
     Cool.Data.Sets = {
+    --["Stone-Talker"] = {
+        [588] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Stone-Talker proc is available or cooldown until it is ready again.",
+            id = 154786,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 10000,
+            texture = "/esoui/art/icons/placeholder/icon_spell_rest_convalescence01.dds",
+            showFrame = true,
+        },
+    --["Perfected Stone-Talker"] = {
+        [592] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Stone-Talker proc is available or cooldown until it is ready again.",
+            id = 154786,
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 10000,
+            texture = "/esoui/art/icons/placeholder/icon_spell_rest_convalescence01.dds",
+            showFrame = true,
+        },
     --["Perfected Void Bash"] = {
         [564] = {
             procType = "set",

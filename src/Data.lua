@@ -143,7 +143,7 @@ function Cool.GetSetData()
         [592] = {
             procType = "set",
             event = EVENT_COMBAT_EVENT,
-            description = "Displays when the Stone-Talker proc is available or cooldown until it is ready again.",
+            description = "Displays when the Perfected Stone-Talker proc is available or cooldown until it is ready again.",
             id = 154786,
             result = ACTION_RESULT_EFFECT_GAINED,
             cooldownDurationMs = 10000,

@@ -51,7 +51,7 @@ local function OnCombatEvent(setKey, _, result, _, abilityName, _, _, _, _, _, _
 
     if result == ACTION_RESULT_ABILITY_ON_COOLDOWN then
         Cool:Trace(1, "<<1>> (<<2>>) on Cooldown", abilityName, abilityId)
-    elseif result == set.result then
+    elseif result == set.result and not set.onCooldown then
         Cool:Trace(1, "Name: <<1>> ID: <<2>> with result <<3>>", abilityName, abilityId, result)
         set.onCooldown = true
         set.timeOfProc = GetGameTimeMilliseconds()

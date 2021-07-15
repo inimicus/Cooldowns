@@ -128,6 +128,17 @@ function Cool.GetSetData()
     -- local isSet, setName, _, _, _, setId = GetItemLinkSetInfo(itemLink, false)
 
     Cool.Data.Sets = {
+    --["Encratis's Behemoth"] = {
+        [577] = {
+            procType = "set",
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays when the Sentinel of Rkugamz proc is available or cooldown until it is ready again.",
+            id = {151033},
+            result = ACTION_RESULT_EFFECT_GAINED,
+            cooldownDurationMs = 15000,
+            texture = "/esoui/art/icons/monster_fire_elemental_embers_001.dds",
+            showFrame = false,
+        },
     --["Stone-Talker"] = {
         [588] = {
             procType = "set",

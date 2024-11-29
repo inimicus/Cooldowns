@@ -639,6 +639,21 @@ function Cool.GetSetData()
             texture = "/esoui/art/icons/ability_sorcerer_011.dds",
             showFrame = true,
         },
+        ["Implacable Outcome"] = {
+            procType = "passive",
+            classId = 117,
+            event = EVENT_COMBAT_EVENT,
+            description = "Displays the cooldown for gaining ultimate when consuming Crux.",
+            settingsColor = "CD5031",
+            id = {185051, 185070},
+            enabled = false,
+            result = ACTION_RESULT_POWER_ENERGIZE,
+            cooldownDurationMs = 8000,
+            onCooldown = false,
+            timeOfProc = 0,
+            texture = "/esoui/art/icons/passive_arcanist_08.dds",
+            showFrame = true,
+        },
     }
 
 end

@@ -3,11 +3,11 @@
 Track cooldowns of various sets and synergies.
 
 <p align="center">
-    <img src="https://github.com/inimicus/Cooldowns/blob/master/art/Cooldowns.png?raw=true"><br>
+    <img src="https://user-images.githubusercontent.com/4276170/390940132-b75a6e97-f14c-4db0-87b2-ef0d7b9f4e6e.png"><br>
 </p>
 
 <p align="center">
-    <img src="https://github.com/inimicus/Cooldowns/blob/master/art/Synergies.png?raw=true"><br>
+    <img src="https://user-images.githubusercontent.com/4276170/390940138-ef201cd2-b471-41ee-ba82-d0f88cf4ade8.png"><br>
 </p>
 
 ## Purpose

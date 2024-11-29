@@ -76,6 +76,7 @@ Synergies:
 
 Passives:
 
+- Arcanist: Implacable Outcome
 - Dragonknight: Mountain's Blessing (ultimate generation portion), Combustion
 - Nightblade: Transfer
 - Warden: Savage Beast

@@ -98,4 +98,6 @@ If you'd like to see a specific set added, please let me know. I would prefer to
 limit the sets to ones with long cooldowns and those not already covered by other
 more well-done addons, but this is not a hard rule.
 
+To request tracking or submit code changes for a new set, synergy, or passive, head over to [Cooldowns on GitHub](https://github.com/inimicus/Cooldowns) and [create an issue](https://github.com/inimicus/Cooldowns/issues/new/choose) or [pull request](https://github.com/inimicus/Cooldowns/compare).
+
 # Enjoy!

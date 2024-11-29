@@ -10,7 +10,13 @@ Track cooldowns of various sets and synergies.
     <img src="https://user-images.githubusercontent.com/4276170/390940138-ef201cd2-b471-41ee-ba82-d0f88cf4ade8.png"><br>
 </p>
 
+## Dependencies
+
+- [LibAddonMenu-2.0](https://www.esoui.com/downloads/info7-libaddonmenu.html)
+- [LibSets](https://www.esoui.com/downloads/info2241-LibSetsAllsetitemsingamepreview.luaAPIexcelsheet.html)
+
 ## Purpose
+
 Counting to five is hard enough. Counting to 30 is next to impossible. Counting
 anything more than 30 requires powerful computers or elite console players to
 be even remotely within the realm of possibility.
